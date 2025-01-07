@@ -3,7 +3,7 @@ image: neonwatty/meme-search-demo-one
 servers:
   web:
     hosts:
-      - 44.240.243.23
+      - 54.187.124.43
 
 proxy:
   app_port: 8501

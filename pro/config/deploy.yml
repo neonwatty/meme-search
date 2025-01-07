@@ -3,8 +3,7 @@ image: neonwatty/meme-search-demo-two
 servers:
   web:
     hosts:
-      - 44.240.243.23
-
+      - 54.187.124.43
 env:
   DATABASE_URL: postgres://postgres:postgres@meme-search-pro-postgres:5432/meme_search
 
@@ -35,7 +34,7 @@ ssh:
 accessories:
   postgres:
     image: pgvector/pgvector:pg17
-    host: 44.240.243.23
+    host: 54.187.124.43
     directories:
       - meme_search_pro/db_data/meme-search-db:/var/lib/postgresql/data
     env:
