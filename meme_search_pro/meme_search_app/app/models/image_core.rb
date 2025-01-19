@@ -54,7 +54,7 @@ class ImageCore < ApplicationRecord
   def remove_image_text_job
     # send request
     begin # For local / native metal testing
-      uri = URI.parse("http://localhost:8000/remove_job/#{self.id}")
+      uri = URI.parse("http://#{ENV['HOST_IP']}:8000/remove_job/#{self.id}")
       http = Net::HTTP.new(uri.host, uri.port)
 
       # Try to make a request to the first URI

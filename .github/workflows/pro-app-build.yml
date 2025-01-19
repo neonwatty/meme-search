@@ -1,46 +1,46 @@
-# name: "pro app build"
-# on:
-#   workflow_dispatch:
-#   pull_request:
-#   push:
-#     branches: ["main"]
-#     paths:
-#       - "meme_search_pro/meme_search_app/**"
+ name: "pro app build"
+ on:
+   workflow_dispatch:
+   pull_request:
+   push:
+     branches: ["main"]
+     paths:
+       - "meme_search_pro/meme_search_app/**"
 
-# jobs:
-#   Build_And_Push_App:
-#     runs-on: ubuntu-22.04
-#     permissions:
-#       contents: read
-#       packages: write
+ jobs:
+   Build_And_Push_App:
+     runs-on: ubuntu-22.04
+     permissions:
+       contents: read
+       packages: write
 
-#     steps:
-#       - name: Set up QEMU
-#         uses: docker/setup-qemu-action@v3
+     steps:
+       - name: Set up QEMU
+         uses: docker/setup-qemu-action@v3
 
-#       - name: Set Buildx
-#         uses: docker/setup-buildx-action@v3
+       - name: Set Buildx
+         uses: docker/setup-buildx-action@v3
 
-#       - name: Log in to Github Docker Image Registry
-#         uses: docker/login-action@v3
-#         with:
-#           registry: ghcr.io
-#           username: neonwatty
-#           password: ${{ secrets.TOKEN_GITHUB }}
+       - name: Log in to Github Docker Image Registry
+         uses: docker/login-action@v3
+         with:
+           registry: ghcr.io
+           username: croche2574
+           password: ${{ secrets.GITHUB_TOKEN }}
+      
+       - name: Checkout Branch
+         uses: actions/checkout@v1
 
-#       - name: Print current working directory
-#         run: pwd # Prints the current working directory
+       - name: Print current working directory
+         run: pwd # Prints the current working directory
 
-#       - name: Print root directory contents
-#         run: ls -l .
+       - name: Print root directory contents
+         run: ls -l ./
 
-#       - name: Print app directory contents
-#         run: ls -l ./meme_search
-
-#       - name: Build and Upload for AMD64 and ARM64
-#         uses: docker/build-push-action@v6
-#         with:
-#           context: ./meme_search_pro/meme_search_app
-#           platforms: linux/amd64,linux/arm64
-#           push: true
-#           tags: ghcr.io/neonwatty/meme_search_pro:latest
+       - name: Build and Upload for AMD64 and ARM64
+         uses: docker/build-push-action@v6
+         with:
+           context: ./meme_search_pro/meme_search_app
+           platforms: linux/amd64,linux/arm64
+           push: true
+           tags: ghcr.io/croche2574/meme_search_pro:latest

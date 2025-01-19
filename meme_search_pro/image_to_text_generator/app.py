@@ -6,13 +6,14 @@ import threading
 import logging
 import requests
 from image_to_text_generator import image_to_text
+import os
 
 
 app = FastAPI()
 lock = threading.Lock()
 
 # constants
-APP_URL = "http://host.docker.internal:3000/image_cores/"
+APP_URL = "http://" + os.environ.get("HOST_URL", "host.docker.internal") + ":3000/image_cores/"
 JOB_DB = "/app/db/job_queue.db"
 
 # initialize logging

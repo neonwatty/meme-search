@@ -51,7 +51,7 @@ class ImageCoresController < ApplicationController
 
       # send request
       begin # For local / native metal testing
-        uri = URI("http://localhost:8000/add_job")
+        uri = URI("http://#{ENV['HOST_IP']}:8000/add_job")
         http = Net::HTTP.new(uri.host, uri.port)
 
         # Try to make a request to the first URI
@@ -105,7 +105,7 @@ class ImageCoresController < ApplicationController
 
       # send request
       begin # For local / native metal testing
-        uri = URI.parse("http://localhost:8000/remove_job/#{@image_core.id}")
+        uri = URI.parse("http://#{ENV['HOST_IP']}:8000/remove_job/#{@image_core.id}")
         http = Net::HTTP.new(uri.host, uri.port)
 
         # Try to make a request to the first URI
