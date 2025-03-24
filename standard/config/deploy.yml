@@ -28,3 +28,4 @@ builder:
 # Use a different ssh user than root
 ssh:
   user: ubuntu
+  keys: [ "~/.ssh/jeremy-kamal-key.pem" ]
