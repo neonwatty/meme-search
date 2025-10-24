@@ -13,7 +13,13 @@
     <link rel="apple-touch-icon" href="/icon.png">
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
+
+    <% if Rails.env.development? %>
+      <%= vite_client_tag %>
+      <%= vite_react_refresh_tag %>
+    <% end %>
+
+    <%= vite_javascript_tag 'application' %>
     <style>
       textarea {
       height: 7rem;

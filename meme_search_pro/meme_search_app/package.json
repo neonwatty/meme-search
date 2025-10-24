@@ -1,1 +1,36 @@
-{}
+{
+  "name": "meme_search_app",
+  "version": "1.0.0",
+  "description": "The meme search pro app is a Ruby on Rails based web application that allows users to upload, index, and query their memes. It is meant to be run in conjunction with the image-to-text service, as well as the associated postgres database container.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "clobber": "vite clobber"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tanstack/react-query": "^5.90.5",
+    "axios": "^1.12.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.9.1",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@vitejs/plugin-react": "^5.1.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.12",
+    "vite-plugin-ruby": "^5.1.1"
+  }
+}
