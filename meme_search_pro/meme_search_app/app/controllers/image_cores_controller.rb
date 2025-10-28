@@ -52,23 +52,36 @@ class ImageCoresController < ApplicationController
       # get current model
       current_model = ImageToText.find_by(current: true)
 
-      # send request
-      uri = URI("http://image_to_text_generator:8000/add_job")
-      http = Net::HTTP.new(uri.host, uri.port)
+      begin
+        # send request - try Docker service name first, fallback to localhost
+        uri = URI("http://image_to_text_generator:8000/add_job")
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.open_timeout = 2
+        http.read_timeout = 5
 
-      # Try to make a request to the first URI
-      request = Net::HTTP::Post.new(uri)
-      request["Content-Type"] = "application/json"
-      data = { image_core_id: @image_core.id, image_path: @image_core.image_path.name + "/" + @image_core.name, model: current_model.name }
-      request.body = data.to_json
-      response = http.request(request)
+        # Try to make a request to the first URI
+        request = Net::HTTP::Post.new(uri)
+        request["Content-Type"] = "application/json"
+        data = { image_core_id: @image_core.id, image_path: @image_core.image_path.name + "/" + @image_core.name, model: current_model.name }
+        request.body = data.to_json
+        response = http.request(request)
 
-      respond_to do |format|
-        if response.is_a?(Net::HTTPSuccess)
-          # flash[:notice] = "Image added to queue for automatic description generation."
-          # format.html { redirect_back_or_to root_path }
-        else
-          flash[:alert] = "Cannot generate description, your image to text genertaor is offline!"
+        respond_to do |format|
+          if response.is_a?(Net::HTTPSuccess)
+            # flash[:notice] = "Image added to queue for automatic description generation."
+            # format.html { redirect_back_or_to root_path }
+          else
+            flash[:alert] = "Cannot generate description, your image to text generator is offline!"
+            format.html { redirect_back_or_to root_path }
+          end
+        end
+      rescue SocketError, Errno::ECONNREFUSED, Net::OpenTimeout, Net::ReadTimeout => e
+        # Reset status back to not_started since the request failed
+        @image_core.status = :not_started
+        @image_core.save
+
+        respond_to do |format|
+          flash[:alert] = "Cannot generate description: image-to-text service is not running. Please start the Python ML service or use Docker Compose to run the full stack."
           format.html { redirect_back_or_to root_path }
         end
       end
