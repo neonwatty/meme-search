@@ -154,6 +154,30 @@ jobs:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
         run: bin/rails test test/system/tag_names_test.rb
 
+      - name: Run model tests
+        working-directory: ./meme_search_pro/meme_search_app
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          COVERAGE: true
+        run: bin/rails test test/models
+
+      - name: Run controller tests
+        working-directory: ./meme_search_pro/meme_search_app
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          COVERAGE: true
+        run: bin/rails test test/controllers
+
+      - name: Run channel tests
+        working-directory: ./meme_search_pro/meme_search_app
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          COVERAGE: true
+        run: bin/rails test test/channels
+
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v4
         if: failure()
