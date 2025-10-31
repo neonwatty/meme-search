@@ -9,6 +9,70 @@ Meme Search is a self-hosted AI-powered meme search engine with a microservices 
 - **Python Image-to-Text Service** (`meme_search_pro/image_to_text_generator`) - AI inference service on port 8000
 - **PostgreSQL with pgvector** - Database with vector similarity search
 
+## Environment Setup with Mise
+
+This project uses [mise](https://mise.jdx.dev/) for managing development tool versions. Mise ensures all developers use consistent versions of Ruby, Python, and Node.js.
+
+### Required Tool Versions
+
+- Ruby: 3.4.2
+- Python: 3.12
+- Node.js: 20 (LTS)
+- PostgreSQL: 17 (runs in Docker, not installed locally via mise)
+
+### Installation
+
+1. **Install mise** (if not already installed):
+   ```bash
+   # macOS
+   brew install mise
+
+   # Other platforms: https://mise.jdx.dev/getting-started.html
+   ```
+
+2. **Activate mise in your shell** (add to `~/.zshrc`, `~/.bashrc`, etc.):
+   ```bash
+   eval "$(mise activate zsh)"  # or bash, fish, etc.
+   ```
+
+3. **Install project tools**:
+   ```bash
+   cd /path/to/meme-search
+   mise trust    # Trust the project's .mise.toml configuration
+   mise install  # Install Ruby 3.4.2, Python 3.12, Node 20
+   ```
+
+4. **Verify installation**:
+   ```bash
+   mise doctor           # Check mise configuration
+   ruby --version        # Should show 3.4.2
+   python --version      # Should show 3.12.x
+   node --version        # Should show 20.x
+   bundle --version      # Should show 2.6.5
+   ```
+
+### Using Mise
+
+Mise automatically activates the correct tool versions when you `cd` into the project directory. If you need to explicitly run commands with mise:
+
+```bash
+mise exec -- bundle install     # Run bundle with mise-managed Ruby
+mise exec -- python script.py   # Run Python with mise-managed Python
+mise run bundle install         # Alternative syntax
+```
+
+### Configuration Files
+
+- **`.mise.toml`**: Main mise configuration (tools and environment variables)
+- **`.tool-versions`**: Backward compatibility with asdf version manager
+- **`meme_search_pro/meme_search_app/.ruby-version`**: Ruby version for Rails app
+
+### Troubleshooting
+
+- **"Could not find bundler"**: Run `mise install` to ensure Ruby and Bundler are installed
+- **Wrong Ruby version**: Ensure mise is activated in your shell (check `which ruby`)
+- **PostgreSQL not found**: PostgreSQL runs in Docker, not locally. Use `docker compose up` to start it
+
 ## Development Commands
 
 ### Rails Application
