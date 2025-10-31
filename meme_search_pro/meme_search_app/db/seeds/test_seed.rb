@@ -9,7 +9,8 @@ TagName.destroy_all
 ImagePath.destroy_all
 ImageToText.destroy_all
 
-puts "Creating ImagePaths..."
+puts "Creating ImagePaths (with auto-discovery of image files)..."
+# Note: ImagePath.after_save callback automatically creates ImageCore records for discovered files
 path1 = ImagePath.create!(
   id: 1,
   name: "example_memes_1",
@@ -39,42 +40,41 @@ tag2 = TagName.create!(
   updated_at: "2019-01-01 00:00:00"
 )
 
-puts "Creating ImageCores..."
-image1 = ImageCore.create!(
-  image_path_id: 1,
-  name: "all the fucks.jpg",
-  description: "this image says all the fucks",
-  status: "not_started",
-  created_at: "2019-01-01 00:00:00",
-  updated_at: "2019-01-01 00:00:00"
-)
+puts "Updating ImageCores with descriptions and tags..."
+# ImageCores were auto-created by ImagePath callback, now add descriptions
+image1 = ImageCore.find_by(image_path_id: 1, name: "all the fucks.jpg")
+if image1
+  image1.update!(description: "this image says all the fucks")
+  # image1 has tag_one only
+  ImageTag.create!(tag_name: tag1, image_core: image1)
+end
 
-image2 = ImageCore.create!(
-  image_path_id: 1,
-  name: "both pills.jpeg",
-  description: "this image says did you just take both pills?",
-  status: "not_started",
-  created_at: "2019-01-01 00:00:00",
-  updated_at: "2019-01-01 00:00:00"
-)
+image2 = ImageCore.find_by(image_path_id: 1, name: "both pills.jpeg")
+if image2
+  image2.update!(description: "this image says did you just take both pills?")
+  # image2 has BOTH tag_one and tag_two
+  ImageTag.create!(tag_name: tag1, image_core: image2)
+  ImageTag.create!(tag_name: tag2, image_core: image2)
+end
 
-image3 = ImageCore.create!(
-  image_path_id: 2,
-  name: "no.jpg",
-  description: "this image has a bunny saying no",
-  status: "not_started",
-  created_at: "2019-01-01 00:00:00",
-  updated_at: "2019-01-01 00:00:00"
-)
+image3 = ImageCore.find_by(image_path_id: 2, name: "no.jpg")
+if image3
+  image3.update!(description: "this image has a bunny saying no")
+  # image3 has tag_two only
+  ImageTag.create!(tag_name: tag2, image_core: image3)
+end
 
-image4 = ImageCore.create!(
-  image_path_id: 2,
-  name: "screenshot.jpg",
-  description: "this image is of a cat saying weird knowledge increased",
-  status: "not_started",
-  created_at: "2019-01-01 00:00:00",
-  updated_at: "2019-01-01 00:00:00"
-)
+image4 = ImageCore.find_by(image_path_id: 2, name: "screenshot.jpg")
+if image4
+  image4.update!(description: "this image is of a cat saying weird knowledge increased")
+  # image4 has NO tags
+end
+
+puts "Resetting ID sequences for all tables..."
+# Reset sequences to avoid ID conflicts when creating new records
+ActiveRecord::Base.connection.tables.each do |table|
+  ActiveRecord::Base.connection.reset_pk_sequence!(table)
+end
 
 puts "Creating ImageToText models..."
 # Florence-2-base is the default model
@@ -126,5 +126,5 @@ ImageToText.create!(
 puts "Test database seeded successfully!"
 puts "  - #{ImagePath.count} image paths"
 puts "  - #{TagName.count} tags"
-puts "  - #{ImageCore.count} image cores"
+puts "  - #{ImageCore.count} image cores (auto-discovered from directories)"
 puts "  - #{ImageToText.count} image-to-text models"

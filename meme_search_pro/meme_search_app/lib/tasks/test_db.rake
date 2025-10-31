@@ -13,7 +13,8 @@ namespace :db do
       Rails.env = "test"
 
       puts "Resetting test database..."
-      Rake::Task["db:test:prepare"].invoke
+      # Clean all existing data (truncate tables without dropping database)
+      Rake::Task["db:test:clean"].invoke
 
       puts "Seeding test database..."
       load Rails.root.join("db", "seeds", "test_seed.rb")
@@ -24,12 +25,9 @@ namespace :db do
       Rails.env = "test"
 
       puts "Cleaning test database..."
-      ImageTag.destroy_all
-      ImageEmbedding.destroy_all
-      ImageCore.destroy_all
-      TagName.destroy_all
-      ImagePath.destroy_all
-      ImageToText.destroy_all
+      # Use delete_all to avoid callbacks and foreign key issues
+      # Delete in reverse dependency order
+      ActiveRecord::Base.connection.execute("TRUNCATE TABLE image_tags, image_embeddings, image_cores, tag_names, image_paths, image_to_texts RESTART IDENTITY CASCADE")
 
       puts "Test database cleaned!"
     end

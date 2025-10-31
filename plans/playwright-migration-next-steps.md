@@ -1,8 +1,8 @@
 # Playwright Migration & Rails 8 Upgrade - Next Steps
 
 **Branch**: `rails-8-update-3`
-**Status**: Phase 1 Complete
-**Last Updated**: 2025-10-30
+**Status**: Phase 2 Complete - All Tests Migrated! 🎉
+**Last Updated**: 2025-10-31
 
 ---
 
@@ -22,12 +22,12 @@
 
 ---
 
-## 📋 Immediate Next Steps
+## ✅ Phase 1 Complete!
 
 ### Phase 1 Completion
 
 #### 1. Update Documentation
-- [ ] Update `CLAUDE.md` with Playwright section
+- [x] Update `CLAUDE.md` with Playwright section
   - Add "Testing with Playwright" section
   - Document npm test scripts
   - Explain test structure and page object model pattern
@@ -35,7 +35,7 @@
   - Document database seeding strategy
 
 #### 2. Add GitHub Actions Playwright Workflow
-- [ ] Create or update `.github/workflows/pro-app-test.yml`
+- [x] Create or update `.github/workflows/pro-app-test.yml`
   - Add new job for Playwright tests
   - Install Node.js 20
   - Install Playwright browsers (`npx playwright install --with-deps chromium`)
@@ -47,66 +47,74 @@
 
 ---
 
+## 📋 Immediate Next Steps
+
+🎉 **PHASE 2 COMPLETE!** All 16 system tests have been successfully migrated to Playwright!
+
+**Next:** Proceed to Phase 3 - Cleanup & Optimization (optional)
+
+---
+
 ## 🔄 Phase 2: Migrate Remaining System Tests
 
 ### Priority Order (Simplest → Most Complex)
 
-#### Test 1: tag_names_test.rb → tag-names.spec.ts
+#### Test 1: tag_names_test.rb → tag-names.spec.ts ✅
 **Complexity**: Low
 **Test Count**: 1 comprehensive test
 **Coverage**: Tag CRUD operations in settings
 
-- [ ] Create `playwright/pages/settings/tag-names.page.ts`
-- [ ] Migrate test to `playwright/tests/tag-names.spec.ts`
-- [ ] Handle navigation, form fill, alerts/confirmations
-- [ ] Verify test passes
+- [x] Create `playwright/pages/settings/tag-names.page.ts`
+- [x] Migrate test to `playwright/tests/tag-names.spec.ts`
+- [x] Handle navigation, form fill, alerts/confirmations
+- [x] Verify test passes
 
-#### Test 2: image_paths_test.rb → image-paths.spec.ts
+#### Test 2: image_paths_test.rb → image-paths.spec.ts ✅
 **Complexity**: Low-Medium
 **Test Count**: 1 comprehensive test
 **Coverage**: Directory path management, validation
 
-- [ ] Create `playwright/pages/settings/image-paths.page.ts`
-- [ ] Migrate test to `playwright/tests/image-paths.spec.ts`
-- [ ] Handle form validation errors
-- [ ] Verify test passes
+- [x] Create `playwright/pages/settings/image-paths.page.ts`
+- [x] Migrate test to `playwright/tests/image-paths.spec.ts`
+- [x] Handle form validation errors
+- [x] Verify test passes
 
-#### Test 3: image_cores_test.rb → image-cores.spec.ts
+#### Test 3: image_cores_test.rb → image-cores.spec.ts ✅
 **Complexity**: Medium
 **Test Count**: 2 tests
 **Coverage**: CRUD operations, tag management, description updates, deletion
 
-- [ ] Create `playwright/pages/image-cores.page.ts`
-- [ ] Migrate tests to `playwright/tests/image-cores.spec.ts`
-- [ ] Handle click interactions, form fills, DOM assertions
-- [ ] Verify tests pass
+- [x] Create `playwright/pages/image-cores.page.ts`
+- [x] Migrate tests to `playwright/tests/image-cores.spec.ts`
+- [x] Handle click interactions, form fills, DOM assertions
+- [x] Verify tests pass
 
-#### Test 4: search_test.rb → search.spec.ts
+#### Test 4: search_test.rb → search.spec.ts ✅
 **Complexity**: Medium-High
 **Test Count**: 3 tests
 **Coverage**: Keyword search, vector search, tag filtering
 
 **Challenge**: Debounced search (300ms + 500ms wait)
 
-- [ ] Create `playwright/pages/search.page.ts`
-- [ ] Migrate tests to `playwright/tests/search.spec.ts`
-- [ ] Implement proper wait strategies for debounced input
-- [ ] Handle DOM counting assertions
-- [ ] Verify tests pass
+- [x] Create `playwright/pages/search.page.ts`
+- [x] Migrate tests to `playwright/tests/search.spec.ts`
+- [x] Implement proper wait strategies for debounced input
+- [x] Handle DOM counting assertions
+- [x] Verify tests pass
 
-#### Test 5: index_filter_test.rb → index-filter.spec.ts
+#### Test 5: index_filter_test.rb → index-filter.spec.ts ✅
 **Complexity**: High
-**Test Count**: 5 tests
+**Test Count**: 6 tests
 **Coverage**: Filter sidebar UX (tags, paths, embeddings)
 
 **Challenge**: Modal interactions, escape key handling, checkbox states
 
-- [ ] Create `playwright/pages/index-filter.page.ts`
-- [ ] Migrate tests to `playwright/tests/index-filter.spec.ts`
-- [ ] Handle opening/closing modals
-- [ ] Implement keyboard interactions (Escape key)
-- [ ] Handle checkbox states
-- [ ] Verify tests pass
+- [x] Create `playwright/pages/index-filter.page.ts`
+- [x] Migrate tests to `playwright/tests/index-filter.spec.ts`
+- [x] Handle opening/closing modals
+- [x] Implement keyboard interactions (Escape key)
+- [x] Handle checkbox states
+- [x] Verify tests pass
 
 ---
 
@@ -170,13 +178,13 @@
 
 | Test File | Tests | Status | Playwright File | Notes |
 |-----------|-------|--------|----------------|-------|
-| `image_to_texts_test.rb` | 3 | ✅ Done | `image-to-texts.spec.ts` | Phase 1 complete |
-| `tag_names_test.rb` | 1 | ⏳ Pending | `tag-names.spec.ts` | Next priority |
-| `image_paths_test.rb` | 1 | ⏳ Pending | `image-paths.spec.ts` | Low complexity |
-| `image_cores_test.rb` | 2 | ⏳ Pending | `image-cores.spec.ts` | Medium complexity |
-| `search_test.rb` | 3 | ⏳ Pending | `search.spec.ts` | Debounce handling |
-| `index_filter_test.rb` | 5 | ⏳ Pending | `index-filter.spec.ts` | Modal/keyboard |
-| **Total** | **15** | **3/15** | **6 files** | **20% complete** |
+| `image_to_texts_test.rb` | 3 | ✅ Done | `image-to-texts.spec.ts` | Model selection UI |
+| `tag_names_test.rb` | 1 | ✅ Done | `tag-names.spec.ts` | CRUD operations with dialog |
+| `image_paths_test.rb` | 1 | ✅ Done | `image-paths.spec.ts` | Directory path CRUD |
+| `image_cores_test.rb` | 2 | ✅ Done | `image-cores.spec.ts` | Edit, tags, delete |
+| `search_test.rb` | 3 | ✅ Done | `search.spec.ts` | Keyword/vector/tag filtering |
+| `index_filter_test.rb` | 6 | ✅ Done | `index-filter.spec.ts` | Modal/keyboard/filters |
+| **Total** | **16** | **16/16** | **6 files** | **100% complete** |
 
 ---
 
@@ -221,11 +229,13 @@
 
 ## ✨ Success Criteria
 
-### Phase 1 (Current) ✅
+### Phase 1 ✅ COMPLETE
 - [x] Playwright infrastructure working
-- [x] First test migrated and passing
+- [x] First test migrated and passing (image-to-texts)
+- [x] Second test migrated and passing (tag-names)
 - [x] Database seeding functional
-- [x] CI integration planned (not implemented yet)
+- [x] CI integration implemented and working
+- [x] Documentation updated in CLAUDE.md
 
 ### Phase 2 (Next)
 - [ ] All 15 system tests migrated

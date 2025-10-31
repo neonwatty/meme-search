@@ -134,6 +134,172 @@ docker compose -f docker-compose-local-build.yml up --build
 # Create .env with: APP_PORT=8080
 ```
 
+### Playwright E2E Tests
+
+This project uses [Playwright](https://playwright.dev/) with TypeScript for end-to-end testing. Playwright tests are incrementally replacing Capybara system tests.
+
+#### Running Playwright Tests
+
+```bash
+# From project root directory
+
+# Run all E2E tests (headless)
+npm run test:e2e
+
+# Run with UI mode (interactive)
+npm run test:e2e:ui
+
+# Run in headed mode (see browser)
+npm run test:e2e:headed
+
+# Debug mode (step through tests)
+npm run test:e2e:debug
+
+# View last test report
+npm run test:e2e:report
+
+# Generate test code (record interactions)
+npm run test:e2e:codegen
+```
+
+#### Test Structure
+
+```
+playwright/
+├── tests/              # Test specs (.spec.ts files)
+│   ├── image-to-texts.spec.ts
+│   └── ... (more tests)
+├── pages/              # Page Object Model classes
+│   └── settings/
+│       └── image-to-texts.page.ts
+└── utils/              # Test utilities
+    └── db-setup.ts     # Database reset/seed helpers
+```
+
+#### Page Object Model Pattern
+
+Tests use the Page Object Model (POM) pattern to separate test logic from page interactions:
+
+**Page Object** (`playwright/pages/settings/image-to-texts.page.ts`):
+```typescript
+export class ImageToTextsPage {
+  readonly page: Page;
+  readonly heading: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.heading = page.locator('h1');
+  }
+
+  async goto(): Promise<void> {
+    await this.page.goto('/settings/image_to_texts');
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  async selectModel(modelId: number): Promise<void> {
+    const label = this.page.locator(`label[for='${modelId}']`);
+    await label.click();
+    await this.page.waitForTimeout(500);
+  }
+}
+```
+
+**Test Spec** (`playwright/tests/image-to-texts.spec.ts`):
+```typescript
+test('updating the current model', async ({ page }) => {
+  await imageToTextsPage.goto();
+  await imageToTextsPage.selectModel(2);
+  expect(await imageToTextsPage.isModelSelected(2)).toBe(true);
+});
+```
+
+#### Database Management for Tests
+
+Playwright tests use a dedicated test database seeding strategy:
+
+**Rails Rake Tasks** (available in `meme_search_pro/meme_search_app`):
+```bash
+mise exec -- bin/rails db:test:reset_and_seed  # Reset and seed test DB
+mise exec -- bin/rails db:test:seed            # Seed only
+mise exec -- bin/rails db:test:clean           # Clean test DB
+```
+
+**TypeScript Helper** (`playwright/utils/db-setup.ts`):
+```typescript
+import { resetTestDatabase } from '../utils/db-setup';
+
+test.beforeEach(async ({ page }) => {
+  await resetTestDatabase();  // Runs rake db:test:reset_and_seed
+  // ... test setup
+});
+```
+
+**Seed Data** (`db/seeds/test_seed.rb`):
+- Creates fixture-equivalent data for all 5 models:
+  - ImageToText (5 models: Florence-2-base [default], Florence-2-large, SmolVLM-256M, SmolVLM-500M, moondream2)
+  - ImagePath (2 paths: example_memes_1, example_memes_2)
+  - TagName (2 tags: tag_one, tag_two)
+  - ImageCore (4 images with descriptions)
+
+#### Prerequisites
+
+**Rails Server**: Tests require Rails server running in test mode on port 3000:
+```bash
+cd meme_search_pro/meme_search_app
+mise exec -- bin/rails server -e test -p 3000
+```
+
+**Playwright Browsers**: Install browsers (one-time):
+```bash
+npx playwright install --with-deps chromium
+```
+
+#### Configuration
+
+**`playwright.config.ts`**:
+- Base URL: `http://localhost:3000` (configurable via `BASE_URL` env var)
+- Workers: 1 (sequential execution for database consistency)
+- Fully Parallel: false (required for shared test database)
+- Browsers: Chromium only (1400x1400 viewport to match Capybara)
+- Web Server: Auto-starts Rails server in test mode (disabled in CI)
+
+**`tsconfig.json`**: TypeScript configuration for test code
+
+#### Troubleshooting
+
+**"Cannot connect to localhost:3000"**:
+- Ensure Rails test server is running: `mise exec -- bin/rails server -e test`
+- Check that port 3000 is not in use by another process
+
+**"Database errors during tests"**:
+- Reset test database: `cd meme_search_pro/meme_search_app && mise exec -- bin/rails db:test:reset_and_seed`
+- Verify PostgreSQL is running: `docker compose up -d`
+
+**"Ruby version errors in db-setup.ts"**:
+- Ensure mise is activated in your shell
+- `db-setup.ts` uses `mise exec --` to ensure correct Ruby version
+
+**"Tests timeout or hang"**:
+- Check for JavaScript errors in browser console (run with `--headed`)
+- Increase timeout in `playwright.config.ts` if needed
+- Verify network idle state is reached (check for long-running requests)
+
+#### Migration Status
+
+**Migrated Tests** (4/15 = 27%):
+- ✅ `image_to_texts_test.rb` → `image-to-texts.spec.ts` (3 tests)
+- ✅ `tag_names_test.rb` → `tag-names.spec.ts` (1 test)
+
+**Pending Migrations**:
+- ⏳ `image_paths_test.rb` → `image-paths.spec.ts` (1 test)
+- ⏳ `image_cores_test.rb` → `image-cores.spec.ts` (2 tests)
+- ⏳ `search_test.rb` → `search.spec.ts` (3 tests)
+- ⏳ `index_filter_test.rb` → `index-filter.spec.ts` (5 tests)
+
+**Both frameworks coexist**: Capybara system tests remain functional during incremental migration.
+
+**Migration Plan**: See `plans/playwright-migration-next-steps.md` for detailed roadmap.
+
 ## Architecture
 
 ### Rails App Key Components
