@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Before (Current State)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: white;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: rgb(30, 41, 59);
+            }
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-slate-800 text-black dark:text-white">
+    <!-- Current Navigation (no glassmorphism) -->
+    <nav class="pt-6 pb-12 bg-gray-300 dark:bg-slate-700">
+        <div class="flex flex-row text-slate-800 dark:text-white">
+            <a href="index.html" class="text-xl left-4 top-5 absolute text-slate-800 dark:text-white font-semibold">
+                MemeSearch
+            </a>
+            <ul class="flex flex-row space-x-10 items-center justify-start px-1 inset-x-44 w-3/4 absolute">
+                <li>
+                    <a href="#" class="link link-hover text-black bg-fuchsia-300 px-2 py-3 rounded-xl">
+                        All memes
+                    </a>
+                </li>
+                <li>
+                    <a href="gallery-after.html" class="link link-hover hover:text-black hover:bg-indigo-300 hover:px-2 hover:py-3 hover:rounded-xl">
+                        Search memes
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="link link-hover hover:font-bold hover:text-indigo-500">
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-5 pt-10">
+        <div class="flex flex-col items-center mb-6">
+            <!-- View Toggle Button -->
+            <button
+                onclick="toggleView()"
+                id="toggleButton"
+                class="px-4 py-2 text-white bg-purple-500 ml-5 transition-colors rounded-2xl border-black cursor-pointer mb-4">
+                Switch to Grid View
+            </button>
+        </div>
+
+        <!-- List View (Default) -->
+        <div id="listView" class="flex flex-col content-center items-center justify-center w-full h-full">
+            <!-- Meme Card 1 -->
+            <div class="transition-transform duration-300 transform hover:scale-105 dark:text-white bg-slate-200 dark:bg-slate-700 p-2 rounded-2xl w-auto flex m-5">
+                <div class="flex flex-col space-x-10 mb-5 mt-5 w-auto content-center">
+                    <div class="flex flex-col items-center content-center h-full w-auto">
+                        <img src="https://picsum.photos/450/300?random=1" alt="Meme 1" class="rounded-lg">
+                        <div class="flex flex-col my-auto space-y-2 w-full items-center mt-3">
+                            <textarea class="text-black w-full h-28 p-3 rounded" disabled>This is a funny meme about coding at 3am when everything finally works</textarea>
+                        </div>
+                        <div class="flex flex-row space-x-3 mb-5 mt-5 mx-auto text-center w-auto">
+                            <div class="text-black dark:text-white p-2 rounded-xl" style="background-color: #FF6B6B;">
+                                funny
+                            </div>
+                            <div class="text-black dark:text-white p-2 rounded-xl" style="background-color: #4ECDC4;">
+                                programming
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meme Card 2 -->
+            <div class="transition-transform duration-300 transform hover:scale-105 dark:text-white bg-slate-200 dark:bg-slate-700 p-2 rounded-2xl w-auto flex m-5">
+                <div class="flex flex-col space-x-10 mb-5 mt-5 w-auto content-center">
+                    <div class="flex flex-col items-center content-center h-full w-auto">
+                        <img src="https://picsum.photos/450/400?random=2" alt="Meme 2" class="rounded-lg">
+                        <div class="flex flex-col my-auto space-y-2 w-full items-center mt-3">
+                            <textarea class="text-black w-full h-28 p-3 rounded" disabled>When you realize the bug was a missing semicolon all along</textarea>
+                        </div>
+                        <div class="flex flex-row space-x-3 mb-5 mt-5 mx-auto text-center w-auto">
+                            <div class="text-black dark:text-white p-2 rounded-xl" style="background-color: #95E1D3;">
+                                debugging
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meme Card 3 -->
+            <div class="transition-transform duration-300 transform hover:scale-105 dark:text-white bg-slate-200 dark:bg-slate-700 p-2 rounded-2xl w-auto flex m-5">
+                <div class="flex flex-col space-x-10 mb-5 mt-5 w-auto content-center">
+                    <div class="flex flex-col items-center content-center h-full w-auto">
+                        <img src="https://picsum.photos/450/350?random=3" alt="Meme 3" class="rounded-lg">
+                        <div class="flex flex-col my-auto space-y-2 w-full items-center mt-3">
+                            <textarea class="text-black w-full h-28 p-3 rounded" disabled>Me explaining my code to the rubber duck on my desk</textarea>
+                        </div>
+                        <div class="flex flex-row space-x-3 mb-5 mt-5 mx-auto text-center w-auto">
+                            <div class="text-black dark:text-white p-2 rounded-xl" style="background-color: #FFE66D;">
+                                relatable
+                            </div>
+                            <div class="text-black dark:text-white p-2 rounded-xl" style="background-color: #4ECDC4;">
+                                programming
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid View (Hidden by default) -->
+        <div id="gridView" class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <!-- Grid Card 1 -->
+            <div class="transition-transform duration-300 transform hover:scale-105 dark:text-white bg-slate-200 dark:bg-slate-700 p-2 rounded-2xl">
+                <img src="https://picsum.photos/300/200?random=1" alt="Meme 1" class="rounded-lg w-full">
+            </div>
+
+            <!-- Grid Card 2 -->
+            <div class="transition-transform duration-300 transform hover:scale-105 dark:text-white bg-slate-200 dark:bg-slate-700 p-2 rounded-2xl">
+                <img src="https://picsum.photos/300/250?random=2" alt="Meme 2" class="rounded-lg w-full">
+            </div>
+
+            <!-- Grid Card 3 -->
+            <div class="transition-transform duration-300 transform hover:scale-105 dark:text-white bg-slate-200 dark:bg-slate-700 p-2 rounded-2xl">
+                <img src="https://picsum.photos/300/220?random=3" alt="Meme 3" class="rounded-lg w-full">
+            </div>
+
+            <!-- Grid Card 4 -->
+            <div class="transition-transform duration-300 transform hover:scale-105 dark:text-white bg-slate-200 dark:bg-slate-700 p-2 rounded-2xl">
+                <img src="https://picsum.photos/300/280?random=4" alt="Meme 4" class="rounded-lg w-full">
+            </div>
+
+            <!-- Grid Card 5 -->
+            <div class="transition-transform duration-300 transform hover:scale-105 dark:text-white bg-slate-200 dark:bg-slate-700 p-2 rounded-2xl">
+                <img src="https://picsum.photos/300/190?random=5" alt="Meme 5" class="rounded-lg w-full">
+            </div>
+
+            <!-- Grid Card 6 -->
+            <div class="transition-transform duration-300 transform hover:scale-105 dark:text-white bg-slate-200 dark:bg-slate-700 p-2 rounded-2xl">
+                <img src="https://picsum.photos/300/240?random=6" alt="Meme 6" class="rounded-lg w-full">
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex pb-5 justify-center mt-8">
+            <div class="flex items-center space-x-2">
+                <a href="#" class="px-3 py-1 border rounded-md text-gray-500 cursor-not-allowed">Previous</a>
+                <a href="#" class="px-3 py-1 border rounded-md bg-blue-500 text-white">1</a>
+                <a href="#" class="px-3 py-1 border rounded-md text-blue-500">2</a>
+                <a href="#" class="px-3 py-1 border rounded-md text-blue-500">3</a>
+                <a href="#" class="px-3 py-1 border rounded-md text-blue-500">Next</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleView() {
+            const listView = document.getElementById('listView');
+            const gridView = document.getElementById('gridView');
+            const button = document.getElementById('toggleButton');
+
+            if (listView.classList.contains('hidden')) {
+                listView.classList.remove('hidden');
+                gridView.classList.add('hidden');
+                button.textContent = 'Switch to Grid View';
+            } else {
+                listView.classList.add('hidden');
+                gridView.classList.remove('hidden');
+                button.textContent = 'Switch to List View';
+            }
+        }
+
+        // Dark mode toggle
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'd') {
+                document.documentElement.classList.toggle('dark');
+            }
+        });
+    </script>
+</body>
+</html>

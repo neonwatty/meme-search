@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MemeSearch - UX Mockup Index</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Glassmorphism utilities */
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .glass-nav {
+            background: rgba(209, 213, 219, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+            .glass {
+                background: rgba(30, 41, 59, 0.8);
+            }
+
+            .glass-nav {
+                background: rgba(51, 65, 85, 0.8);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .glass-card {
+                background: rgba(30, 41, 59, 0.9);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        /* Background gradient for demo */
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="dark:bg-slate-900">
+    <!-- Navigation with Glassmorphism -->
+    <nav class="glass-nav fixed top-0 left-0 right-0 z-50 shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="#" class="text-2xl font-bold text-slate-800 dark:text-white">
+                    MemeSearch
+                </a>
+
+                <ul class="flex space-x-8">
+                    <li>
+                        <a href="gallery-before.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-indigo-300/30">
+                            All memes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="gallery-after.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-indigo-300/30">
+                            Search memes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="lightbox-demo.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-indigo-300/30">
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-6 pt-32 pb-12">
+        <div class="glass-card rounded-3xl p-12 shadow-2xl max-w-4xl mx-auto">
+            <h1 class="text-5xl font-bold text-slate-900 dark:text-white mb-6">
+                UX Modernization Mockups
+            </h1>
+
+            <p class="text-xl text-slate-700 dark:text-slate-300 mb-12">
+                Preview the proposed UX improvements for MemeSearch with interactive demos.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Mockup Links -->
+                <a href="gallery-before.html" class="glass-card rounded-xl p-6 hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-2xl">
+                    <div class="text-3xl mb-3">📸</div>
+                    <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">
+                        Gallery - Before
+                    </h3>
+                    <p class="text-slate-600 dark:text-slate-400">
+                        Current list and grid view implementation
+                    </p>
+                </a>
+
+                <a href="gallery-after.html" class="glass-card rounded-xl p-6 hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-2xl">
+                    <div class="text-3xl mb-3">✨</div>
+                    <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">
+                        Gallery - After
+                    </h3>
+                    <p class="text-slate-600 dark:text-slate-400">
+                        With masonry layout, filter chips, and glassmorphism
+                    </p>
+                </a>
+
+                <a href="lightbox-demo.html" class="glass-card rounded-xl p-6 hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-2xl">
+                    <div class="text-3xl mb-3">🔍</div>
+                    <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">
+                        Lightbox Demo
+                    </h3>
+                    <p class="text-slate-600 dark:text-slate-400">
+                        Interactive image preview modal
+                    </p>
+                </a>
+
+                <a href="comparison.html" class="glass-card rounded-xl p-6 hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-2xl">
+                    <div class="text-3xl mb-3">⚖️</div>
+                    <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">
+                        Side-by-Side Comparison
+                    </h3>
+                    <p class="text-slate-600 dark:text-slate-400">
+                        Before and after visual comparison
+                    </p>
+                </a>
+            </div>
+
+            <!-- Features List -->
+            <div class="mt-12 p-6 glass rounded-xl">
+                <h2 class="text-2xl font-semibold text-slate-900 dark:text-white mb-4">
+                    Features Demonstrated
+                </h2>
+                <ul class="space-y-2 text-slate-700 dark:text-slate-300">
+                    <li class="flex items-center">
+                        <span class="text-green-500 mr-2">✓</span>
+                        Glassmorphism effects on navigation and cards
+                    </li>
+                    <li class="flex items-center">
+                        <span class="text-green-500 mr-2">✓</span>
+                        Masonry layout for dynamic column heights
+                    </li>
+                    <li class="flex items-center">
+                        <span class="text-green-500 mr-2">✓</span>
+                        Filter chips with quick removal
+                    </li>
+                    <li class="flex items-center">
+                        <span class="text-green-500 mr-2">✓</span>
+                        Fullscreen lightbox modal with keyboard navigation
+                    </li>
+                    <li class="flex items-center">
+                        <span class="text-green-500 mr-2">✓</span>
+                        Smooth animations and transitions
+                    </li>
+                    <li class="flex items-center">
+                        <span class="text-green-500 mr-2">✓</span>
+                        Dark mode support
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle dark mode for demo
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'd') {
+                document.documentElement.classList.toggle('dark');
+            }
+        });
+    </script>
+</body>
+</html>

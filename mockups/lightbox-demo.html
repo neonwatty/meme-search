@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lightbox Modal Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Glassmorphism */
+        .glass-nav {
+            background: rgba(209, 213, 219, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .glass-card {
+            background: rgba(226, 232, 240, 0.9);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+            .glass-nav {
+                background: rgba(51, 65, 85, 0.8);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .glass-card {
+                background: rgba(51, 65, 85, 0.9);
+            }
+
+            .glass-card:hover {
+                background: rgba(51, 65, 85, 0.95);
+            }
+        }
+
+        /* Lightbox animations */
+        dialog[open] {
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Background */
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            }
+        }
+
+        /* Hide scrollbar when lightbox is open */
+        body.lightbox-open {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="text-black dark:text-white">
+    <!-- Navigation -->
+    <nav class="glass-nav fixed top-0 left-0 right-0 z-50 shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="index.html" class="text-2xl font-bold text-slate-800 dark:text-white">
+                    MemeSearch
+                </a>
+                <ul class="flex space-x-8">
+                    <li><a href="gallery-before.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 transition px-3 py-2 rounded-lg hover:bg-white/30">All memes</a></li>
+                    <li><a href="gallery-after.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 transition px-3 py-2 rounded-lg hover:bg-white/30">Search memes</a></li>
+                    <li><a href="#" class="text-black bg-fuchsia-300 px-3 py-2 rounded-xl">Settings</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 pt-28 pb-12">
+        <div class="glass-card rounded-3xl p-8 shadow-xl mb-8 max-w-4xl mx-auto">
+            <h1 class="text-4xl font-bold mb-4">Lightbox Modal Demo</h1>
+            <p class="text-lg text-slate-700 dark:text-slate-300 mb-6">
+                Click any image to open the fullscreen lightbox. Use arrow keys to navigate, Escape to close.
+            </p>
+
+            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+                <h3 class="font-semibold mb-2 text-blue-900 dark:text-blue-100">Keyboard Shortcuts:</h3>
+                <ul class="text-sm space-y-1 text-blue-800 dark:text-blue-200">
+                    <li>• <kbd class="px-2 py-1 bg-white dark:bg-slate-700 rounded">Esc</kbd> - Close lightbox</li>
+                    <li>• <kbd class="px-2 py-1 bg-white dark:bg-slate-700 rounded">←</kbd> - Previous image</li>
+                    <li>• <kbd class="px-2 py-1 bg-white dark:bg-slate-700 rounded">→</kbd> - Next image</li>
+                    <li>• <kbd class="px-2 py-1 bg-white dark:bg-slate-700 rounded">D</kbd> - Toggle dark mode</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Image Gallery Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+            <div class="glass-card rounded-xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(0)">
+                <img src="https://picsum.photos/400/300?random=1" alt="Meme 1" class="rounded-lg w-full">
+                <p class="text-xs px-2 py-1">Funny coding meme #1</p>
+            </div>
+
+            <div class="glass-card rounded-xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(1)">
+                <img src="https://picsum.photos/400/500?random=2" alt="Meme 2" class="rounded-lg w-full">
+                <p class="text-xs px-2 py-1">Debugging adventures</p>
+            </div>
+
+            <div class="glass-card rounded-xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(2)">
+                <img src="https://picsum.photos/400/350?random=3" alt="Meme 3" class="rounded-lg w-full">
+                <p class="text-xs px-2 py-1">Rubber duck debugging</p>
+            </div>
+
+            <div class="glass-card rounded-xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(3)">
+                <img src="https://picsum.photos/400/400?random=4" alt="Meme 4" class="rounded-lg w-full">
+                <p class="text-xs px-2 py-1">Git commit messages</p>
+            </div>
+
+            <div class="glass-card rounded-xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(4)">
+                <img src="https://picsum.photos/400/450?random=5" alt="Meme 5" class="rounded-lg w-full">
+                <p class="text-xs px-2 py-1">Stack Overflow saves</p>
+            </div>
+
+            <div class="glass-card rounded-xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(5)">
+                <img src="https://picsum.photos/400/250?random=6" alt="Meme 6" class="rounded-lg w-full">
+                <p class="text-xs px-2 py-1">Production vs Dev</p>
+            </div>
+
+            <div class="glass-card rounded-xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(6)">
+                <img src="https://picsum.photos/400/380?random=7" alt="Meme 7" class="rounded-lg w-full">
+                <p class="text-xs px-2 py-1">CSS expectations</p>
+            </div>
+
+            <div class="glass-card rounded-xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(7)">
+                <img src="https://picsum.photos/400/320?random=8" alt="Meme 8" class="rounded-lg w-full">
+                <p class="text-xs px-2 py-1">Refactoring journey</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <dialog id="lightbox" class="fixed inset-0 z-50 w-screen h-screen bg-black/95 backdrop-blur-sm p-0 m-0 border-0">
+        <div class="relative w-full h-full flex items-center justify-center p-8">
+            <!-- Close button -->
+            <button
+                onclick="closeLightbox()"
+                class="absolute top-4 right-4 z-10 w-12 h-12 rounded-full bg-white/10 backdrop-blur flex items-center justify-center hover:bg-white/20 transition"
+                aria-label="Close lightbox"
+            >
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <!-- Previous button -->
+            <button
+                onclick="previousImage()"
+                id="prevBtn"
+                class="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/10 backdrop-blur flex items-center justify-center hover:bg-white/20 transition disabled:opacity-30"
+                aria-label="Previous image"
+            >
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+
+            <!-- Image container -->
+            <div class="max-w-6xl max-h-full flex flex-col items-center" onclick="event.stopPropagation()">
+                <img
+                    id="lightboxImage"
+                    class="max-w-full max-h-[70vh] object-contain rounded-lg shadow-2xl"
+                    alt="Full size image"
+                />
+
+                <!-- Description & Tags -->
+                <div class="mt-6 max-w-3xl bg-white/10 backdrop-blur-xl rounded-lg p-6">
+                    <p id="lightboxDescription" class="text-white text-lg mb-4"></p>
+                    <div id="lightboxTags" class="flex flex-wrap gap-2"></div>
+                    <div class="flex justify-center gap-2 mt-4 text-white text-sm">
+                        <span id="imageCounter"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next button -->
+            <button
+                onclick="nextImage()"
+                id="nextBtn"
+                class="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white/10 backdrop-blur flex items-center justify-center hover:bg-white/20 transition disabled:opacity-30"
+                aria-label="Next image"
+            >
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+        </div>
+    </dialog>
+
+    <script>
+        const images = [
+            { src: 'https://picsum.photos/800/600?random=1', description: 'This is a funny meme about coding at 3am when everything finally works', tags: ['funny', 'programming'] },
+            { src: 'https://picsum.photos/800/1000?random=2', description: 'When you realize the bug was a missing semicolon all along', tags: ['debugging'] },
+            { src: 'https://picsum.photos/800/700?random=3', description: 'Me explaining my code to the rubber duck on my desk', tags: ['relatable', 'programming'] },
+            { src: 'https://picsum.photos/800/800?random=4', description: 'Git commit messages: "fix", "fix fix", "actually fix"', tags: ['git', 'funny'] },
+            { src: 'https://picsum.photos/800/900?random=5', description: 'Stack Overflow saves my project once again', tags: ['stackoverflow', 'relatable'] },
+            { src: 'https://picsum.photos/800/500?random=6', description: 'Production server: "Works on my machine" meme', tags: ['devops', 'funny'] },
+            { src: 'https://picsum.photos/800/750?random=7', description: 'CSS: Expectation vs Reality', tags: ['css', 'webdev'] },
+            { src: 'https://picsum.photos/800/650?random=8', description: 'Before and after refactoring: Same code, different vibes', tags: ['refactoring', 'programming'] }
+        ];
+
+        let currentIndex = 0;
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightboxImage');
+        const lightboxDescription = document.getElementById('lightboxDescription');
+        const lightboxTags = document.getElementById('lightboxTags');
+        const imageCounter = document.getElementById('imageCounter');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function openLightbox(index) {
+            currentIndex = index;
+            updateLightboxContent();
+            lightbox.showModal();
+            document.body.classList.add('lightbox-open');
+        }
+
+        function closeLightbox() {
+            lightbox.close();
+            document.body.classList.remove('lightbox-open');
+        }
+
+        function previousImage() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateLightboxContent();
+            }
+        }
+
+        function nextImage() {
+            if (currentIndex < images.length - 1) {
+                currentIndex++;
+                updateLightboxContent();
+            }
+        }
+
+        function updateLightboxContent() {
+            const image = images[currentIndex];
+            lightboxImage.src = image.src;
+            lightboxDescription.textContent = image.description;
+
+            // Update tags
+            const tagColors = {
+                'funny': '#FF6B6B',
+                'programming': '#4ECDC4',
+                'debugging': '#95E1D3',
+                'relatable': '#FFE66D',
+                'git': '#A8E6CF',
+                'stackoverflow': '#FF8B94',
+                'devops': '#C7CEEA',
+                'css': '#FFDAC1',
+                'webdev': '#B4F8C8',
+                'refactoring': '#FFD700'
+            };
+
+            lightboxTags.innerHTML = image.tags.map(tag =>
+                `<span class="px-3 py-1 rounded-full text-sm font-medium" style="background-color: ${tagColors[tag] || '#E0E0E0'}; color: white;">
+                    ${tag}
+                </span>`
+            ).join('');
+
+            // Update counter
+            imageCounter.textContent = `${currentIndex + 1} / ${images.length}`;
+
+            // Update button states
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === images.length - 1;
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (lightbox.open) {
+                if (e.key === 'Escape') {
+                    closeLightbox();
+                } else if (e.key === 'ArrowLeft') {
+                    previousImage();
+                } else if (e.key === 'ArrowRight') {
+                    nextImage();
+                }
+            }
+
+            // Dark mode toggle
+            if (e.key === 'd') {
+                document.documentElement.classList.toggle('dark');
+            }
+        });
+
+        // Close on backdrop click
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+
+        // Touch support for mobile swipe (basic)
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        lightbox.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        lightbox.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchStartX - touchEndX > 50) {
+                nextImage(); // Swipe left
+            }
+            if (touchEndX - touchStartX > 50) {
+                previousImage(); // Swipe right
+            }
+        }
+    </script>
+</body>
+</html>

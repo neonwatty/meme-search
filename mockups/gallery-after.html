@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - After (With UX Improvements)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Glassmorphism */
+        .glass-nav {
+            background: rgba(209, 213, 219, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .glass-card {
+            background: rgba(226, 232, 240, 0.9);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .glass-modal {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+            .glass-nav {
+                background: rgba(51, 65, 85, 0.8);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .glass-card {
+                background: rgba(51, 65, 85, 0.9);
+            }
+
+            .glass-card:hover {
+                background: rgba(51, 65, 85, 0.95);
+            }
+
+            .glass-modal {
+                background: rgba(30, 41, 59, 0.9);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        /* Masonry Layout */
+        .masonry-container {
+            column-count: 1;
+            column-gap: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .masonry-container {
+                column-count: 2;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .masonry-container {
+                column-count: 3;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .masonry-container {
+                column-count: 4;
+            }
+        }
+
+        .masonry-item {
+            break-inside: avoid;
+            page-break-inside: avoid;
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        /* Background gradient */
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            }
+        }
+
+        /* Filter chip animations */
+        .filter-chip {
+            animation: slideInFromTop 0.2s ease-out;
+        }
+
+        @keyframes slideInFromTop {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body class="text-black dark:text-white">
+    <!-- Navigation with Glassmorphism -->
+    <nav class="glass-nav fixed top-0 left-0 right-0 z-50 shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="index.html" class="text-2xl font-bold text-slate-800 dark:text-white">
+                    MemeSearch
+                </a>
+
+                <ul class="flex space-x-8">
+                    <li>
+                        <a href="gallery-before.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30">
+                            All memes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="text-black bg-fuchsia-300 px-3 py-2 rounded-xl">
+                            Search memes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="lightbox-demo.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30">
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 pt-28">
+        <!-- Filter Chips (NEW) -->
+        <div id="filterChips" class="flex flex-wrap gap-2 mb-6 items-center filter-chip">
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Active filters:</span>
+
+            <!-- Tag Filter Chip -->
+            <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all hover:shadow-md" style="background-color: rgba(255, 107, 107, 0.2); color: #FF6B6B;">
+                <span class="w-2 h-2 rounded-full" style="background-color: #FF6B6B;"></span>
+                Tag: funny
+                <button onclick="removeChip(this)" class="ml-1 hover:opacity-70 transition" aria-label="Remove filter">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </span>
+
+            <!-- Path Filter Chip -->
+            <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-sm font-medium transition-all hover:shadow-md filter-chip">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                </svg>
+                Path: memes_2024
+                <button onclick="removeChip(this)" class="ml-1 hover:opacity-70 transition" aria-label="Remove filter">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </span>
+
+            <!-- Clear all button -->
+            <button onclick="clearAll()" class="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium underline transition">
+                Clear all filters
+            </button>
+        </div>
+
+        <!-- View Controls -->
+        <div class="flex justify-center items-center gap-4 mb-6">
+            <button id="openFilters" onclick="openFilterModal()" class="glass-modal px-4 py-2 text-slate-800 dark:text-white rounded-2xl shadow-lg hover:shadow-xl transition-all">
+                Open filters
+            </button>
+
+            <button onclick="toggleView()" id="toggleButton" class="px-4 py-2 text-white bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl shadow-lg hover:shadow-xl transition-all">
+                Switch to Grid View
+            </button>
+        </div>
+
+        <!-- List View -->
+        <div id="listView" class="flex flex-col items-center space-y-6">
+            <div class="glass-card rounded-2xl p-4 shadow-lg hover:shadow-2xl transition-all max-w-2xl w-full">
+                <img src="https://picsum.photos/600/400?random=1" alt="Meme 1" class="rounded-lg w-full mb-3">
+                <p class="text-sm mb-2">This is a funny meme about coding at 3am</p>
+                <div class="flex gap-2">
+                    <span class="px-3 py-1 rounded-full text-sm" style="background-color: rgba(255, 107, 107, 0.3);">funny</span>
+                    <span class="px-3 py-1 rounded-full text-sm" style="background-color: rgba(78, 205, 196, 0.3);">programming</span>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-2xl p-4 shadow-lg hover:shadow-2xl transition-all max-w-2xl w-full">
+                <img src="https://picsum.photos/600/500?random=2" alt="Meme 2" class="rounded-lg w-full mb-3">
+                <p class="text-sm mb-2">When you realize the bug was a missing semicolon</p>
+                <div class="flex gap-2">
+                    <span class="px-3 py-1 rounded-full text-sm" style="background-color: rgba(149, 225, 211, 0.3);">debugging</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid View (hidden) -->
+        <div id="gridView" class="hidden grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div class="glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all">
+                <img src="https://picsum.photos/300/200?random=1" alt="Meme" class="rounded-lg w-full">
+            </div>
+            <div class="glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all">
+                <img src="https://picsum.photos/300/250?random=2" alt="Meme" class="rounded-lg w-full">
+            </div>
+            <div class="glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all">
+                <img src="https://picsum.photos/300/220?random=3" alt="Meme" class="rounded-lg w-full">
+            </div>
+            <div class="glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all">
+                <img src="https://picsum.photos/300/280?random=4" alt="Meme" class="rounded-lg w-full">
+            </div>
+        </div>
+
+        <!-- Masonry View (NEW - hidden) -->
+        <div id="masonryView" class="hidden masonry-container">
+            <div class="masonry-item glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(1)">
+                <img src="https://picsum.photos/300/400?random=1" alt="Meme" class="rounded-lg w-full mb-2">
+                <p class="text-xs px-2 mb-1 line-clamp-2">Funny meme about coding</p>
+                <div class="flex gap-1 px-2 pb-2">
+                    <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: rgba(255, 107, 107, 0.3);">funny</span>
+                </div>
+            </div>
+
+            <div class="masonry-item glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(2)">
+                <img src="https://picsum.photos/300/250?random=2" alt="Meme" class="rounded-lg w-full mb-2">
+                <p class="text-xs px-2 mb-1 line-clamp-2">Debugging adventures</p>
+                <div class="flex gap-1 px-2 pb-2">
+                    <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: rgba(149, 225, 211, 0.3);">debugging</span>
+                </div>
+            </div>
+
+            <div class="masonry-item glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(3)">
+                <img src="https://picsum.photos/300/350?random=3" alt="Meme" class="rounded-lg w-full mb-2">
+                <p class="text-xs px-2 mb-1 line-clamp-2">Rubber duck debugging</p>
+                <div class="flex gap-1 px-2 pb-2">
+                    <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: rgba(255, 230, 109, 0.3);">relatable</span>
+                </div>
+            </div>
+
+            <div class="masonry-item glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(4)">
+                <img src="https://picsum.photos/300/300?random=4" alt="Meme" class="rounded-lg w-full mb-2">
+                <p class="text-xs px-2 mb-1 line-clamp-2">Git commit messages be like</p>
+                <div class="flex gap-1 px-2 pb-2">
+                    <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: rgba(78, 205, 196, 0.3);">git</span>
+                </div>
+            </div>
+
+            <div class="masonry-item glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(5)">
+                <img src="https://picsum.photos/300/450?random=5" alt="Meme" class="rounded-lg w-full mb-2">
+                <p class="text-xs px-2 mb-1 line-clamp-2">Stack Overflow saves the day</p>
+                <div class="flex gap-1 px-2 pb-2">
+                    <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: rgba(255, 107, 107, 0.3);">funny</span>
+                </div>
+            </div>
+
+            <div class="masonry-item glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(6)">
+                <img src="https://picsum.photos/300/200?random=6" alt="Meme" class="rounded-lg w-full mb-2">
+                <p class="text-xs px-2 mb-1 line-clamp-2">Production vs Development</p>
+                <div class="flex gap-1 px-2 pb-2">
+                    <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: rgba(149, 225, 211, 0.3);">devops</span>
+                </div>
+            </div>
+
+            <div class="masonry-item glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(7)">
+                <img src="https://picsum.photos/300/320?random=7" alt="Meme" class="rounded-lg w-full mb-2">
+                <p class="text-xs px-2 mb-1 line-clamp-2">CSS: Expectation vs Reality</p>
+                <div class="flex gap-1 px-2 pb-2">
+                    <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: rgba(78, 205, 196, 0.3);">css</span>
+                </div>
+            </div>
+
+            <div class="masonry-item glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(8)">
+                <img src="https://picsum.photos/300/380?random=8" alt="Meme" class="rounded-lg w-full mb-2">
+                <p class="text-xs px-2 mb-1 line-clamp-2">Refactoring: Before and After</p>
+                <div class="flex gap-1 px-2 pb-2">
+                    <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: rgba(255, 230, 109, 0.3);">refactoring</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex pb-10 justify-center mt-8">
+            <div class="flex items-center space-x-2">
+                <a href="#" class="px-3 py-1 rounded-md glass-modal text-gray-500 cursor-not-allowed">Previous</a>
+                <a href="#" class="px-3 py-1 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg">1</a>
+                <a href="#" class="px-3 py-1 rounded-md glass-modal hover:shadow-lg transition">2</a>
+                <a href="#" class="px-3 py-1 rounded-md glass-modal hover:shadow-lg transition">3</a>
+                <a href="#" class="px-3 py-1 rounded-md glass-modal hover:shadow-lg transition">Next</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Modal (Glassmorphism) -->
+    <dialog id="filterModal" class="glass-modal rounded-2xl p-8 shadow-2xl max-w-md backdrop:bg-black/60">
+        <h3 class="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Filters</h3>
+
+        <div class="space-y-4">
+            <div>
+                <h4 class="font-semibold mb-2 text-slate-900 dark:text-white">Tags</h4>
+                <div class="space-y-2">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2 rounded" checked>
+                        <span>funny</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2 rounded">
+                        <span>programming</span>
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-semibold mb-2 text-slate-900 dark:text-white">Paths</h4>
+                <div class="space-y-2">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2 rounded" checked>
+                        <span>memes_2024</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2 rounded">
+                        <span>memes_2023</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex gap-2 pt-4">
+                <button onclick="closeFilterModal()" class="flex-1 px-4 py-2 bg-gradient-to-r from-emerald-400 to-emerald-500 text-white rounded-lg shadow-lg hover:shadow-xl transition">
+                    Apply filters
+                </button>
+                <button onclick="closeFilterModal()" class="flex-1 px-4 py-2 bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-lg shadow-lg hover:shadow-xl transition">
+                    Close
+                </button>
+            </div>
+        </div>
+    </dialog>
+
+    <script>
+        let currentView = 'list';
+
+        function toggleView() {
+            const listView = document.getElementById('listView');
+            const gridView = document.getElementById('gridView');
+            const masonryView = document.getElementById('masonryView');
+            const button = document.getElementById('toggleButton');
+
+            if (currentView === 'list') {
+                listView.classList.add('hidden');
+                gridView.classList.remove('hidden');
+                masonryView.classList.add('hidden');
+                button.textContent = 'Switch to Masonry View';
+                currentView = 'grid';
+            } else if (currentView === 'grid') {
+                listView.classList.add('hidden');
+                gridView.classList.add('hidden');
+                masonryView.classList.remove('hidden');
+                button.textContent = 'Switch to List View';
+                currentView = 'masonry';
+            } else {
+                listView.classList.remove('hidden');
+                gridView.classList.add('hidden');
+                masonryView.classList.add('hidden');
+                button.textContent = 'Switch to Grid View';
+                currentView = 'list';
+            }
+        }
+
+        function removeChip(button) {
+            button.closest('span').style.animation = 'slideOut 0.2s ease-out';
+            setTimeout(() => {
+                button.closest('span').remove();
+                // Hide container if no more chips
+                const chipsContainer = document.getElementById('filterChips');
+                const chips = chipsContainer.querySelectorAll('span:not(:first-child)');
+                if (chips.length === 0) {
+                    chipsContainer.style.display = 'none';
+                }
+            }, 200);
+        }
+
+        function clearAll() {
+            document.getElementById('filterChips').style.display = 'none';
+        }
+
+        function openFilterModal() {
+            document.getElementById('filterModal').showModal();
+        }
+
+        function closeFilterModal() {
+            document.getElementById('filterModal').close();
+        }
+
+        function openLightbox(id) {
+            window.location.href = 'lightbox-demo.html';
+        }
+
+        // Dark mode toggle
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'd') {
+                document.documentElement.classList.toggle('dark');
+            }
+        });
+
+        // Close modal on backdrop click
+        document.getElementById('filterModal').addEventListener('click', (e) => {
+            if (e.target.tagName === 'DIALOG') {
+                closeFilterModal();
+            }
+        });
+    </script>
+</body>
+</html>
