@@ -1,0 +1,29 @@
+{
+  "name": "meme-search",
+  "version": "1.0.0",
+  "description": "Use AI to index your memes by their content and text, making them easily retrievable for your meme warfare pleasures.",
+  "main": "index.js",
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:report": "playwright show-report",
+    "test:e2e:codegen": "playwright codegen http://localhost:3000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neonwatty/meme-search.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/neonwatty/meme-search/issues"
+  },
+  "homepage": "https://github.com/neonwatty/meme-search#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "typescript": "^5.9.3"
+  }
+}

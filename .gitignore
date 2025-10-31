@@ -10,3 +10,10 @@ meme_search_pro/db_data
 **/__pycache__
 **.ruff_cache
 **models
+
+# Playwright
+node_modules/
+playwright-report/
+test-results/
+playwright/.cache/
+dist/
