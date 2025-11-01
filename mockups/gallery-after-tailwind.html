@@ -3,141 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery - After (With UX Improvements)</title>
+    <title>Gallery - After (Pure Tailwind - No Custom CSS)</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Glassmorphism */
-        .glass-nav {
-            background: rgba(209, 213, 219, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .glass-card {
-            background: rgba(226, 232, 240, 0.9);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            transition: all 0.3s ease;
-        }
-
-        .glass-card:hover {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-
-        .glass-modal {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        /* Dark mode */
-        @media (prefers-color-scheme: dark) {
-            .glass-nav {
-                background: rgba(51, 65, 85, 0.8);
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .glass-card {
-                background: rgba(51, 65, 85, 0.9);
-            }
-
-            .glass-card:hover {
-                background: rgba(51, 65, 85, 0.95);
-            }
-
-            .glass-modal {
-                background: rgba(30, 41, 59, 0.9);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-            }
-        }
-
-        /* Masonry Layout */
-        .masonry-container {
-            column-count: 1;
-            column-gap: 1rem;
-        }
-
-        @media (min-width: 640px) {
-            .masonry-container {
-                column-count: 2;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .masonry-container {
-                column-count: 3;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .masonry-container {
-                column-count: 4;
-            }
-        }
-
-        .masonry-item {
-            break-inside: avoid;
-            page-break-inside: avoid;
-            display: inline-block;
-            width: 100%;
-            margin-bottom: 1rem;
-        }
-
-        /* Background gradient */
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            body {
-                background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            }
-        }
-
-        /* Filter chip animations */
-        .filter-chip {
-            animation: slideInFromTop 0.2s ease-out;
-        }
-
-        @keyframes slideInFromTop {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
 </head>
-<body class="text-black dark:text-white">
+<body class="bg-gradient-to-br from-slate-50 to-slate-300 dark:from-slate-900 dark:to-slate-700 min-h-screen text-black dark:text-white">
     <!-- Navigation with Glassmorphism -->
-    <nav class="glass-nav fixed top-0 left-0 right-0 z-50 shadow-lg">
+    <nav class="bg-gray-300/80 dark:bg-slate-700/80 backdrop-blur-xl border-b border-white/20 dark:border-white/10 shadow-lg fixed top-0 left-0 right-0 z-50">
         <div class="container mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
-                <a href="index.html" class="text-2xl font-bold text-slate-800 dark:text-white">
+                <a href="gallery-after-tailwind.html" class="text-2xl font-bold text-slate-800 dark:text-white">
                     MemeSearch
                 </a>
 
                 <ul class="flex space-x-8">
                     <li>
-                        <a href="gallery-before.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30">
+                        <a href="#" class="text-black bg-fuchsia-300 px-3 py-2 rounded-xl">
                             All memes
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="text-black bg-fuchsia-300 px-3 py-2 rounded-xl">
+                        <a href="search-tailwind.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30">
                             Search memes
                         </a>
                     </li>
                     <li>
-                        <a href="lightbox-demo.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30">
+                        <a href="settings-tags-index.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30">
                             Settings
                         </a>
                     </li>
@@ -148,7 +38,7 @@
 
     <div class="container mx-auto px-6 pt-28">
         <!-- Filter Chips (NEW) -->
-        <div id="filterChips" class="flex flex-wrap gap-2 mb-6 items-center filter-chip">
+        <div id="filterChips" class="flex flex-wrap gap-2 mb-6 items-center">
             <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Active filters:</span>
 
             <!-- Tag Filter Chip -->
@@ -163,7 +53,7 @@
             </span>
 
             <!-- Path Filter Chip -->
-            <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-sm font-medium transition-all hover:shadow-md filter-chip">
+            <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-sm font-medium transition-all hover:shadow-md">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                 </svg>
@@ -183,7 +73,7 @@
 
         <!-- View Controls -->
         <div class="flex justify-center items-center gap-4 mb-6">
-            <button id="openFilters" onclick="openFilterModal()" class="glass-modal px-4 py-2 text-slate-800 dark:text-white rounded-2xl shadow-lg hover:shadow-xl transition-all">
+            <button id="openFilters" onclick="openFilterModal()" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-white/20 dark:border-white/10 px-4 py-2 text-slate-800 dark:text-white rounded-2xl shadow-lg hover:shadow-xl transition-all">
                 Open filters
             </button>
 
@@ -194,7 +84,7 @@
 
         <!-- List View -->
         <div id="listView" class="flex flex-col items-center space-y-6">
-            <div class="glass-card rounded-2xl p-4 shadow-lg hover:shadow-2xl transition-all max-w-2xl w-full">
+            <div class="bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-4 shadow-lg hover:shadow-2xl max-w-2xl w-full">
                 <img src="https://picsum.photos/600/400?random=1" alt="Meme 1" class="rounded-lg w-full mb-3">
                 <p class="text-sm mb-2">This is a funny meme about coding at 3am</p>
                 <div class="flex gap-2">
@@ -203,7 +93,7 @@
                 </div>
             </div>
 
-            <div class="glass-card rounded-2xl p-4 shadow-lg hover:shadow-2xl transition-all max-w-2xl w-full">
+            <div class="bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-4 shadow-lg hover:shadow-2xl max-w-2xl w-full">
                 <img src="https://picsum.photos/600/500?random=2" alt="Meme 2" class="rounded-lg w-full mb-3">
                 <p class="text-sm mb-2">When you realize the bug was a missing semicolon</p>
                 <div class="flex gap-2">
@@ -214,101 +104,101 @@
 
         <!-- Grid View (hidden) -->
         <div id="gridView" class="hidden grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <div class="glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all">
+            <div class="bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-2 shadow-lg hover:shadow-2xl">
                 <img src="https://picsum.photos/300/200?random=1" alt="Meme" class="rounded-lg w-full">
             </div>
-            <div class="glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all">
+            <div class="bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-2 shadow-lg hover:shadow-2xl">
                 <img src="https://picsum.photos/300/250?random=2" alt="Meme" class="rounded-lg w-full">
             </div>
-            <div class="glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all">
+            <div class="bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-2 shadow-lg hover:shadow-2xl">
                 <img src="https://picsum.photos/300/220?random=3" alt="Meme" class="rounded-lg w-full">
             </div>
-            <div class="glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all">
+            <div class="bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-2 shadow-lg hover:shadow-2xl">
                 <img src="https://picsum.photos/300/280?random=4" alt="Meme" class="rounded-lg w-full">
             </div>
         </div>
 
         <!-- Masonry View (NEW - hidden) -->
-        <div id="masonryView" class="hidden masonry-container">
-            <div class="masonry-item glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(1)">
+        <div id="masonryView" class="hidden columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4">
+            <a href="image-show.html" class="break-inside-avoid inline-block w-full mb-4 bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-2 shadow-lg hover:shadow-2xl cursor-pointer">
                 <img src="https://picsum.photos/300/400?random=1" alt="Meme" class="rounded-lg w-full mb-2">
                 <p class="text-xs px-2 mb-1 line-clamp-2">Funny meme about coding</p>
                 <div class="flex gap-1 px-2 pb-2">
                     <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: rgba(255, 107, 107, 0.3);">funny</span>
                 </div>
-            </div>
+            </a>
 
-            <div class="masonry-item glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(2)">
+            <a href="image-show.html" class="break-inside-avoid inline-block w-full mb-4 bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-2 shadow-lg hover:shadow-2xl cursor-pointer">
                 <img src="https://picsum.photos/300/250?random=2" alt="Meme" class="rounded-lg w-full mb-2">
                 <p class="text-xs px-2 mb-1 line-clamp-2">Debugging adventures</p>
                 <div class="flex gap-1 px-2 pb-2">
                     <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: rgba(149, 225, 211, 0.3);">debugging</span>
                 </div>
-            </div>
+            </a>
 
-            <div class="masonry-item glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(3)">
+            <a href="image-show.html" class="break-inside-avoid inline-block w-full mb-4 bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-2 shadow-lg hover:shadow-2xl cursor-pointer">
                 <img src="https://picsum.photos/300/350?random=3" alt="Meme" class="rounded-lg w-full mb-2">
                 <p class="text-xs px-2 mb-1 line-clamp-2">Rubber duck debugging</p>
                 <div class="flex gap-1 px-2 pb-2">
                     <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: rgba(255, 230, 109, 0.3);">relatable</span>
                 </div>
-            </div>
+            </a>
 
-            <div class="masonry-item glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(4)">
+            <a href="image-show.html" class="break-inside-avoid inline-block w-full mb-4 bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-2 shadow-lg hover:shadow-2xl cursor-pointer">
                 <img src="https://picsum.photos/300/300?random=4" alt="Meme" class="rounded-lg w-full mb-2">
                 <p class="text-xs px-2 mb-1 line-clamp-2">Git commit messages be like</p>
                 <div class="flex gap-1 px-2 pb-2">
                     <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: rgba(78, 205, 196, 0.3);">git</span>
                 </div>
-            </div>
+            </a>
 
-            <div class="masonry-item glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(5)">
+            <a href="image-show.html" class="break-inside-avoid inline-block w-full mb-4 bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-2 shadow-lg hover:shadow-2xl cursor-pointer">
                 <img src="https://picsum.photos/300/450?random=5" alt="Meme" class="rounded-lg w-full mb-2">
                 <p class="text-xs px-2 mb-1 line-clamp-2">Stack Overflow saves the day</p>
                 <div class="flex gap-1 px-2 pb-2">
                     <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: rgba(255, 107, 107, 0.3);">funny</span>
                 </div>
-            </div>
+            </a>
 
-            <div class="masonry-item glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(6)">
+            <a href="image-show.html" class="break-inside-avoid inline-block w-full mb-4 bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-2 shadow-lg hover:shadow-2xl cursor-pointer">
                 <img src="https://picsum.photos/300/200?random=6" alt="Meme" class="rounded-lg w-full mb-2">
                 <p class="text-xs px-2 mb-1 line-clamp-2">Production vs Development</p>
                 <div class="flex gap-1 px-2 pb-2">
                     <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: rgba(149, 225, 211, 0.3);">devops</span>
                 </div>
-            </div>
+            </a>
 
-            <div class="masonry-item glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(7)">
+            <a href="image-show.html" class="break-inside-avoid inline-block w-full mb-4 bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-2 shadow-lg hover:shadow-2xl cursor-pointer">
                 <img src="https://picsum.photos/300/320?random=7" alt="Meme" class="rounded-lg w-full mb-2">
                 <p class="text-xs px-2 mb-1 line-clamp-2">CSS: Expectation vs Reality</p>
                 <div class="flex gap-1 px-2 pb-2">
                     <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: rgba(78, 205, 196, 0.3);">css</span>
                 </div>
-            </div>
+            </a>
 
-            <div class="masonry-item glass-card rounded-2xl p-2 shadow-lg hover:shadow-2xl transition-all cursor-pointer" onclick="openLightbox(8)">
+            <a href="image-show.html" class="break-inside-avoid inline-block w-full mb-4 bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-2 shadow-lg hover:shadow-2xl cursor-pointer">
                 <img src="https://picsum.photos/300/380?random=8" alt="Meme" class="rounded-lg w-full mb-2">
                 <p class="text-xs px-2 mb-1 line-clamp-2">Refactoring: Before and After</p>
                 <div class="flex gap-1 px-2 pb-2">
                     <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: rgba(255, 230, 109, 0.3);">refactoring</span>
                 </div>
-            </div>
+            </a>
         </div>
 
         <!-- Pagination -->
         <div class="flex pb-10 justify-center mt-8">
             <div class="flex items-center space-x-2">
-                <a href="#" class="px-3 py-1 rounded-md glass-modal text-gray-500 cursor-not-allowed">Previous</a>
+                <a href="#" class="px-3 py-1 rounded-md bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-white/20 dark:border-white/10 text-gray-500 cursor-not-allowed">Previous</a>
                 <a href="#" class="px-3 py-1 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg">1</a>
-                <a href="#" class="px-3 py-1 rounded-md glass-modal hover:shadow-lg transition">2</a>
-                <a href="#" class="px-3 py-1 rounded-md glass-modal hover:shadow-lg transition">3</a>
-                <a href="#" class="px-3 py-1 rounded-md glass-modal hover:shadow-lg transition">Next</a>
+                <a href="#" class="px-3 py-1 rounded-md bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-white/20 dark:border-white/10 hover:shadow-lg transition">2</a>
+                <a href="#" class="px-3 py-1 rounded-md bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-white/20 dark:border-white/10 hover:shadow-lg transition">3</a>
+                <a href="#" class="px-3 py-1 rounded-md bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-white/20 dark:border-white/10 hover:shadow-lg transition">Next</a>
             </div>
         </div>
     </div>
 
     <!-- Filter Modal (Glassmorphism) -->
-    <dialog id="filterModal" class="glass-modal rounded-2xl p-8 shadow-2xl max-w-md backdrop:bg-black/60">
+    <dialog id="filterModal" class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-white/20 dark:border-white/10 rounded-2xl p-8 shadow-2xl max-w-md backdrop:bg-black/60">
         <h3 class="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Filters</h3>
 
         <div class="space-y-4">
@@ -382,9 +272,13 @@
         }
 
         function removeChip(button) {
-            button.closest('span').style.animation = 'slideOut 0.2s ease-out';
+            const chip = button.closest('span');
+            chip.style.opacity = '0';
+            chip.style.transform = 'translateY(-10px)';
+            chip.style.transition = 'all 0.2s ease-out';
+
             setTimeout(() => {
-                button.closest('span').remove();
+                chip.remove();
                 // Hide container if no more chips
                 const chipsContainer = document.getElementById('filterChips');
                 const chips = chipsContainer.querySelectorAll('span:not(:first-child)');

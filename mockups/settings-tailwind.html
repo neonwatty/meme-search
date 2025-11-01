@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - MemeSearch (Pure Tailwind)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-300 dark:from-slate-900 dark:to-slate-700 min-h-screen text-black dark:text-white">
+    <!-- Navigation with Glassmorphism -->
+    <nav class="bg-gray-300/80 dark:bg-slate-700/80 backdrop-blur-xl border-b border-white/20 dark:border-white/10 shadow-lg fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="gallery-after-tailwind.html" class="text-2xl font-bold text-slate-800 dark:text-white">
+                    MemeSearch
+                </a>
+
+                <ul class="flex space-x-8">
+                    <li>
+                        <a href="gallery-after-tailwind.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30">
+                            All memes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="search-tailwind.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30">
+                            Search memes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="text-black bg-fuchsia-300 px-3 py-2 rounded-xl">
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 pt-28 pb-12">
+        <!-- Page Title -->
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-slate-800 dark:text-slate-200">Settings</h1>
+        </div>
+
+        <!-- Main Settings Container -->
+        <div class="max-w-6xl mx-auto">
+            <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-white/20 dark:border-white/10 rounded-3xl p-8 shadow-2xl">
+
+                <!-- Tab Buttons -->
+                <div class="flex border-b border-gray-200 dark:border-gray-700 mb-8">
+                    <button onclick="showTab('tags')" id="tab-tags"
+                            class="px-6 py-3 font-semibold text-white bg-fuchsia-500 rounded-t-2xl transition-all -mb-px">
+                        Tags
+                    </button>
+                    <button onclick="showTab('paths')" id="tab-paths"
+                            class="px-6 py-3 font-semibold text-gray-700 dark:text-gray-300 bg-white/50 dark:bg-slate-700/50 hover:bg-white/70 dark:hover:bg-slate-700/70 rounded-t-2xl transition-all -mb-px">
+                        Paths
+                    </button>
+                    <button onclick="showTab('models')" id="tab-models"
+                            class="px-6 py-3 font-semibold text-gray-700 dark:text-gray-300 bg-white/50 dark:bg-slate-700/50 hover:bg-white/70 dark:hover:bg-slate-700/70 rounded-t-2xl transition-all -mb-px">
+                        Models
+                    </button>
+                </div>
+
+                <!-- Tags Tab Content -->
+                <div id="content-tags" class="tab-content">
+                    <!-- Success Message (initially hidden) -->
+                    <div id="successMessage" class="hidden mb-6 p-4 bg-green-100 dark:bg-green-900/30 border border-green-400 dark:border-green-600 rounded-2xl">
+                        <p class="text-green-800 dark:text-green-300 font-medium">Tag saved successfully!</p>
+                    </div>
+
+                    <!-- Create New Tag Section -->
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Create New Tag</h2>
+
+                        <form onsubmit="saveTag(event)" class="bg-slate-100/90 dark:bg-slate-700/90 backdrop-blur-lg rounded-2xl p-6 shadow-lg">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Color Picker -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Tag Color</label>
+                                    <div class="flex items-center gap-4">
+                                        <div id="colorPreview" class="w-12 h-12 rounded-full border-2 border-white shadow-lg" style="background-color: #FF6B6B;"></div>
+                                        <div class="flex items-center bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-gray-300 dark:border-gray-600 rounded-2xl shadow-lg overflow-hidden">
+                                            <span class="px-3 py-3 text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800">#</span>
+                                            <input type="color" id="colorPicker" value="#FF6B6B" onchange="updateColorPreview()"
+                                                   class="w-24 h-12 border-0 cursor-pointer" />
+                                        </div>
+                                        <input type="text" id="hexInput" value="FF6B6B" maxlength="6" placeholder="FF6B6B"
+                                               oninput="updateColorFromHex()"
+                                               class="w-32 px-4 py-3 text-black dark:text-white bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-gray-300 dark:border-gray-600 rounded-2xl shadow-lg focus:outline-none focus:ring-4 focus:ring-fuchsia-500/50 transition-all" />
+                                    </div>
+                                </div>
+
+                                <!-- Tag Name -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Tag Name</label>
+                                    <input type="text" id="tagName" placeholder="Enter tag name" required
+                                           class="w-full px-4 py-3 text-black dark:text-white bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-gray-300 dark:border-gray-600 rounded-2xl shadow-lg focus:outline-none focus:ring-4 focus:ring-fuchsia-500/50 focus:border-fuchsia-500 transition-all" />
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="mt-6">
+                                <button type="submit"
+                                        class="px-6 py-3 text-white font-semibold bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all">
+                                    Save Tag
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Current Tags List -->
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Current Tags</h2>
+                        </div>
+
+                        <div id="tagsList" class="space-y-3">
+                            <!-- Sample Tags -->
+                            <div class="flex items-center justify-between p-4 bg-slate-100/90 dark:bg-slate-700/90 backdrop-blur-lg rounded-2xl shadow-md hover:shadow-lg transition-all">
+                                <div class="flex items-center gap-3">
+                                    <div class="px-4 py-2 rounded-xl text-white font-medium shadow-md" style="background-color: #FF6B6B;">funny</div>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="editTag('funny', '#FF6B6B')"
+                                            class="px-4 py-2 text-white font-semibold bg-gradient-to-r from-fuchsia-400 to-fuchsia-600 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all">Edit</button>
+                                    <button onclick="deleteTag('funny')"
+                                            class="px-4 py-2 text-white font-semibold bg-gradient-to-r from-red-400 to-red-600 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all">Delete</button>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-slate-100/90 dark:bg-slate-700/90 backdrop-blur-lg rounded-2xl shadow-md hover:shadow-lg transition-all">
+                                <div class="flex items-center gap-3">
+                                    <div class="px-4 py-2 rounded-xl text-white font-medium shadow-md" style="background-color: #4ECDC4;">programming</div>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="editTag('programming', '#4ECDC4')"
+                                            class="px-4 py-2 text-white font-semibold bg-gradient-to-r from-fuchsia-400 to-fuchsia-600 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all">Edit</button>
+                                    <button onclick="deleteTag('programming')"
+                                            class="px-4 py-2 text-white font-semibold bg-gradient-to-r from-red-400 to-red-600 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all">Delete</button>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-slate-100/90 dark:bg-slate-700/90 backdrop-blur-lg rounded-2xl shadow-md hover:shadow-lg transition-all">
+                                <div class="flex items-center gap-3">
+                                    <div class="px-4 py-2 rounded-xl text-white font-medium shadow-md" style="background-color: #95E1D3;">relatable</div>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="editTag('relatable', '#95E1D3')"
+                                            class="px-4 py-2 text-white font-semibold bg-gradient-to-r from-fuchsia-400 to-fuchsia-600 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all">Edit</button>
+                                    <button onclick="deleteTag('relatable')"
+                                            class="px-4 py-2 text-white font-semibold bg-gradient-to-r from-red-400 to-red-600 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paths Tab Content -->
+                <div id="content-paths" class="tab-content hidden">
+                    <!-- Create New Path Section -->
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Add New Path</h2>
+
+                        <form onsubmit="savePath(event)" class="bg-slate-100/90 dark:bg-slate-700/90 backdrop-blur-lg rounded-2xl p-6 shadow-lg">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Directory Path</label>
+                                <input type="text" id="pathInput" placeholder="/public/memes/2024" required
+                                       class="w-full px-4 py-3 text-black dark:text-white bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-gray-300 dark:border-gray-600 rounded-2xl shadow-lg focus:outline-none focus:ring-4 focus:ring-fuchsia-500/50 focus:border-fuchsia-500 transition-all" />
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2 italic">Enter a valid subdirectory in /public/memes (browser cannot verify its validity)</p>
+                            </div>
+
+                            <div class="mt-6">
+                                <button type="submit"
+                                        class="px-6 py-3 text-white font-semibold bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all">
+                                    Save Path
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Current Paths List -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Current Paths</h2>
+
+                        <div id="pathsList" class="space-y-3">
+                            <!-- Sample Paths -->
+                            <div class="flex items-center justify-between p-4 bg-slate-100/90 dark:bg-slate-700/90 backdrop-blur-lg rounded-2xl shadow-md hover:shadow-lg transition-all">
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                                    </svg>
+                                    <span class="text-lg text-gray-800 dark:text-gray-200 font-mono">/public/memes/2024</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="editPath('/public/memes/2024')"
+                                            class="px-4 py-2 text-white font-semibold bg-gradient-to-r from-fuchsia-400 to-fuchsia-600 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all">Edit</button>
+                                    <button onclick="deletePath('/public/memes/2024')"
+                                            class="px-4 py-2 text-white font-semibold bg-gradient-to-r from-red-400 to-red-600 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all">Delete</button>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-slate-100/90 dark:bg-slate-700/90 backdrop-blur-lg rounded-2xl shadow-md hover:shadow-lg transition-all">
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                                    </svg>
+                                    <span class="text-lg text-gray-800 dark:text-gray-200 font-mono">/public/memes/archive</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="editPath('/public/memes/archive')"
+                                            class="px-4 py-2 text-white font-semibold bg-gradient-to-r from-fuchsia-400 to-fuchsia-600 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all">Edit</button>
+                                    <button onclick="deletePath('/public/memes/archive')"
+                                            class="px-4 py-2 text-white font-semibold bg-gradient-to-r from-red-400 to-red-600 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Models Tab Content -->
+                <div id="content-models" class="tab-content hidden">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Available Models</h2>
+
+                        <form onsubmit="saveModel(event)">
+                            <div id="modelsList" class="space-y-4 mb-6">
+                                <!-- Model 1 -->
+                                <div class="flex items-center justify-between p-6 bg-slate-100/90 dark:bg-slate-700/90 backdrop-blur-lg rounded-2xl shadow-md hover:shadow-lg transition-all">
+                                    <div class="flex-1">
+                                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">BLIP Image Captioning</h3>
+                                        <p class="text-gray-700 dark:text-gray-300 mb-2">Generate natural language descriptions of images using BLIP model.</p>
+                                        <a href="https://huggingface.co/Salesforce/blip-image-captioning-base" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline text-sm">
+                                            Click here to learn more →
+                                        </a>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer ml-6">
+                                        <input type="radio" name="model" value="blip" class="sr-only peer" checked onchange="updateModelSelection()">
+                                        <div class="w-11 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-500"></div>
+                                    </label>
+                                </div>
+
+                                <!-- Model 2 -->
+                                <div class="flex items-center justify-between p-6 bg-slate-100/90 dark:bg-slate-700/90 backdrop-blur-lg rounded-2xl shadow-md hover:shadow-lg transition-all">
+                                    <div class="flex-1">
+                                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">CLIP Vision Encoder</h3>
+                                        <p class="text-gray-700 dark:text-gray-300 mb-2">Extract visual features and embeddings using OpenAI's CLIP model.</p>
+                                        <a href="https://huggingface.co/openai/clip-vit-base-patch32" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline text-sm">
+                                            Click here to learn more →
+                                        </a>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer ml-6">
+                                        <input type="radio" name="model" value="clip" class="sr-only peer" onchange="updateModelSelection()">
+                                        <div class="w-11 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-500"></div>
+                                    </label>
+                                </div>
+
+                                <!-- Model 3 -->
+                                <div class="flex items-center justify-between p-6 bg-slate-100/90 dark:bg-slate-700/90 backdrop-blur-lg rounded-2xl shadow-md hover:shadow-lg transition-all">
+                                    <div class="flex-1">
+                                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">ViT Image Classification</h3>
+                                        <p class="text-gray-700 dark:text-gray-300 mb-2">Classify images using Vision Transformer (ViT) architecture.</p>
+                                        <a href="https://huggingface.co/google/vit-base-patch16-224" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline text-sm">
+                                            Click here to learn more →
+                                        </a>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer ml-6">
+                                        <input type="radio" name="model" value="vit" class="sr-only peer" onchange="updateModelSelection()">
+                                        <div class="w-11 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-500"></div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Save Button -->
+                            <div class="mt-6">
+                                <button type="submit"
+                                        class="px-6 py-3 text-white font-semibold bg-gradient-to-r from-blue-400 to-blue-600 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all">
+                                    Save Model Selection
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            // Remove active state from all tabs
+            document.querySelectorAll('[id^="tab-"]').forEach(tab => {
+                tab.classList.remove('bg-fuchsia-500', 'text-white');
+                tab.classList.add('bg-white/50', 'dark:bg-slate-700/50', 'text-gray-700', 'dark:text-gray-300');
+            });
+
+            // Show selected tab content
+            document.getElementById('content-' + tabName).classList.remove('hidden');
+
+            // Add active state to selected tab
+            const activeTab = document.getElementById('tab-' + tabName);
+            activeTab.classList.add('bg-fuchsia-500', 'text-white');
+            activeTab.classList.remove('bg-white/50', 'dark:bg-slate-700/50', 'text-gray-700', 'dark:text-gray-300');
+        }
+
+        // Color picker functions
+        function updateColorPreview() {
+            const colorPicker = document.getElementById('colorPicker');
+            const hexInput = document.getElementById('hexInput');
+            const preview = document.getElementById('colorPreview');
+
+            preview.style.backgroundColor = colorPicker.value;
+            hexInput.value = colorPicker.value.substring(1).toUpperCase();
+        }
+
+        function updateColorFromHex() {
+            const hexInput = document.getElementById('hexInput');
+            const colorPicker = document.getElementById('colorPicker');
+            const preview = document.getElementById('colorPreview');
+
+            let hex = hexInput.value.replace('#', '');
+            if (hex.length === 6 && /^[0-9A-F]+$/i.test(hex)) {
+                const fullHex = '#' + hex;
+                colorPicker.value = fullHex;
+                preview.style.backgroundColor = fullHex;
+            }
+        }
+
+        // Form submissions
+        function saveTag(event) {
+            event.preventDefault();
+            const tagName = document.getElementById('tagName').value;
+            const color = document.getElementById('colorPicker').value;
+
+            // Show success message
+            const successMsg = document.getElementById('successMessage');
+            successMsg.classList.remove('hidden');
+            setTimeout(() => successMsg.classList.add('hidden'), 3000);
+
+            // Clear form
+            document.getElementById('tagName').value = '';
+
+            console.log('Saved tag:', tagName, color);
+            return false;
+        }
+
+        function savePath(event) {
+            event.preventDefault();
+            const path = document.getElementById('pathInput').value;
+            console.log('Saved path:', path);
+            alert('Path saved successfully!');
+            document.getElementById('pathInput').value = '';
+            return false;
+        }
+
+        function saveModel(event) {
+            event.preventDefault();
+            const selected = document.querySelector('input[name="model"]:checked');
+            console.log('Selected model:', selected ? selected.value : 'none');
+            alert('Model selection saved!');
+            return false;
+        }
+
+        // Edit/Delete actions
+        function editTag(tagName, color) {
+            document.getElementById('tagName').value = tagName;
+            document.getElementById('colorPicker').value = color;
+            document.getElementById('hexInput').value = color.substring(1);
+            document.getElementById('colorPreview').style.backgroundColor = color;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function deleteTag(tagName) {
+            if (confirm(`Are you sure you want to delete the tag "${tagName}"?`)) {
+                console.log('Deleted tag:', tagName);
+                alert('Tag deleted!');
+            }
+        }
+
+        function editPath(path) {
+            document.getElementById('pathInput').value = path;
+            showTab('paths');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function deletePath(path) {
+            if (confirm(`Are you sure you want to delete the path "${path}"?`)) {
+                console.log('Deleted path:', path);
+                alert('Path deleted!');
+            }
+        }
+
+        function updateModelSelection() {
+            console.log('Model selection updated');
+        }
+
+        // Dark mode toggle
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'd') {
+                document.documentElement.classList.toggle('dark');
+            }
+        });
+    </script>
+</body>
+</html>

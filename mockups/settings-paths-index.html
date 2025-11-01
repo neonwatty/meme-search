@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Directory Paths - MemeSearch Settings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-300 dark:from-slate-900 dark:to-slate-700 min-h-screen text-black dark:text-white">
+    <!-- Navigation with Glassmorphism -->
+    <nav class="bg-gray-300/80 dark:bg-slate-700/80 backdrop-blur-xl border-b border-white/20 dark:border-white/10 shadow-lg fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="gallery-after-tailwind.html" class="text-2xl font-bold text-slate-800 dark:text-white">
+                    MemeSearch
+                </a>
+
+                <ul class="flex space-x-8">
+                    <li>
+                        <a href="gallery-after-tailwind.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30">
+                            All memes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="search-tailwind.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30">
+                            Search memes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="settings-tags-index.html" class="text-black bg-fuchsia-300 px-3 py-2 rounded-xl">
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 pt-28 pb-12">
+        <!-- Settings Sub-Navigation -->
+        <div class="max-w-4xl mx-auto mb-6">
+            <div class="flex space-x-2 border-b border-gray-200 dark:border-gray-700">
+                <a href="settings-tags-index.html" class="px-6 py-3 font-semibold text-gray-700 dark:text-gray-300 bg-white/50 dark:bg-slate-700/50 rounded-t-2xl hover:bg-white/70 dark:hover:bg-slate-700/70 transition-all">
+                    Tags
+                </a>
+                <a href="settings-paths-index.html" class="px-6 py-3 font-semibold text-white bg-fuchsia-500 rounded-t-2xl transition-all">
+                    Paths
+                </a>
+            </div>
+        </div>
+
+        <!-- Page Header with Create Button -->
+        <div class="max-w-4xl mx-auto mb-8">
+            <div class="flex items-center justify-between pb-4 border-b-2 border-black dark:border-white">
+                <h1 class="text-4xl font-bold text-slate-800 dark:text-white">
+                    Current directory paths
+                </h1>
+                <a
+                    href="settings-path-new.html"
+                    class="px-6 py-3 text-white font-semibold bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all">
+                    Create new
+                </a>
+            </div>
+        </div>
+
+        <!-- Paths List -->
+        <div class="max-w-4xl mx-auto space-y-4">
+            <!-- Path Item 1 -->
+            <div class="flex items-center justify-between bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-white/20 dark:border-white/10 rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all">
+                <div class="flex items-center">
+                    <span class="px-6 py-3 text-lg font-mono bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-2xl shadow-md">
+                        example_memes_1
+                    </span>
+                </div>
+                <a
+                    href="settings-path-show.html"
+                    class="px-4 py-2 text-black font-semibold bg-fuchsia-200 rounded-2xl shadow-md hover:bg-fuchsia-300 transition-all">
+                    Adjust / delete
+                </a>
+            </div>
+
+            <!-- Path Item 2 -->
+            <div class="flex items-center justify-between bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-white/20 dark:border-white/10 rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all">
+                <div class="flex items-center">
+                    <span class="px-6 py-3 text-lg font-mono bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-2xl shadow-md">
+                        example_memes_2
+                    </span>
+                </div>
+                <a
+                    href="settings-path-show.html"
+                    class="px-4 py-2 text-black font-semibold bg-fuchsia-200 rounded-2xl shadow-md hover:bg-fuchsia-300 transition-all">
+                    Adjust / delete
+                </a>
+            </div>
+
+            <!-- Empty State (hidden by default, shown when no paths) -->
+            <div id="emptyState" class="hidden flex flex-col items-center py-12">
+                <p class="text-2xl text-gray-600 dark:text-gray-400 mb-4">
+                    No paths yet. Add your first directory path!
+                </p>
+                <a
+                    href="settings-path-new.html"
+                    class="px-6 py-3 text-white font-semibold bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all">
+                    Create new path
+                </a>
+            </div>
+        </div>
+
+        <!-- Pagination (shown when > 10 items) -->
+        <div class="flex justify-center items-center space-x-2 mt-8">
+            <!-- Pagination would go here -->
+        </div>
+    </div>
+
+    <script>
+        // Dark mode toggle with 'D' key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'd') {
+                document.documentElement.classList.toggle('dark');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Tag - MemeSearch Settings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-300 dark:from-slate-900 dark:to-slate-700 min-h-screen text-black dark:text-white">
+    <!-- Navigation with Glassmorphism -->
+    <nav class="bg-gray-300/80 dark:bg-slate-700/80 backdrop-blur-xl border-b border-white/20 dark:border-white/10 shadow-lg fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="gallery-after-tailwind.html" class="text-2xl font-bold text-slate-800 dark:text-white">
+                    MemeSearch
+                </a>
+
+                <ul class="flex space-x-8">
+                    <li>
+                        <a href="gallery-after-tailwind.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30">
+                            All memes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="search-tailwind.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30">
+                            Search memes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="settings-tags-index.html" class="text-black bg-fuchsia-300 px-3 py-2 rounded-xl">
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 pt-28 pb-12">
+        <!-- Settings Sub-Navigation -->
+        <div class="max-w-4xl mx-auto mb-6">
+            <div class="flex space-x-2 border-b border-gray-200 dark:border-gray-700">
+                <a href="settings-tags-index.html" class="px-6 py-3 font-semibold text-white bg-fuchsia-500 rounded-t-2xl transition-all">
+                    Tags
+                </a>
+                <a href="settings-paths-index.html" class="px-6 py-3 font-semibold text-gray-700 dark:text-gray-300 bg-white/50 dark:bg-slate-700/50 rounded-t-2xl hover:bg-white/70 dark:hover:bg-slate-700/70 transition-all">
+                    Paths
+                </a>
+            </div>
+        </div>
+
+        <div class="max-w-2xl mx-auto">
+            <!-- Page Header -->
+            <h1 class="text-4xl font-bold text-slate-800 dark:text-white mb-8">
+                Edit tag
+            </h1>
+
+            <!-- Form Container with Glassmorphism -->
+            <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-white/20 dark:border-white/10 rounded-3xl p-8 shadow-2xl mb-6">
+                <form id="tagForm" onsubmit="handleSubmit(event)" class="space-y-6">
+                    <!-- Color Picker Section -->
+                    <div class="space-y-4">
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                            Color
+                        </label>
+
+                        <div class="flex items-center gap-4">
+                            <!-- Color Preview with "A" (pre-filled) -->
+                            <div
+                                id="colorPreview"
+                                class="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg"
+                                style="background-color: #FF6B6B;">
+                                A
+                            </div>
+
+                            <!-- Hex Input with # prefix (pre-filled) -->
+                            <div class="flex items-center bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-gray-300 dark:border-gray-600 rounded-2xl shadow-lg overflow-hidden">
+                                <span class="px-3 py-3 text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 font-mono">
+                                    #
+                                </span>
+                                <input
+                                    type="text"
+                                    id="hexInput"
+                                    value="FF6B6B"
+                                    maxlength="6"
+                                    oninput="updateColorFromHex()"
+                                    placeholder="FF6B6B"
+                                    class="px-4 py-3 text-black dark:text-white bg-transparent focus:outline-none w-32 font-mono uppercase" />
+                            </div>
+
+                            <!-- Native Color Picker (pre-filled) -->
+                            <input
+                                type="color"
+                                id="colorPicker"
+                                value="#FF6B6B"
+                                onchange="updateColorPreview()"
+                                class="w-24 h-12 rounded-2xl border-2 border-gray-300 dark:border-gray-600 shadow-lg cursor-pointer" />
+                        </div>
+
+                        <p class="text-xs text-gray-600 dark:text-gray-400 italic">
+                            Choose a color for this tag. It will be used when displaying the tag.
+                        </p>
+                    </div>
+
+                    <!-- Tag Name Input (pre-filled) -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                            Tag Name
+                        </label>
+                        <input
+                            type="text"
+                            id="tagNameInput"
+                            value="funny"
+                            placeholder="Enter tag name (e.g., funny, programming)"
+                            required
+                            class="w-full px-4 py-3 text-black dark:text-white bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-gray-300 dark:border-gray-600 rounded-2xl shadow-lg focus:outline-none focus:ring-4 focus:ring-fuchsia-500/50 focus:border-fuchsia-500 transition-all" />
+                    </div>
+
+                    <!-- Save Button -->
+                    <div class="flex justify-start pt-4">
+                        <button
+                            type="submit"
+                            class="px-8 py-3 text-white font-semibold bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Back Button -->
+            <a
+                href="settings-tags-index.html"
+                class="inline-block px-6 py-3 text-gray-700 dark:text-gray-300 font-semibold bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-gray-300 dark:border-gray-600 rounded-2xl shadow-lg hover:shadow-xl transition-all">
+                Back to tags
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Update color preview from color picker
+        function updateColorPreview() {
+            const colorPicker = document.getElementById('colorPicker');
+            const hexInput = document.getElementById('hexInput');
+            const preview = document.getElementById('colorPreview');
+
+            preview.style.backgroundColor = colorPicker.value;
+            hexInput.value = colorPicker.value.substring(1).toUpperCase();
+        }
+
+        // Update color from hex input
+        function updateColorFromHex() {
+            const hexInput = document.getElementById('hexInput');
+            const colorPicker = document.getElementById('colorPicker');
+            const preview = document.getElementById('colorPreview');
+
+            let hex = hexInput.value.replace('#', '').toUpperCase();
+
+            // Validate hex and update if valid
+            if (hex.length === 6 && /^[0-9A-F]+$/i.test(hex)) {
+                const fullHex = '#' + hex;
+                colorPicker.value = fullHex;
+                preview.style.backgroundColor = fullHex;
+            }
+
+            // Keep input uppercase
+            hexInput.value = hex;
+        }
+
+        // Handle form submission
+        function handleSubmit(event) {
+            event.preventDefault();
+            const tagName = document.getElementById('tagNameInput').value;
+            const color = document.getElementById('colorPicker').value;
+            alert(`Tag "${tagName}" updated with color ${color}!`);
+            window.location.href = 'settings-tags-index.html';
+        }
+
+        // Dark mode toggle with 'D' key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'd') {
+                document.documentElement.classList.toggle('dark');
+            }
+        });
+    </script>
+</body>
+</html>

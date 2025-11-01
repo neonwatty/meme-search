@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Page (Pure Tailwind - No Custom CSS)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-300 dark:from-slate-900 dark:to-slate-700 min-h-screen text-black dark:text-white">
+    <!-- Navigation with Glassmorphism -->
+    <nav class="bg-gray-300/80 dark:bg-slate-700/80 backdrop-blur-xl border-b border-white/20 dark:border-white/10 shadow-lg fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="gallery-after-tailwind.html" class="text-2xl font-bold text-slate-800 dark:text-white">
+                    MemeSearch
+                </a>
+
+                <ul class="flex space-x-8">
+                    <li>
+                        <a href="gallery-after-tailwind.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30">
+                            All memes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="text-black bg-fuchsia-300 px-3 py-2 rounded-xl">
+                            Search memes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="settings-tags-index.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30">
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 pt-28 pb-12">
+        <!-- Search Header -->
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-slate-800 dark:text-slate-200">
+                Search
+            </h1>
+        </div>
+
+        <!-- Search Controls Container -->
+        <div class="max-w-4xl mx-auto mb-8">
+            <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-white/20 dark:border-white/10 rounded-3xl p-8 shadow-2xl">
+
+                <!-- Search Form -->
+                <form id="searchForm" class="space-y-6">
+                    <div class="flex flex-col md:flex-row gap-4 items-center">
+                        <!-- Search Input -->
+                        <div class="flex-1 w-full">
+                            <input
+                                type="search"
+                                id="searchInput"
+                                placeholder="search images"
+                                class="w-full px-6 py-4 text-black dark:text-white bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border-2 border-indigo-600 dark:border-indigo-400 rounded-2xl shadow-lg focus:outline-none focus:ring-4 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all"
+                            />
+                        </div>
+
+                        <!-- Tag Dropdown -->
+                        <div class="relative w-full md:w-64">
+                            <button
+                                type="button"
+                                id="tagDropdownBtn"
+                                onclick="toggleTagDropdown()"
+                                class="w-full px-6 py-4 text-left bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-white/20 dark:border-white/10 rounded-2xl shadow-lg hover:shadow-xl transition-all flex items-center justify-between">
+                                <span class="text-gray-900 dark:text-white" id="selectedTags">Choose tags</span>
+                                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+
+                            <!-- Dropdown Menu -->
+                            <div
+                                id="tagDropdown"
+                                class="hidden absolute left-0 right-0 mt-2 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl shadow-2xl z-10 max-h-64 overflow-y-auto">
+                                <div class="p-4 space-y-2">
+                                    <label class="flex items-center px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg cursor-pointer transition">
+                                        <input type="checkbox" value="funny" class="mr-3 rounded" onchange="updateSelectedTags()">
+                                        <span>funny</span>
+                                    </label>
+                                    <label class="flex items-center px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg cursor-pointer transition">
+                                        <input type="checkbox" value="programming" class="mr-3 rounded" onchange="updateSelectedTags()">
+                                        <span>programming</span>
+                                    </label>
+                                    <label class="flex items-center px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg cursor-pointer transition">
+                                        <input type="checkbox" value="debugging" class="mr-3 rounded" onchange="updateSelectedTags()">
+                                        <span>debugging</span>
+                                    </label>
+                                    <label class="flex items-center px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg cursor-pointer transition">
+                                        <input type="checkbox" value="relatable" class="mr-3 rounded" onchange="updateSelectedTags()">
+                                        <span>relatable</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Keyword/Vector Toggle -->
+                        <div class="flex items-center gap-3">
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    id="searchToggle"
+                                    class="sr-only peer"
+                                    onchange="updateToggleText()">
+                                <div class="relative w-14 h-7 bg-gray-300 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-purple-600"></div>
+                                <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300" id="toggleText">keyword</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Search Button -->
+                    <div class="flex justify-center pt-4">
+                        <button
+                            type="submit"
+                            onclick="performSearch(event)"
+                            class="px-8 py-3 text-white bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl shadow-lg hover:shadow-xl transition-all font-semibold">
+                            Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Results Area -->
+        <div id="searchResults">
+            <!-- No Search Yet State -->
+            <div id="noSearchYet" class="flex flex-col items-center pt-10">
+                <p class="text-2xl mb-6 text-slate-800 dark:text-white">
+                    Search for somethin would ya?
+                </p>
+                <img
+                    src="https://i.pinimg.com/originals/f5/48/5f/f5485f1f382d1e5d6c72a2f66cd490d9.png"
+                    class="w-1/4 rounded-lg shadow-2xl"
+                    alt="No search yet" />
+            </div>
+
+            <!-- Search Results Container (hidden initially) -->
+            <div id="resultsContainer" class="hidden">
+                <!-- View Toggle -->
+                <div class="flex justify-center items-center mb-6">
+                    <button
+                        id="viewToggleBtn"
+                        onclick="toggleView()"
+                        class="px-4 py-2 text-white bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl shadow-lg hover:shadow-xl transition-all">
+                        Switch to Grid View
+                    </button>
+                </div>
+
+                <!-- List View -->
+                <div id="listView" class="flex flex-col items-center space-y-6">
+                    <a href="image-show.html" class="bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-4 shadow-lg hover:shadow-2xl max-w-2xl w-full cursor-pointer">
+                        <img src="https://picsum.photos/600/400?random=11" alt="Meme 1" class="rounded-lg w-full mb-3">
+                        <p class="text-sm mb-2">This is a funny meme about coding at 3am</p>
+                        <div class="flex gap-2">
+                            <span class="px-3 py-1 rounded-full text-sm" style="background-color: rgba(255, 107, 107, 0.3);">funny</span>
+                            <span class="px-3 py-1 rounded-full text-sm" style="background-color: rgba(78, 205, 196, 0.3);">programming</span>
+                        </div>
+                    </a>
+
+                    <a href="image-show.html" class="bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-4 shadow-lg hover:shadow-2xl max-w-2xl w-full cursor-pointer">
+                        <img src="https://picsum.photos/600/500?random=12" alt="Meme 2" class="rounded-lg w-full mb-3">
+                        <p class="text-sm mb-2">When you realize the bug was a missing semicolon</p>
+                        <div class="flex gap-2">
+                            <span class="px-3 py-1 rounded-full text-sm" style="background-color: rgba(149, 225, 211, 0.3);">debugging</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Grid View (hidden) -->
+                <div id="gridView" class="hidden grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <a href="image-show.html" class="bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-2 shadow-lg hover:shadow-2xl cursor-pointer">
+                        <img src="https://picsum.photos/300/200?random=11" alt="Meme" class="rounded-lg w-full">
+                    </a>
+                    <a href="image-show.html" class="bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-2 shadow-lg hover:shadow-2xl cursor-pointer">
+                        <img src="https://picsum.photos/300/250?random=12" alt="Meme" class="rounded-lg w-full">
+                    </a>
+                    <a href="image-show.html" class="bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-2 shadow-lg hover:shadow-2xl cursor-pointer">
+                        <img src="https://picsum.photos/300/220?random=13" alt="Meme" class="rounded-lg w-full">
+                    </a>
+                    <a href="image-show.html" class="bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-2 shadow-lg hover:shadow-2xl cursor-pointer">
+                        <img src="https://picsum.photos/300/280?random=14" alt="Meme" class="rounded-lg w-full">
+                    </a>
+                </div>
+
+                <!-- No Results State -->
+                <div id="noResults" class="hidden flex flex-col items-center pt-10">
+                    <p class="text-2xl mb-6 text-slate-800 dark:text-white">
+                        No results found
+                    </p>
+                    <p class="text-lg text-slate-600 dark:text-slate-400">
+                        Try different search terms or tags
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentView = 'list';
+
+        // Toggle tag dropdown
+        function toggleTagDropdown() {
+            const dropdown = document.getElementById('tagDropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('tagDropdown');
+            const btn = document.getElementById('tagDropdownBtn');
+            if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Update selected tags display
+        function updateSelectedTags() {
+            const checkboxes = document.querySelectorAll('#tagDropdown input[type="checkbox"]:checked');
+            const selectedTagsText = document.getElementById('selectedTags');
+
+            if (checkboxes.length === 0) {
+                selectedTagsText.textContent = 'Choose tags';
+            } else {
+                const tags = Array.from(checkboxes).map(cb => cb.value);
+                selectedTagsText.textContent = tags.join(', ');
+            }
+        }
+
+        // Update toggle text
+        function updateToggleText() {
+            const checkbox = document.getElementById('searchToggle');
+            const text = document.getElementById('toggleText');
+            text.textContent = checkbox.checked ? 'vector' : 'keyword';
+        }
+
+        // Perform search
+        function performSearch(event) {
+            event.preventDefault();
+
+            const searchInput = document.getElementById('searchInput').value;
+            const noSearchYet = document.getElementById('noSearchYet');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const noResults = document.getElementById('noResults');
+            const listView = document.getElementById('listView');
+            const gridView = document.getElementById('gridView');
+
+            // Simulate search
+            if (searchInput.trim() === '') {
+                // Show "no search yet" state
+                noSearchYet.classList.remove('hidden');
+                resultsContainer.classList.add('hidden');
+            } else if (searchInput.toLowerCase() === 'nothing') {
+                // Show "no results" state
+                noSearchYet.classList.add('hidden');
+                resultsContainer.classList.remove('hidden');
+                noResults.classList.remove('hidden');
+                listView.classList.add('hidden');
+                gridView.classList.add('hidden');
+            } else {
+                // Show results
+                noSearchYet.classList.add('hidden');
+                resultsContainer.classList.remove('hidden');
+                noResults.classList.add('hidden');
+
+                if (currentView === 'list') {
+                    listView.classList.remove('hidden');
+                    gridView.classList.add('hidden');
+                } else {
+                    listView.classList.add('hidden');
+                    gridView.classList.remove('hidden');
+                }
+            }
+        }
+
+        // Toggle view
+        function toggleView() {
+            const listView = document.getElementById('listView');
+            const gridView = document.getElementById('gridView');
+            const button = document.getElementById('viewToggleBtn');
+
+            if (currentView === 'list') {
+                listView.classList.add('hidden');
+                gridView.classList.remove('hidden');
+                button.textContent = 'Switch to List View';
+                currentView = 'grid';
+            } else {
+                listView.classList.remove('hidden');
+                gridView.classList.add('hidden');
+                button.textContent = 'Switch to Grid View';
+                currentView = 'list';
+            }
+        }
+
+        // Dark mode toggle
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'd') {
+                document.documentElement.classList.toggle('dark');
+            }
+        });
+
+        // Submit on input (debounced)
+        let debounceTimer;
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                performSearch(e);
+            }, 300);
+        });
+    </script>
+</body>
+</html>

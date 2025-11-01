@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Meme - MemeSearch</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-300 dark:from-slate-900 dark:to-slate-700 min-h-screen text-black dark:text-white">
+    <!-- Navigation with Glassmorphism -->
+    <nav class="bg-gray-300/80 dark:bg-slate-700/80 backdrop-blur-xl border-b border-white/20 dark:border-white/10 shadow-lg fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="gallery-after-tailwind.html" class="text-2xl font-bold text-slate-800 dark:text-white">
+                    MemeSearch
+                </a>
+
+                <ul class="flex space-x-8">
+                    <li>
+                        <a href="gallery-after-tailwind.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30">
+                            All memes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="search-tailwind.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30">
+                            Search memes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="settings-tags-index.html" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30">
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 pt-28 pb-12">
+        <!-- Image Edit Container -->
+        <div class="flex flex-col items-center justify-center max-w-2xl mx-auto">
+            <!-- Main Card with Glassmorphism -->
+            <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-white/20 dark:border-white/10 rounded-3xl p-8 shadow-2xl w-full">
+                <form id="editForm" onsubmit="handleSubmit(event)">
+                    <!-- Image Preview -->
+                    <div class="flex flex-col items-center space-y-6">
+                        <img
+                            src="https://picsum.photos/450/400?random=101"
+                            alt="Meme"
+                            class="rounded-2xl shadow-2xl max-w-[450px] w-full"
+                        />
+
+                        <!-- Description Section -->
+                        <div class="w-full space-y-3">
+                            <!-- Header with Generate Button -->
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300">Description:</h3>
+                                <button
+                                    type="button"
+                                    onclick="alert('Description generated!')"
+                                    class="px-4 py-2 text-white text-sm font-semibold bg-gradient-to-r from-blue-400 to-blue-600 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all">
+                                    Generate description 🪄
+                                </button>
+                            </div>
+
+                            <!-- Description Textarea (Editable) -->
+                            <textarea
+                                id="descriptionInput"
+                                rows="4"
+                                placeholder="Enter meme description..."
+                                class="w-full px-4 py-3 text-black dark:text-white bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-gray-300 dark:border-gray-600 rounded-2xl shadow-lg focus:outline-none focus:ring-4 focus:ring-fuchsia-500/50 focus:border-fuchsia-500 transition-all resize-none"
+                            >A funny meme about coding at 3am when you realize the bug was just a missing semicolon. Classic programmer humor that everyone can relate to.</textarea>
+
+                            <!-- Character Count -->
+                            <div class="text-right text-xs text-gray-500 dark:text-gray-400">
+                                <span id="charCount">150</span> characters
+                            </div>
+                        </div>
+
+                        <!-- Tags Section -->
+                        <div class="w-full space-y-3">
+                            <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300">Tags:</h3>
+
+                            <!-- Tag Multi-Select Dropdown -->
+                            <div class="relative">
+                                <button
+                                    type="button"
+                                    id="tagDropdownBtn"
+                                    onclick="toggleTagDropdown()"
+                                    class="w-full px-6 py-4 text-left bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-gray-300 dark:border-gray-600 rounded-2xl shadow-lg hover:shadow-xl transition-all flex items-center justify-between">
+                                    <span class="text-gray-900 dark:text-white" id="selectedTags">funny, programming, relatable</span>
+                                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+
+                                <!-- Dropdown Menu -->
+                                <div
+                                    id="tagDropdown"
+                                    class="hidden absolute left-0 right-0 mt-2 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl shadow-2xl z-10 max-h-64 overflow-y-auto">
+                                    <div class="p-4 space-y-2">
+                                        <label class="flex items-center px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg cursor-pointer transition">
+                                            <input type="checkbox" value="funny" class="mr-3 rounded focus:ring-2 focus:ring-fuchsia-500" onchange="updateSelectedTags()" checked>
+                                            <span class="px-3 py-1 rounded-full text-sm font-semibold" style="background-color: rgba(255, 107, 107, 0.3); color: #FF6B6B;">funny</span>
+                                        </label>
+                                        <label class="flex items-center px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg cursor-pointer transition">
+                                            <input type="checkbox" value="programming" class="mr-3 rounded focus:ring-2 focus:ring-fuchsia-500" onchange="updateSelectedTags()" checked>
+                                            <span class="px-3 py-1 rounded-full text-sm font-semibold" style="background-color: rgba(78, 205, 196, 0.3); color: #4ECDC4;">programming</span>
+                                        </label>
+                                        <label class="flex items-center px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg cursor-pointer transition">
+                                            <input type="checkbox" value="debugging" class="mr-3 rounded focus:ring-2 focus:ring-fuchsia-500" onchange="updateSelectedTags()">
+                                            <span class="px-3 py-1 rounded-full text-sm font-semibold" style="background-color: rgba(149, 225, 211, 0.3); color: #95E1D3;">debugging</span>
+                                        </label>
+                                        <label class="flex items-center px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg cursor-pointer transition">
+                                            <input type="checkbox" value="relatable" class="mr-3 rounded focus:ring-2 focus:ring-fuchsia-500" onchange="updateSelectedTags()" checked>
+                                            <span class="px-3 py-1 rounded-full text-sm font-semibold" style="background-color: rgba(243, 129, 129, 0.3); color: #F38181;">relatable</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Save Button -->
+                        <div class="w-full flex justify-center pt-4">
+                            <button
+                                type="submit"
+                                class="px-8 py-3 text-white font-semibold bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex flex-row flex-wrap gap-4 mt-6 justify-center">
+                <a
+                    href="image-show.html"
+                    class="px-6 py-3 text-gray-700 dark:text-gray-300 font-semibold bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-gray-300 dark:border-gray-600 rounded-2xl shadow-lg hover:shadow-xl transition-all">
+                    Back
+                </a>
+                <a
+                    href="gallery-after-tailwind.html"
+                    class="px-6 py-3 text-gray-700 dark:text-gray-300 font-semibold bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-gray-300 dark:border-gray-600 rounded-2xl shadow-lg hover:shadow-xl transition-all">
+                    Back to memes
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle tag dropdown
+        function toggleTagDropdown() {
+            const dropdown = document.getElementById('tagDropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('tagDropdown');
+            const btn = document.getElementById('tagDropdownBtn');
+            if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Update selected tags display
+        function updateSelectedTags() {
+            const checkboxes = document.querySelectorAll('#tagDropdown input[type="checkbox"]:checked');
+            const selectedTagsText = document.getElementById('selectedTags');
+
+            if (checkboxes.length === 0) {
+                selectedTagsText.textContent = 'Choose tags';
+            } else {
+                const tags = Array.from(checkboxes).map(cb => cb.value);
+                selectedTagsText.textContent = tags.join(', ');
+            }
+        }
+
+        // Character count for description
+        const descriptionInput = document.getElementById('descriptionInput');
+        const charCount = document.getElementById('charCount');
+
+        descriptionInput.addEventListener('input', () => {
+            charCount.textContent = descriptionInput.value.length;
+        });
+
+        // Handle form submission
+        function handleSubmit(event) {
+            event.preventDefault();
+            alert('Meme saved successfully!');
+            window.location.href = 'image-show.html';
+        }
+
+        // Dark mode toggle with 'D' key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'd') {
+                document.documentElement.classList.toggle('dark');
+            }
+        });
+
+        // Initialize character count
+        charCount.textContent = descriptionInput.value.length;
+    </script>
+</body>
+</html>
