@@ -1,40 +1,51 @@
 <div id="search-results-returned">
-
   <% if @image_cores.present? %>
-   
     <div data-controller="view-switcher">
 
-    <div class="flex flex-col items-center justify-center w-auto h-full mt-8">
-    <button 
-      data-action="click->view-switcher#toggleView"
-      class="px-4 py-2 text-white bg-purple-500 ml-5 transition-colors rounded-2xl border-black cursor-pointer"
-      data-view-switcher-target="toggleButton">
-      Switch to Grid View
-    </button>
-    </div>
+      <!-- View Switcher Button -->
+      <div class="flex justify-center mb-6">
+        <button
+          data-action="click->view-switcher#toggleView"
+          class="px-6 py-3 text-white font-semibold bg-cyan-700 hover:bg-cyan-600 rounded-2xl shadow-lg hover:shadow-xl transition-all cursor-pointer"
+          data-view-switcher-target="toggleButton">
+          Switch to Grid View
+        </button>
+      </div>
 
-    <!-- List View -->
-    <div class="flex flex-col content-center items-center justify-center w-full h-full" id="search_list_image_cores" data-view-switcher-target="listView">
-      <% @image_cores.each do |image_core| %>
-        <%= link_to image_core do %>
-          <div id="image_core_<%= image_core.id %>" class="transition-transform duration-300 transform hover:scale-105 dark:text-white bg-slate-200 dark:bg-slate-700 p-2 rounded-2xl w-auto flex m-5">
-            <%= render partial: "image_core", locals: { image_core: image_core } %>
-          </div>
+      <!-- List View -->
+      <div class="flex flex-col content-center items-center justify-center w-full h-full" id="search_list_image_cores" data-view-switcher-target="listView">
+        <% @image_cores.each do |image_core| %>
+          <%= link_to image_core do %>
+            <div id="image_core_search_<%= image_core.id %>" class="transition-transform duration-300 transform hover:scale-105 bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-800/95 p-4 rounded-2xl shadow-lg hover:shadow-2xl w-auto flex m-5">
+              <%= render partial: "image_core", locals: { image_core: image_core } %>
+            </div>
+          <% end %>
         <% end %>
-      <% end %>
-    </div>
+      </div>
 
-    <!-- Grid View (hidden by default) -->
-    <div 
-      class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4" id="search_grid_image_cores" data-view-switcher-target="gridView">
-      <% @image_cores.each do |image_core| %>
-        <%= link_to image_core do %>
-          <div id="image_core_<%= image_core.id %>" class="transition-transform duration-300 transform hover:scale-105 dark:text-white bg-slate-200 dark:bg-slate-700 p-2 rounded-2xl">
-            <%= render partial: "image_only", locals: { image_core: image_core } %>
-          </div>
+      <!-- Grid View (hidden by default) -->
+      <div
+        class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4" id="search_grid_image_cores" data-view-switcher-target="gridView">
+        <% @image_cores.each do |image_core| %>
+          <%= link_to image_core do %>
+            <div id="image_core_search_grid_<%= image_core.id %>" class="transition-transform duration-300 transform hover:scale-105 bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-800/95 p-4 rounded-2xl shadow-lg hover:shadow-2xl">
+              <%= render partial: "image_only", locals: { image_core: image_core } %>
+            </div>
+          <% end %>
         <% end %>
-      <% end %>
-    </div>
+      </div>
+
+      <!-- Masonry View (hidden by default) -->
+      <div
+        class="hidden columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 mt-4 w-full px-4" id="search_masonry_image_cores" data-view-switcher-target="masonryView">
+        <% @image_cores.each do |image_core| %>
+          <%= link_to image_core, class: "inline-block w-full mb-4" do %>
+            <div id="image_core_search_masonry_<%= image_core.id %>" class="transition-transform duration-300 transform hover:scale-105 bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-800/95 p-4 rounded-2xl shadow-lg hover:shadow-2xl break-inside-avoid">
+              <%= render partial: "image_only", locals: { image_core: image_core } %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
     </div>
 
   <% else %>

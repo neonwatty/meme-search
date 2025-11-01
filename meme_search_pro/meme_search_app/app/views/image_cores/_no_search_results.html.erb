@@ -1,8 +1,22 @@
-<div class="flex flex-col items-center pt-10 text-black dark:text-white" id="no-search-results">
-    <p class="text-xl">
-      I didn't find anything
+<div class="flex flex-col items-center justify-center py-16 px-4" id="no-search-results">
+  <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-3xl p-12 shadow-2xl text-center max-w-2xl">
+    <div class="mb-6">
+      <svg class="w-24 h-24 mx-auto text-amber-400 dark:text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+    </div>
+    <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-3">No Results Found</h3>
+    <p class="text-lg text-gray-600 dark:text-gray-400 mb-6">
+      We couldn't find any memes matching your search. Try different keywords, adjust your filters, or switch between keyword and vector search modes.
     </p>
-  <img
-    src="https://i.pinimg.com/originals/f5/48/5f/f5485f1f382d1e5d6c72a2f66cd490d9.png"
-    class="w-1/4 rounded-sm" />
+    <div class="flex flex-wrap justify-center gap-3 mb-6">
+      <span class="px-4 py-2 bg-indigo-100/80 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full text-sm font-medium">Try broader terms</span>
+      <span class="px-4 py-2 bg-purple-100/80 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-sm font-medium">Check your spelling</span>
+      <span class="px-4 py-2 bg-fuchsia-100/80 dark:bg-fuchsia-900/30 text-fuchsia-700 dark:text-fuchsia-300 rounded-full text-sm font-medium">Remove filters</span>
+    </div>
+    <img
+      src="https://i.pinimg.com/originals/f5/48/5f/f5485f1f382d1e5d6c72a2f66cd490d9.png"
+      class="w-64 mx-auto rounded-2xl shadow-xl opacity-80"
+      alt="No results found" />
+  </div>
 </div>

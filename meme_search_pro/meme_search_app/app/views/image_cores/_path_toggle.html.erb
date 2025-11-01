@@ -1,22 +1,20 @@
 <% path_names = ImagePath.all.map {|item| item.name.strip} %>
 <div id="path_toggle">
   <%= fields_for :search_paths do |path_fields| %>
-    <div class="flex flex-col my-auto">
+    <div class="flex flex-col">
       <div data-controller="multi-select" class="relative">
         <div
-    data-action="click->multi-select#toggle"
-          class="border rounded-md p-3 bg-white shadow-md cursor-pointer"
-          >
-          <input id="selected_path_names" readonly name="selected_path_names" data-multi-select-target="selectedItems" class="text-gray-600" placeholder="Choose paths">
+          data-action="click->multi-select#toggle"
+          class="bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-gray-200/50 dark:border-gray-600/50 rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all cursor-pointer">
+          <input id="selected_path_names" readonly name="selected_path_names" data-multi-select-target="selectedItems" class="w-full bg-transparent text-gray-700 dark:text-gray-300 outline-none cursor-pointer" placeholder="Choose paths">
         </div>
         <div
-    data-multi-select-target="options"
-    class="absolute left-0 right-0 mt-1 hidden bg-white border rounded-md shadow-lg z-10"
-  >
+          data-multi-select-target="options"
+          class="absolute left-0 right-0 mt-2 hidden bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50 rounded-2xl shadow-2xl z-20 overflow-hidden">
           <% path_names.each_with_index do |path, index|  %>
-            <div class="p-2 flex items-center", id='path_<%= index %>'>
+            <div class="p-3 flex items-center hover:bg-purple-50/50 dark:hover:bg-purple-900/20 transition-colors border-b border-gray-100/50 dark:border-gray-700/50 last:border-b-0" id='path_<%= index %>'>
               <%= path_fields.text_field :path,
-                        class: 'mr-2 pr-4', 
+                        class: 'mr-3 w-5 h-5 text-purple-600 bg-white dark:bg-slate-700 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 cursor-pointer',
                         data: {
                           action: "change->multi-select#updateSelection"
                         },
@@ -24,7 +22,7 @@
                         value: path.to_s.downcase,
                         checked: true
                   %>
-              <%= path_fields.label :path, path.to_s, class: "text-black"%>
+              <%= path_fields.label :path, path.to_s, class: "text-gray-700 dark:text-gray-300 font-medium cursor-pointer"%>
             </div>
           <% end %>
         </div>

@@ -49,7 +49,7 @@
   }
 }
 
-<%# Button classes removed - now using helper methods in ApplicationHelper %>
-<%# See: back_button_classes, edit_button_classes, show_button_classes, %>
-<%# delete_button_classes, new_button_classes, submit_button_classes, index_button_classes %>
+/* Button classes removed - now using helper methods in ApplicationHelper */
+/* See: back_button_classes, edit_button_classes, show_button_classes, */
+/* delete_button_classes, new_button_classes, submit_button_classes, index_button_classes */
 @import 'actiontext.css';
