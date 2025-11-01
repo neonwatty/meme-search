@@ -1,0 +1,11 @@
+<%# Settings Sub-Navigation Tabs %>
+<div class="max-w-4xl mx-auto mb-6">
+  <div class="flex space-x-2 border-b border-gray-200 dark:border-gray-700">
+    <%= link_to "Tags", settings_tag_names_path,
+      class: "px-6 py-3 font-semibold rounded-t-2xl transition-all #{settings_active_tab_class(:tags)}" %>
+    <%= link_to "Paths", settings_image_paths_path,
+      class: "px-6 py-3 font-semibold rounded-t-2xl transition-all #{settings_active_tab_class(:paths)}" %>
+    <%= link_to "Models", settings_image_to_texts_path,
+      class: "px-6 py-3 font-semibold rounded-t-2xl transition-all #{settings_active_tab_class(:models)}" %>
+  </div>
+</div>

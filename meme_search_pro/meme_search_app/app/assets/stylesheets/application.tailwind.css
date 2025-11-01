@@ -49,27 +49,7 @@
   }
 }
 
-@layer components {
-  .back-button {
-    @apply ml-2 rounded-lg py-3 px-5 bg-amber-400 text-black border border-black inline-block font-semibold text-center;
-  }
-  .show-button {
-    @apply rounded-lg py-3 px-5 bg-fuchsia-500 text-black inline-block font-semibold border border-black text-center;
-  }
-  .edit-button {
-    @apply rounded-lg py-3 px-5 bg-fuchsia-500 text-black border border-black inline-block font-semibold text-center;
-  }
-  .delete-button {
-    @apply rounded-lg py-3 px-5 bg-red-500 text-black border border-black inline-block font-semibold text-center;
-  }
-  .new-button {
-    @apply rounded-lg py-3 px-5 bg-emerald-500 text-black border border-black inline-block font-semibold text-center;
-  }
-  .submit-button {
-    @apply rounded-lg py-3 px-5 bg-emerald-300 text-black border border-black inline-block font-semibold cursor-pointer text-center;
-  }
-  .index-button {
-    @apply rounded-lg py-3 px-5 bg-amber-500 text-black border border-black inline-block font-semibold cursor-pointer text-center;
-  }
-}
+<%# Button classes removed - now using helper methods in ApplicationHelper %>
+<%# See: back_button_classes, edit_button_classes, show_button_classes, %>
+<%# delete_button_classes, new_button_classes, submit_button_classes, index_button_classes %>
 @import 'actiontext.css';

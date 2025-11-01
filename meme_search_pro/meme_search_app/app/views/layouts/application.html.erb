@@ -29,7 +29,8 @@
   </head>
   <body class="bg-white dark:bg-slate-800 text-black dark:text-white">
     <%= render 'shared/nav' %>
-    <div class="pt-10 h-full">
+    <%# Added pt-28 to account for fixed navbar %>
+    <div class="pt-28 pb-12 h-full">
       <% flash.each do |key, message| %>
         <%= render partial: "shared/notifications", locals: {key: key, message: message} %>
       <% end %>

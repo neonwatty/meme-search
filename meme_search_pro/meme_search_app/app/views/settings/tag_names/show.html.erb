@@ -1,10 +1,12 @@
+<%= render 'settings/shared/tabs' %>
+
 <div class="mx-auto md:w-2/3 w-full flex">
   <div class="mx-auto">
     <%= render @tag_name %>
-    <%= link_to "Edit this tag", [:edit, :settings, @tag_name], class: "edit-button" %>
-    <%= link_to "Back to tags", [:settings, :tag_names], class: "back-button" %>
+    <%= link_to "Edit this tag", [:edit, :settings, @tag_name], class: edit_button_classes %>
+    <%= link_to "Back to tags", [:settings, :tag_names], class: back_button_classes %>
     <div class="inline-block ml-2">
-      <%= button_to "Delete this tag",[:settings, @tag_name], method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "delete-button" %>
+      <%= button_to "Delete this tag",[:settings, @tag_name], method: :delete, data: { turbo_confirm: "Are you sure?" }, class: delete_button_classes %>
     </div>
   </div>
 </div>

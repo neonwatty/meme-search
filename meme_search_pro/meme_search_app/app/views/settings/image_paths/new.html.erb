@@ -1,5 +1,7 @@
+<%= render 'settings/shared/tabs' %>
+
 <div class="mx-auto md:w-2/3 w-full">
   <h1 class="font-bold text-4xl">New directory path</h1>
   <%= render "form", image_path: @image_path %>
-  <%= link_to "Back to directory paths", [:settings, :image_paths], class: "back-button" %>
+  <%= link_to "Back to directory paths", [:settings, :image_paths], class: back_button_classes %>
 </div>

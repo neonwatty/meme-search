@@ -1,8 +1,8 @@
 <div class="flex flex-col h-full items-center justify-center">
   <%= render partial: "image_core", locals: {image_core: @image_core} %>
   <div class="flex flex-row space-x-4 mt-3">
-    <%= link_to "Edit details", [:edit, @image_core], class: "edit-button" %>
-    <%= link_to "Back to memes", root_path, class: "back-button" %>
-    <%= button_to "Delete", @image_core, method: :delete,  data: { confirm: 'Are you sure?' }, class: "delete-button" %>
+    <%= link_to "Edit details", [:edit, @image_core], class: edit_button_classes %>
+    <%= link_to "Back to memes", root_path, class: back_button_classes %>
+    <%= button_to "Delete", @image_core, method: :delete,  data: { confirm: 'Are you sure?' }, class: delete_button_classes %>
   </div>
 </div>
