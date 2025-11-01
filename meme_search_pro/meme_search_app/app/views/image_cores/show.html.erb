@@ -1,6 +1,16 @@
-<div class="flex flex-col h-full items-center justify-center">
-  <%= render partial: "image_core", locals: {image_core: @image_core} %>
-  <div class="flex flex-row space-x-4 mt-3">
+<div class="flex flex-col h-full items-center justify-center px-4 py-8">
+  <!-- Page Header -->
+  <div class="text-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Meme Details</h1>
+  </div>
+
+  <!-- Glassmorphic Card Wrapper -->
+  <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-3xl p-8 shadow-2xl max-w-3xl w-full">
+    <%= render partial: "image_core_detail", locals: {image_core: @image_core} %>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="flex flex-row space-x-4 mt-6">
     <%= link_to "Edit details", [:edit, @image_core], class: edit_button_classes %>
     <%= link_to "Back to memes", root_path, class: back_button_classes %>
     <%= button_to "Delete", @image_core, method: :delete,  data: { confirm: 'Are you sure?' }, class: delete_button_classes %>

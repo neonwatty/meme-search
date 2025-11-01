@@ -1,6 +1,17 @@
-<div class="flex flex-col h-full items-center justify-center">
-  <%= render "edit", image_core: @image_core %>
-  <div class="flex flex-row space-x-4 mt-3">
+<div class="flex flex-col h-full items-center justify-center px-4 py-8">
+  <!-- Page Header -->
+  <div class="text-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Edit Meme</h1>
+    <p class="text-gray-600 dark:text-gray-400 mt-2">Update description and tags</p>
+  </div>
+
+  <!-- Glassmorphic Card Wrapper -->
+  <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-3xl p-8 shadow-2xl max-w-3xl w-full">
+    <%= render "edit", image_core: @image_core %>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="flex flex-row space-x-4 mt-6">
     <%= link_to "Back", @image_core, class: show_button_classes %>
     <%= link_to "Back to memes", :image_cores, class: back_button_classes %>
   </div>

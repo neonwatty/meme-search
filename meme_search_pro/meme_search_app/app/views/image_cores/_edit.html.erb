@@ -1,61 +1,95 @@
-<div class="text-black dark:text-white bg-slate-200 dark:bg-slate-700 rounded-2xl w-auto px-4 flex flex-row", id="image_core_card_<%image_core.id%>">
-  <%= form_with(model: image_core, class: "contents") do |form| %>
-    <div class="flex flex-col space-x-10 mb-5 mt-5 w-auto content-center"  id="<%dom_id image_core %>">
-      <div class="flex flex-col items-center content-center h-full w-auto">
-        <% absolute_path, image_name = absolute_image_path(image_core) %>
-        <%= image_tag(absolute_path, size: "450", alt: image_name) %>
-        <div class="flex flex-col my-auto space-y-2 w-full items-center mt-3">
-          <div class="flex flex-row items-center w-full justify-between">
-            <h3 class="mx-2"> description: </h3>
-            <div class="flex flex-row items-center justify-center space-x-2 mr-1">
-              <% div_id = "status-image-core-id-#{image_core.id}" %>
-              <%= render partial: "generate_status", locals: {img_id: image_core.id, div_id: "status-image-core-id-#{image_core.id}", status: image_core.status} %>
-            </div>
+<%= form_with(model: image_core, data: {controller: "character-counter"}, class: "w-full") do |form| %>
+  <div class="flex flex-col items-center space-y-6" id="image_core_edit_<%=image_core.id%>">
+
+    <!-- Image Display -->
+    <div class="w-full flex justify-center">
+      <% absolute_path, image_name = absolute_image_path(image_core) %>
+      <%= image_tag(absolute_path,
+        class: "rounded-2xl shadow-2xl max-w-full h-auto",
+        style: "max-height: 400px;",
+        alt: image_name) %>
+    </div>
+
+    <!-- Generation Status -->
+    <div class="w-full flex items-center justify-center space-x-2">
+      <%= render partial: "generate_status",
+        locals: {
+          img_id: image_core.id,
+          div_id: "status-image-core-id-#{image_core.id}",
+          status: image_core.status
+        } %>
+    </div>
+
+    <!-- Description Field -->
+    <div class="w-full">
+      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+        Description
+      </label>
+      <%= form.text_area :description,
+        placeholder: "Enter meme description...",
+        rows: 6,
+        data: {
+          action: "input->character-counter#update",
+          character_counter_target: "input"
+        },
+        class: "w-full px-4 py-3 text-gray-700 dark:text-gray-200 bg-white/80 dark:bg-slate-700/80 backdrop-blur-lg border-2 border-indigo-200/50 dark:border-indigo-700/50 rounded-2xl shadow-lg focus:outline-none focus:ring-4 focus:ring-indigo-500/50 dark:focus:ring-indigo-600/50 focus:border-indigo-500 dark:focus:border-indigo-600 transition-all resize-none",
+        id: "image_core_update_description_area" %>
+      <div class="flex justify-between items-center mt-2">
+        <p class="text-xs text-gray-500 dark:text-gray-400">
+          Describe what makes this meme funny or memorable
+        </p>
+        <p class="text-sm text-gray-600 dark:text-gray-400 font-mono">
+          <span data-character-counter-target="count">0</span> characters
+        </p>
+      </div>
+    </div>
+
+    <!-- Tags Field -->
+    <div class="w-full">
+      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+        Tags
+      </label>
+      <% tag_names = TagName.all.map {|item| item.name.strip} %>
+      <% image_tags = image_core.image_tags&.map { |tag| tag.tag_name&.name } %>
+      <%= form.fields_for :image_tags, @image_core.image_tags.first do |tag_fields| %>
+        <div data-controller="multi-select" class="relative">
+          <div
+            data-action="click->multi-select#toggle"
+            class="bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-gray-200/50 dark:border-gray-600/50 rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all cursor-pointer"
+            id="edit_image_core_edit_tags">
+            <input
+              readonly
+              name="image_core[selected_tag_names]"
+              data-multi-select-target="selectedItems"
+              class="w-full bg-transparent text-gray-700 dark:text-gray-300 outline-none cursor-pointer"
+              placeholder="Choose tags">
           </div>
-          <%= form.text_area(:description, placeholder: image_core.description, class:"text-black w-full", id:"image_core_update_description_area") %>
-        </div>
-        <div class="flex flex-col my-auto mt-5 h-full items-center">
-          <h3 class="mb-2"> tags: </h3>
-          <% tag_names = TagName.all.map {|item| item.name.strip} %>
-          <% tag_colors = TagName.all.map {|item| item.color.strip}.join(",") %>
-          <% image_tags = image_core.image_tags&.map { |tag| tag.tag_name&.name } # &.compact&.join(", ") %>
-          <%= form.fields_for :image_tags, @image_core.image_tags.first do |tag_fields| %>
-            <div data-controller="multi-select" class="relative">
-              <div
-                 data-action="click->multi-select#toggle"
-                class="border rounded-md p-3 bg-white shadow-md cursor-pointer"
-                id="edit_image_core_edit_tags"
-                >
-                <input readonly name="image_core[selected_tag_names]" data-multi-select-target="selectedItems" class="text-gray-900" placeholder="Choose tags">
-              </div>
-              <div
-                  data-multi-select-target="options"
-                  class="absolute left-0 right-0 mt-1 hidden bg-white border rounded-md shadow-lg z-10"
-                >
-                <% tag_names.each_with_index do |tag, index|  %>
-                  <div class="p-2 flex items-center", id='tag_<%= index %>'>
-                    <%= tag_fields.text_field :name,
-                        class: 'mr-2 pr-4', 
-                        data: {
-                          action: "change->multi-select#updateSelection"
-                        },
-                        type: "checkbox",
-                        value: tag.to_s.downcase,
-                        checked: image_tags.include?(tag) ? true : false
-                  %>
-                    <%= tag_fields.label :tag, tag.to_s, class: "text-black"%>
-                  </div>
-                <% end %>
+          <div
+            data-multi-select-target="options"
+            class="absolute left-0 right-0 mt-2 hidden bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50 rounded-2xl shadow-2xl z-20 overflow-hidden">
+            <% tag_names.each_with_index do |tag, index|  %>
+              <div class="p-3 flex items-center hover:bg-indigo-50/50 dark:hover:bg-indigo-900/20 transition-colors border-b border-gray-100/50 dark:border-gray-700/50 last:border-b-0" id='tag_edit_<%= index %>'>
+                <%= tag_fields.text_field :name,
+                  class: 'mr-3 w-5 h-5 text-indigo-600 bg-white dark:bg-slate-700 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 cursor-pointer',
+                  data: {
+                    action: "change->multi-select#updateSelection"
+                  },
+                  type: "checkbox",
+                  value: tag.to_s.downcase,
+                  checked: image_tags.include?(tag) ? true : false
+                %>
+                <%= tag_fields.label :tag, tag.to_s, class: "text-gray-700 dark:text-gray-300 font-medium cursor-pointer"%>
               </div>
             <% end %>
           </div>
-          <div class="w-full flex items-center justify-center">
-            <div class="mt-5">
-              <%= form.submit "Save", class: submit_button_classes %>
-            </div>
-          </div>
         </div>
-      </div>
+      <% end %>
     </div>
-  <% end %>
-</div>
+
+    <!-- Submit Button -->
+    <div class="w-full flex justify-center pt-4">
+      <%= form.submit "Save Changes", class: primary_button_classes + " w-full sm:w-auto" %>
+    </div>
+
+  </div>
+<% end %>
