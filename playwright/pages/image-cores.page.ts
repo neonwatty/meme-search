@@ -44,9 +44,10 @@ export class ImageCoresPage {
 
   /**
    * Get count of tags displayed on the show page
+   * Note: Glassmorphic UI displays tags as <span> elements with tag_detail_ prefix
    */
   async getTagCount(): Promise<number> {
-    const tags = this.page.locator('div[id^="tag_"]');
+    const tags = this.page.locator('span[id^="tag_detail_"]');
     return await tags.count();
   }
 
@@ -60,10 +61,10 @@ export class ImageCoresPage {
   }
 
   /**
-   * Click "Edit this image" button on show page
+   * Click "Edit details" button on show page
    */
   async clickEditDetails(): Promise<void> {
-    const button = this.page.getByRole('link', { name: 'Edit this image' }).first();
+    const button = this.page.getByRole('link', { name: 'Edit details' });
     await button.click();
     await this.page.waitForLoadState('networkidle');
   }
@@ -97,13 +98,14 @@ export class ImageCoresPage {
   }
 
   /**
-   * Get the current value of the description textarea
+   * Get the current value of the description on show page
+   * Note: Glassmorphic UI displays description as <p> tag, not textarea
    */
   async getDescriptionValue(): Promise<string> {
-    // On show page, the description is in a disabled textarea
-    const imageCoreId = await this.getImageCoreIdFromUrl();
-    const textarea = this.page.locator(`#description-image-core-id-${imageCoreId}`);
-    return (await textarea.inputValue()) || '';
+    // On show page, description is in a paragraph within the description section
+    const descriptionPara = this.page.locator('label:has-text("Description") + div p').first();
+    const text = await descriptionPara.textContent();
+    return text?.trim() || '';
   }
 
   /**
@@ -117,22 +119,23 @@ export class ImageCoresPage {
 
   /**
    * Select a tag by checking its checkbox
+   * Note: Glassmorphic UI uses tag_edit_ prefix for edit page tag IDs
    * @param tagIndex - The index of the tag (0-based)
    */
   async selectTag(tagIndex: number): Promise<void> {
-    const checkbox = this.page.locator(`#tag_${tagIndex} input[type="checkbox"]`);
+    const checkbox = this.page.locator(`#tag_edit_${tagIndex} input[type="checkbox"]`);
     await checkbox.check();
     await this.page.waitForTimeout(300); // Wait for checkbox state to update
   }
 
   /**
-   * Close the tag dropdown by clicking outside of it
+   * Close the tag dropdown by clicking the toggle again
+   * Note: Glassmorphic UI uses multi-select controller that toggles on click
    */
   async closeTagDropdown(): Promise<void> {
-    // Click on the card background to close dropdown
-    const card = this.page.locator('div[id^="image_core_card_"]').first();
-    await card.click();
-    await this.page.waitForTimeout(500); // Wait for dropdown animation
+    // Click the dropdown toggle to close it
+    await this.page.locator('#edit_image_core_edit_tags').click();
+    await this.page.waitForTimeout(300); // Wait for dropdown animation
   }
 
   /**
