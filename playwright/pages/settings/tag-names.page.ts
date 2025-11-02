@@ -31,15 +31,12 @@ export class TagNamesPage {
 
   /**
    * Navigate to tag names via Settings menu
+   * Note: Settings now links directly to Tags page
    */
   async navigateViaSettingsMenu(): Promise<void> {
-    // Click on Settings menu item
-    await this.settingsMenuItem.getByText('Settings').click();
-    await this.page.waitForTimeout(500);
-
-    // Click on Tags submenu (use first match to avoid duplicate link)
-    await this.page.getByRole('link', { name: 'Tags' }).first().click();
-    await this.page.waitForTimeout(500);
+    // Click on Settings link (now goes directly to Tags page)
+    await this.page.locator('#settings').click();
+    await this.page.waitForLoadState('networkidle');
   }
 
   /**

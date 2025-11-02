@@ -39,15 +39,22 @@ export class ImagePathsPage {
 
   /**
    * Navigate to image paths via Settings menu
+   * Note: Settings now links to Tags page by default, then navigate to Paths via tabs
    */
   async navigateViaSettingsMenu(): Promise<void> {
-    // Click on Settings menu item
-    await this.settingsMenuItem.getByText('Settings').click();
-    await this.page.waitForTimeout(500);
+    // Click on Settings link (goes to Tags page by default)
+    await this.page.locator('#settings').click();
+    await this.page.waitForLoadState('networkidle');
 
-    // Click on Paths submenu (use first match to avoid duplicate link)
-    await this.page.getByRole('link', { name: 'Paths' }).first().click();
-    await this.page.waitForTimeout(500);
+    // Navigate to Paths tab from settings page
+    await this.page.getByRole('link', { name: 'Paths' }).click();
+    await this.page.waitForLoadState('networkidle');
+
+    // Wait for heading to update (ensure Turbo Stream completes)
+    await this.page.waitForFunction(() => {
+      const heading = document.querySelector('h1');
+      return heading?.textContent?.includes('Manage Directory Paths');
+    }, { timeout: 3000 });
   }
 
   /**
