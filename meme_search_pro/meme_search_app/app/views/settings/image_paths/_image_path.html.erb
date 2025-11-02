@@ -1,7 +1,17 @@
-<div id="<%= dom_id image_path %>" class="flex flex-row space-x-10 mb-5 mt-5">
-  <p class="my-5">
-    <div class="text-black dark:text-white bg-slate-200 dark:bg-slate-700 p-2 rounded-xl">
-      <%= image_path.name %>
+<div id="<%= dom_id image_path %>" class="flex flex-col space-y-3">
+  <!-- Path Display -->
+  <div class="flex items-center justify-center">
+    <div class="bg-gray-100/80 dark:bg-slate-700/80 backdrop-blur-lg border border-gray-300/50 dark:border-gray-600/50 rounded-xl px-4 py-3 shadow-md">
+      <code class="text-sm font-mono text-gray-800 dark:text-gray-200">
+        /public/memes/<%= image_path.name %>
+      </code>
     </div>
-  </p>
+  </div>
+
+  <!-- Path Stats (if available) -->
+  <div class="text-center">
+    <p class="text-xs text-gray-500 dark:text-gray-400">
+      Directory path
+    </p>
+  </div>
 </div>

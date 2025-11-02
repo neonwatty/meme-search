@@ -1,7 +1,19 @@
 <%= render 'settings/shared/tabs' %>
 
-<div class="mx-auto md:w-2/3 w-full">
-  <h1 class="font-bold text-4xl">Edit tag</h1>
-  <%= render "form", tag_name: @tag_name %>
-  <%= link_to "Back to tags", [:settings, :tag_names], class: back_button_classes %>
+<div class="flex flex-col items-center justify-center px-4 py-8">
+  <!-- Page Header -->
+  <div class="text-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Edit Tag</h1>
+    <p class="text-gray-600 dark:text-gray-400 mt-2">Update tag name and color</p>
+  </div>
+
+  <!-- Glassmorphic Card Wrapper -->
+  <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-3xl p-8 shadow-2xl max-w-2xl w-full">
+    <%= render "form", tag_name: @tag_name %>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="mt-6">
+    <%= link_to "Back to tags", [:settings, :tag_names], class: back_button_classes %>
+  </div>
 </div>
