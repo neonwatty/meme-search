@@ -27,7 +27,7 @@ test.describe('Image-to-Texts Settings', () => {
 
     // Verify the heading is correct
     const headingText = await imageToTextsPage.getHeading();
-    expect(headingText).toContain('Available models');
+    expect(headingText).toContain('AI Models');
   });
 
   test('updating the current model to all available models', async ({ page }) => {

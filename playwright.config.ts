@@ -50,7 +50,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: process.env.CI ? undefined : {
-    command: 'cd meme_search_pro/meme_search_app && bin/rails tailwindcss:build && bin/rails server -e test',
+    command: 'cd meme_search_pro/meme_search_app && mise exec -- bin/rails tailwindcss:build && mise exec -- bin/rails server -e test',
     url: 'http://localhost:3000',
     reuseExistingServer: false, // Always restart to clear caches between test runs
     stdout: 'ignore',

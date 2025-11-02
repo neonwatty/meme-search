@@ -45,8 +45,8 @@ export class ImagePathsPage {
     await this.settingsMenuItem.getByText('Settings').click();
     await this.page.waitForTimeout(500);
 
-    // Click on Paths submenu (use role to avoid matching heading)
-    await this.page.getByRole('link', { name: 'Paths' }).click();
+    // Click on Paths submenu (use first match to avoid duplicate link)
+    await this.page.getByRole('link', { name: 'Paths' }).first().click();
     await this.page.waitForTimeout(500);
   }
 
@@ -152,11 +152,11 @@ export class ImagePathsPage {
   }
 
   /**
-   * Click "Adjust / delete" button (first occurrence)
+   * Click "Edit path" button (first occurrence)
    */
   async clickAdjustDeleteFirst(): Promise<void> {
-    const adjustButton = this.page.getByRole('link', { name: 'Adjust / delete' }).first();
-    await adjustButton.click();
+    const editButton = this.page.getByRole('link', { name: 'Edit path' }).first();
+    await editButton.click();
     await this.page.waitForTimeout(500);
   }
 

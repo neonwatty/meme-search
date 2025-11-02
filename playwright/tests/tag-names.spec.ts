@@ -32,14 +32,14 @@ test.describe('Tag Names Settings', () => {
 
     // Verify heading is correct
     let headingText = await tagNamesPage.getHeading();
-    expect(headingText).toContain('Current tags');
+    expect(headingText).toContain('Manage Tags');
 
     // Navigate via Settings menu --> Tags
     await tagNamesPage.navigateViaSettingsMenu();
 
     // Verify heading after navigation
     headingText = await tagNamesPage.getHeading();
-    expect(headingText).toContain('Current tags');
+    expect(headingText).toContain('Manage Tags');
 
     // Count total number of original current tags
     const firstTagCount = await tagNamesPage.getTagCount();
@@ -48,7 +48,7 @@ test.describe('Tag Names Settings', () => {
     // Click on "Create New"
     await tagNamesPage.clickCreateNew();
     headingText = await tagNamesPage.getHeading();
-    expect(headingText).toContain('New tag');
+    expect(headingText).toContain('Create New Tag');
 
     // Enter name for new tag and create
     await tagNamesPage.fillTagName(testTagName);

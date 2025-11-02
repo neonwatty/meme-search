@@ -32,14 +32,14 @@ test.describe('Image Paths Settings', () => {
 
     // Verify heading is correct
     let headingText = await imagePathsPage.getHeading();
-    expect(headingText).toContain('Current directory paths');
+    expect(headingText).toContain('Manage Directory Paths');
 
     // Navigate via Settings menu --> Paths
     await imagePathsPage.navigateViaSettingsMenu();
 
     // Verify heading after navigation
     headingText = await imagePathsPage.getHeading();
-    expect(headingText).toContain('Current directory paths');
+    expect(headingText).toContain('Manage Directory Paths');
 
     // Count total number of original current paths
     const firstPathCount = await imagePathsPage.getPathCount();
@@ -48,7 +48,7 @@ test.describe('Image Paths Settings', () => {
     // Click on "Create New"
     await imagePathsPage.clickCreateNew();
     headingText = await imagePathsPage.getHeading();
-    expect(headingText).toContain('New directory path');
+    expect(headingText).toContain('Add Directory Path');
 
     // Enter name for new path and create
     await imagePathsPage.fillPathName('example_memes_3');
@@ -86,7 +86,7 @@ test.describe('Image Paths Settings', () => {
     // Click on "Create New"
     await imagePathsPage.clickCreateNew();
     headingText = await imagePathsPage.getHeading();
-    expect(headingText).toContain('New directory path');
+    expect(headingText).toContain('Add Directory Path');
 
     // Enter name for invalid path and try to create
     await imagePathsPage.fillPathName('not_a_valid_path');

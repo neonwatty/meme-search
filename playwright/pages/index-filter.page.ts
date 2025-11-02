@@ -39,9 +39,9 @@ export class IndexFilterPage {
     this.filterSlideover = page.locator('div#filters_slideover dialog[data-slideover-target="dialog"]');
 
     // Buttons
-    this.openFiltersButton = page.getByRole('button', { name: 'Open filters' });
-    this.closeWithoutFilteringButton = page.getByRole('button', { name: 'Close without filtering' });
-    this.applyFiltersButton = page.getByRole('button', { name: 'Apply filters' });
+    this.openFiltersButton = page.getByRole('button', { name: 'Filters' });
+    this.closeWithoutFilteringButton = page.getByRole('button', { name: 'Close' });
+    this.applyFiltersButton = page.getByRole('button', { name: 'Apply Filters' });
 
     // Dropdown Toggles
     this.tagToggle = page.locator('div#tag_toggle');

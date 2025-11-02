@@ -60,10 +60,10 @@ export class ImageCoresPage {
   }
 
   /**
-   * Click "Edit details" button on show page
+   * Click "Edit this image" button on show page
    */
   async clickEditDetails(): Promise<void> {
-    const button = this.page.getByRole('link', { name: 'Edit details' });
+    const button = this.page.getByRole('link', { name: 'Edit this image' }).first();
     await button.click();
     await this.page.waitForLoadState('networkidle');
   }

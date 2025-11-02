@@ -37,8 +37,8 @@ export class TagNamesPage {
     await this.settingsMenuItem.getByText('Settings').click();
     await this.page.waitForTimeout(500);
 
-    // Click on Tags submenu (use role to avoid matching heading)
-    await this.page.getByRole('link', { name: 'Tags' }).click();
+    // Click on Tags submenu (use first match to avoid duplicate link)
+    await this.page.getByRole('link', { name: 'Tags' }).first().click();
     await this.page.waitForTimeout(500);
   }
 
@@ -115,11 +115,11 @@ export class TagNamesPage {
   }
 
   /**
-   * Click "Adjust / delete" button (first occurrence)
+   * Click "Edit tag" button (first occurrence)
    */
   async clickAdjustDeleteFirst(): Promise<void> {
-    const adjustButton = this.page.getByRole('link', { name: 'Adjust / delete' }).first();
-    await adjustButton.click();
+    const editButton = this.page.getByRole('link', { name: 'Edit tag' }).first();
+    await editButton.click();
     await this.page.waitForTimeout(500);
   }
 
