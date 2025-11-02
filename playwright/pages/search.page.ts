@@ -72,10 +72,11 @@ export class SearchPage {
 
   /**
    * Get the current search mode ('keyword' or 'vector')
+   * Note: Converts text to lowercase to match test expectations
    */
   async getSearchMode(): Promise<string> {
     const modeText = await this.searchToggleText.textContent();
-    return modeText?.trim() || 'keyword';
+    return modeText?.trim().toLowerCase() || 'keyword';
   }
 
   /**
