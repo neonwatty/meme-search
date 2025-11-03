@@ -1,8 +1,14 @@
 name: rails tests for meme search pro app
 
 on:
+  workflow_dispatch:
   pull_request:
-    branches: ["main"]
+    branches: ["main", "develop"]
+    paths:
+      - "meme_search_pro/meme_search_app/**"
+      - ".github/workflows/pro-app-test.yml"
+  push:
+    branches: ["main", "develop"]
     paths:
       - "meme_search_pro/meme_search_app/**"
       - ".github/workflows/pro-app-test.yml"
