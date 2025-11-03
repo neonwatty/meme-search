@@ -41,21 +41,16 @@ class ImageDescriptionChannelTest < ActionCable::Channel::TestCase
     div_id = "description-image-core-id-123"
     description = "Test description"
 
-    data = nil
-    stub_connection.stub(:transmit, ->(message) {
-      data = message
-    }) do
+    # Verify broadcast includes the expected data structure
+    assert_broadcasts("image_description_channel", 1) do
       ActionCable.server.broadcast(
         "image_description_channel",
         { div_id: div_id, description: description }
       )
     end
 
-    # Give time for broadcast to be received
-    sleep 0.1
-
-    # Verify structure (if data was captured)
-    # Note: Direct broadcast verification can be tricky in tests
+    # Verify the subscription is still active after broadcast
+    assert subscription.confirmed?
   end
 
   test "handles multiple subscribers" do

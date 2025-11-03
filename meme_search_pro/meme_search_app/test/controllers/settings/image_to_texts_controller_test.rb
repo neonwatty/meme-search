@@ -46,7 +46,7 @@ module Settings
 
     # Update current tests
     test "should update current model" do
-      post settings_update_current_image_to_texts_url, params: {
+      post update_current_settings_image_to_texts_url, params: {
         current_id: @model2.id
       }
 
@@ -66,7 +66,7 @@ module Settings
       @model1.update!(current: true)
       @model2.update!(current: true)
 
-      post settings_update_current_image_to_texts_url, params: {
+      post update_current_settings_image_to_texts_url, params: {
         current_id: @model1.id
       }
 
@@ -77,7 +77,7 @@ module Settings
     end
 
     test "update_current should handle missing current_id" do
-      post settings_update_current_image_to_texts_url, params: {
+      post update_current_settings_image_to_texts_url, params: {
         current_id: nil
       }
 
@@ -91,7 +91,7 @@ module Settings
       @model2.update!(current: false)
 
       # Switch to model2
-      post settings_update_current_image_to_texts_url, params: {
+      post update_current_settings_image_to_texts_url, params: {
         current_id: @model2.id
       }
 
@@ -103,7 +103,7 @@ module Settings
     end
 
     test "update_current should set correct flash message" do
-      post settings_update_current_image_to_texts_url, params: {
+      post update_current_settings_image_to_texts_url, params: {
         current_id: @model2.id
       }
 
@@ -112,7 +112,7 @@ module Settings
 
     # Integration tests
     test "should persist current model selection across requests" do
-      post settings_update_current_image_to_texts_url, params: {
+      post update_current_settings_image_to_texts_url, params: {
         current_id: @model2.id
       }
 
@@ -125,15 +125,15 @@ module Settings
 
     test "should handle rapid model switching" do
       # Switch back and forth rapidly
-      post settings_update_current_image_to_texts_url, params: {
+      post update_current_settings_image_to_texts_url, params: {
         current_id: @model2.id
       }
 
-      post settings_update_current_image_to_texts_url, params: {
+      post update_current_settings_image_to_texts_url, params: {
         current_id: @model1.id
       }
 
-      post settings_update_current_image_to_texts_url, params: {
+      post update_current_settings_image_to_texts_url, params: {
         current_id: @model2.id
       }
 
@@ -162,7 +162,7 @@ module Settings
       )
 
       # Switch to model3
-      post settings_update_current_image_to_texts_url, params: {
+      post update_current_settings_image_to_texts_url, params: {
         current_id: model3.id
       }
 
@@ -178,14 +178,14 @@ module Settings
     # Error handling tests
     test "should handle invalid current_id" do
       assert_raises(ActiveRecord::RecordNotFound) do
-        post settings_update_current_image_to_texts_url, params: {
+        post update_current_settings_image_to_texts_url, params: {
           current_id: 99999
         }
       end
     end
 
     test "should handle empty params" do
-      post settings_update_current_image_to_texts_url, params: {}
+      post update_current_settings_image_to_texts_url, params: {}
 
       # Should handle gracefully
       assert_redirected_to settings_image_to_texts_url

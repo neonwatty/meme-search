@@ -133,18 +133,19 @@ module Settings
         end
       end
 
-      ImageCore.create!(
+      image_core = ImageCore.create!(
         name: "test.jpg",
         description: "test",
         status: :not_started,
         image_path: image_path
       )
 
+      # Mock HTTP DELETE request to image-to-text service using Webmock
+      stub_request(:delete, /\/remove_job\/#{image_core.id}/)
+        .to_return(status: 200, body: "success", headers: {})
+
       assert_difference("ImageCore.count", -1) do
-        # Mock HTTP call
-        Net::HTTP.stub_any_instance(:request, Net::HTTPSuccess.new("1.1", "200", "OK")) do
-          delete settings_image_path_url(image_path)
-        end
+        delete settings_image_path_url(image_path)
       end
     end
 

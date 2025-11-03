@@ -57,6 +57,12 @@ end
 group :test do
   # Code coverage reporting
   gem "simplecov", require: false
+
+  # Controller testing helpers (assigns, assert_template)
+  gem "rails-controller-testing"
+
+  # HTTP request stubbing
+  gem "webmock"
 end
 
 # user added
