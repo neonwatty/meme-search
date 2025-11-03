@@ -73,7 +73,7 @@ jobs:
         run: gem uninstall error_highlight -v 0.3.0 && bin/rubocop -f github
         working-directory: ./meme_search_pro/meme_search_app
 
-  pro_app_tests:
+  pro_app_unit_tests:
     runs-on: ubuntu-latest
 
     services:
@@ -89,7 +89,7 @@ jobs:
 
     steps:
       - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips postgresql-client
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -111,48 +111,6 @@ jobs:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
         run: bin/rails db:test:prepare
-
-      - name: Run image cores system test
-        working-directory: ./meme_search_pro/meme_search_app
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
-        run: bin/rails test test/system/image_cores_test.rb
-
-      - name: Run image paths test
-        working-directory: ./meme_search_pro/meme_search_app
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
-        run: bin/rails test test/system/image_paths_test.rb
-
-      - name: Run image to texts system test
-        working-directory: ./meme_search_pro/meme_search_app
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
-        run: bin/rails test test/system/image_to_texts_test.rb
-
-      - name: Run index filter test
-        working-directory: ./meme_search_pro/meme_search_app
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
-        run: bin/rails test test/system/index_filter_test.rb
-
-      - name: Run search test
-        working-directory: ./meme_search_pro/meme_search_app
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
-        run: bin/rails test test/system/search_test.rb
-
-      - name: Run tag names test
-        working-directory: ./meme_search_pro/meme_search_app
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
-        run: bin/rails test test/system/tag_names_test.rb
 
       - name: Run model tests
         working-directory: ./meme_search_pro/meme_search_app
@@ -177,14 +135,6 @@ jobs:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
           COVERAGE: true
         run: bin/rails test test/channels
-
-      - name: Keep screenshots from failed system tests
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: screenshots
-          path: ${{ github.workspace }}/tmp/screenshots
-          if-no-files-found: ignore
 
   playwright_tests:
     runs-on: ubuntu-latest
