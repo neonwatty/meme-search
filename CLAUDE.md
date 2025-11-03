@@ -560,7 +560,7 @@ ruby --version  # Should show 3.4.2
 - Better debugging with traces and time-travel
 - More maintainable with Page Object Model
 
-**Capybara Status**: Still present for observation period, planned for removal after 2 weeks of stable Playwright tests in CI.
+**Capybara Status**: ✅ Removed - Playwright is now the sole E2E testing solution (November 2025).
 
 **Migration Plan**: See `plans/playwright-migration-next-steps.md` for Phase 3 (Cleanup & Optimization) tasks.
 
@@ -625,9 +625,10 @@ ruby --version  # Should show 3.4.2
 - Subscription, broadcasting, unsubscription
 - Use `assert_broadcasts`, `assert_has_stream`, `assert_no_streams`
 
-**System Tests** (`test/system/`):
-- Full browser-based E2E tests with Capybara/Selenium
-- Existing tests cover: image_cores, search, tags, paths, filters
+**E2E Tests** (Playwright):
+- Full browser-based E2E tests with Playwright (16 tests, 100% passing)
+- Tests cover: image_cores, search, tags, paths, filters, settings
+- See `playwright/README.md` for comprehensive documentation
 
 **Coverage:**
 - SimpleCov with Rails preset
@@ -725,7 +726,7 @@ def test_model_loading(mock_processor, mock_model):
 - Brakeman security scan
 - JavaScript dependency audit
 - RuboCop linting
-- System tests (Capybara with Chrome)
+- Playwright E2E tests (16 tests, separate job with browser caching)
 - Model, controller, and channel tests with coverage
 - PostgreSQL service with pgvector
 

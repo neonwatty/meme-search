@@ -43,7 +43,7 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        viewport: { width: 1400, height: 1400 }, // Match Capybara config
+        viewport: { width: 1400, height: 1400 }, // Standard test viewport
       },
     },
   ],

@@ -3,8 +3,15 @@
 # Prepare the database
 bin/rails db:test:prepare
 
-# Loop through each test file in the system test directory and run it
-for test_file in test/system/*_test.rb; do
-  echo "Running $test_file..."
-  bin/rails test "$test_file"
-done
+echo "Running model tests..."
+bin/rails test test/models
+
+echo "Running controller tests..."
+bin/rails test test/controllers
+
+echo "Running channel tests..."
+bin/rails test test/channels
+
+echo "✅ All Rails tests complete!"
+echo ""
+echo "📝 To run E2E tests, use: npm run test:e2e"

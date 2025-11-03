@@ -47,3 +47,7 @@ scratch.rb
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+# Test coverage reports
+/coverage/*
+!/coverage/.keep

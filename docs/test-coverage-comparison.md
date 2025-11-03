@@ -1,8 +1,11 @@
 # Test Coverage Comparison: Capybara vs Playwright
 
+> **⚠️ HISTORICAL DOCUMENT**: Capybara has been removed from the codebase (November 2025). This document is preserved for reference and rationale.
+
 **Analysis Date**: 2025-10-31
 **Branch**: `rails-8-update-3`
 **Status**: ✅ Playwright provides equal or better coverage
+**Outcome**: Capybara fully removed on 2025-11-03
 
 ---
 

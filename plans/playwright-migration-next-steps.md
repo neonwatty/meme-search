@@ -1,8 +1,8 @@
 # Playwright Migration & Rails 8 Upgrade - Next Steps
 
 **Branch**: `rails-8-update-3`
-**Status**: Phase 2 Complete - All Tests Migrated! 🎉
-**Last Updated**: 2025-10-31
+**Status**: Phase 3 Complete - Capybara Removed! 🎉
+**Last Updated**: 2025-11-03
 
 ---
 
@@ -120,24 +120,26 @@
 
 ## 🎯 Phase 3: Cleanup & Optimization
 
-### Once All Tests Migrated
+### Once All Tests Migrated ✅
 
-- [ ] Compare test coverage between Capybara and Playwright
-- [ ] Ensure no regressions in test coverage
-- [ ] Document any differences or limitations
+- [x] Compare test coverage between Capybara and Playwright (see `docs/test-coverage-comparison.md`)
+- [x] Ensure no regressions in test coverage (100% coverage + 1 new test)
+- [x] Document any differences or limitations (documented)
 
-### Remove Capybara (Optional)
+### Remove Capybara ✅ COMPLETE (2025-11-03)
 
-**⚠️ Only after all tests migrated and verified**
+**All Capybara dependencies and code have been removed**
 
-- [ ] Remove `gem "capybara"` from Gemfile (test group)
-- [ ] Remove `gem "selenium-webdriver"` from Gemfile (test group)
-- [ ] Delete `test/system/` directory
-- [ ] Delete `test/application_system_test_case.rb`
-- [ ] Remove Capybara configuration from test helper
-- [ ] Update GitHub Actions to remove Capybara test steps
-- [ ] Run full test suite to ensure nothing broken
-- [ ] Update documentation
+- [x] Remove `gem "capybara"` from Gemfile (test group)
+- [x] Remove `gem "selenium-webdriver"` from Gemfile (test group)
+- [x] Delete `test/system/` directory (6 files, 608 lines removed)
+- [x] Delete `test/application_system_test_case.rb`
+- [x] Remove Capybara configuration from test helper (none found)
+- [x] Update GitHub Actions to remove Capybara test steps
+- [x] Update `run_tests.sh` to remove system test references
+- [x] Update Rails config to use 8.0 defaults
+- [x] Run full test suite to ensure nothing broken (all passing)
+- [x] Update documentation (CLAUDE.md, this file, test-coverage-comparison.md)
 
 ---
 
