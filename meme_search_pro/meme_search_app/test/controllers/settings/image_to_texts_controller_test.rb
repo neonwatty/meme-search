@@ -194,7 +194,8 @@ module Settings
     # Private method tests
     test "should have image_to_text_params method" do
       controller = Settings::ImageToTextsController.new
-      assert_respond_to controller, :image_to_text_params, true
+      # In Rails 8, use private_methods to check for private method existence
+      assert_includes controller.private_methods, :image_to_text_params
     end
 
     test "image_to_text_params should permit name and description" do
