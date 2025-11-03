@@ -134,6 +134,82 @@ docker compose -f docker-compose-local-build.yml up --build
 # Create .env with: APP_PORT=8080
 ```
 
+### Docker E2E Tests
+
+This project includes a separate Docker-based E2E testing infrastructure that validates the full microservices stack (Rails + Python + PostgreSQL) in isolated containers. These tests are designed for **local validation** before major releases, not for CI/CD pipelines.
+
+**For comprehensive Docker E2E documentation**, see `playwright-docker/README.md`.
+
+#### Key Differences from CI E2E Tests
+
+**Docker E2E Tests** (`playwright-docker/`):
+- ✅ Tests fresh Docker builds from source
+- ✅ Validates production-like deployment
+- ✅ Tests cross-service communication in containers
+- ✅ Isolated ports (3001, 5433, 8000)
+- ❌ NOT for CI/CD (10-15 minute builds)
+- 📊 Current status: 6/7 tests passing (85%)
+
+**CI E2E Tests** (`playwright/`):
+- ✅ Tests against local services (no Docker builds)
+- ✅ Fast execution (2-3 minutes)
+- ✅ Runs in GitHub Actions
+- ✅ 16/16 tests passing (100%)
+
+#### Quick Start
+
+```bash
+# From project root directory
+
+# Run all Docker E2E tests (includes setup + teardown)
+npm run test:e2e:docker
+
+# Manual control
+npm run test:e2e:docker:setup      # Build + start services
+npm run test:e2e:docker:run        # Run tests only
+npm run test:e2e:docker:teardown   # Stop + cleanup
+
+# Development modes
+npm run test:e2e:docker:ui         # Interactive UI mode
+npm run test:e2e:docker:headed     # See browser
+npm run test:e2e:docker:debug      # Step-through debugging
+npm run test:e2e:docker:report     # View last report
+```
+
+#### Architecture
+
+**Services** (isolated Docker network):
+- **PostgreSQL**: `localhost:5433` (pgvector/pgvector:pg17)
+- **Rails App**: `localhost:3001` (production mode)
+- **Python Service**: `localhost:8000` (test model)
+
+**Smoke Tests** (Phase 1):
+1. ✅ All services are running
+2. ✅ All services pass health checks
+3. ✅ Rails responds to root endpoint
+4. ✅ Python API responds with correct format
+5. ✅ Rails connects to PostgreSQL
+6. ✅ Database has been seeded
+7. ✅ Services are network-accessible to each other
+
+**Timeline**:
+- First run: 10-15 minutes (Docker builds from source)
+- Subsequent runs: 2-3 minutes (cached images)
+
+#### When to Use
+
+Use Docker E2E tests when:
+- Validating major changes before merging to `main`
+- Testing cross-service communication (HTTP, WebSockets, webhooks)
+- Verifying production deployment configuration
+- Debugging multi-container issues
+
+Use CI E2E tests (`playwright/`) for:
+- Regular development workflows
+- Quick feedback during feature development
+- Automated testing in GitHub Actions
+- Parallel test execution
+
 ### Playwright E2E Tests
 
 This project uses [Playwright](https://playwright.dev/) with TypeScript for end-to-end testing. **All system tests have been successfully migrated from Capybara to Playwright** (16/16 tests, 100% complete).
