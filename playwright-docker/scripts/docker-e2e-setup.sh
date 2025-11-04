@@ -55,7 +55,7 @@ echo -e "${GREEN} Cleanup complete${NC}"
 
 # Build images
 echo -e "${YELLOW}Building Docker images (this may take a few minutes)...${NC}"
-docker compose -f docker-compose.e2e.yml build --no-cache
+docker compose -f docker-compose.e2e.yml build
 
 if [ $? -ne 0 ]; then
   echo -e "${RED} Docker build failed${NC}"

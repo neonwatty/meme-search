@@ -24,10 +24,16 @@ cd "$PROJECT_ROOT"
 # Create logs directory if it doesn't exist
 mkdir -p "$LOG_DIR"
 
-# Save logs
-echo -e "${YELLOW}Saving service logs...${NC}"
-docker compose -f docker-compose.e2e.yml logs > "$LOG_DIR/docker-e2e-${TIMESTAMP}.log" 2>&1 || true
-echo -e "${GREEN}✓ Logs saved to $LOG_DIR/docker-e2e-${TIMESTAMP}.log${NC}"
+# Check if Docker daemon is responsive
+if ! docker ps >/dev/null 2>&1; then
+  echo -e "${YELLOW}⚠ Docker daemon not responsive - skipping log save${NC}"
+  echo -e "${YELLOW}Note: This may happen if Docker crashed during tests${NC}"
+else
+  # Save logs
+  echo -e "${YELLOW}Saving service logs...${NC}"
+  docker compose -f docker-compose.e2e.yml logs > "$LOG_DIR/docker-e2e-${TIMESTAMP}.log" 2>&1 || true
+  echo -e "${GREEN}✓ Logs saved to $LOG_DIR/docker-e2e-${TIMESTAMP}.log${NC}"
+fi
 
 # Stop and remove containers
 echo -e "${YELLOW}Stopping Docker services...${NC}"
