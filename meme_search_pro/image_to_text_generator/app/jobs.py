@@ -35,49 +35,71 @@ def proccess_job(input_job_details: dict) -> dict:
 
 
 def process_jobs(JOB_DB, APP_URL):
+    logging.info("Worker thread started - ready to process jobs")
     while True:
-        with lock:
-            conn = sqlite3.connect(JOB_DB)
-            cursor = conn.cursor()
+        conn = None
+        try:
+            with lock:
+                conn = sqlite3.connect(JOB_DB)
+                cursor = conn.cursor()
 
-            cursor.execute("SELECT * FROM jobs ORDER BY id LIMIT 1")
-            job = cursor.fetchone()
+                cursor.execute("SELECT * FROM jobs ORDER BY id LIMIT 1")
+                job = cursor.fetchone()
 
-            if job:
-                # unpack job
-                job_id, image_core_id, image_path, model = job
+                if job:
+                    # unpack job
+                    job_id, image_core_id, image_path, model = job
 
-                # pack up data for processing / status update
-                input_job_details = {
-                    "image_core_id": image_core_id,
-                    "image_path": "/app/public/memes/" + image_path if "tests" not in JOB_DB else image_path,
-                    "model": model,
-                }
-                status_job_details = {"image_core_id": image_core_id, "status": 2}
+                    # pack up data for processing / status update
+                    input_job_details = {
+                        "image_core_id": image_core_id,
+                        "image_path": "/app/public/memes/" + image_path if "tests" not in JOB_DB else image_path,
+                        "model": model,
+                    }
+                    status_job_details = {"image_core_id": image_core_id, "status": 2}
 
-                # send status update (image out of queue and in process)
-                status_sender(status_job_details, APP_URL)
+                    # send status update (image out of queue and in process)
+                    status_sender(status_job_details, APP_URL)
 
-                # report that processing has begun
-                logging.info("Processing job: %s", input_job_details)
+                    # report that processing has begun
+                    logging.info("Processing job: %s", input_job_details)
 
-                # process job
-                output_job_details = proccess_job(input_job_details)
+                    # process job
+                    output_job_details = proccess_job(input_job_details)
 
-                # send results to main app
-                description_sender(output_job_details, APP_URL)
+                    # send results to main app
+                    description_sender(output_job_details, APP_URL)
 
-                # send status update (image processing complete)
-                status_job_details["status"] = 3
-                status_sender(status_job_details, APP_URL)
+                    # send status update (image processing complete)
+                    status_job_details["status"] = 3
+                    status_sender(status_job_details, APP_URL)
 
-                # log completion
-                logging.info("Finished processing job: %s", input_job_details)
+                    # log completion
+                    logging.info("Finished processing job: %s", input_job_details)
 
-                # Remove the processed job from the queue
-                cursor.execute("DELETE FROM jobs WHERE id = ?", (job_id,))
-                conn.commit()
-            else:
-                # If there are no jobs, wait for a while before checking again
-                logging.info("No jobs in queue. Waiting...")
+                    # Remove the processed job from the queue
+                    cursor.execute("DELETE FROM jobs WHERE id = ?", (job_id,))
+                    conn.commit()
+                else:
+                    # If there are no jobs, wait for a while before checking again
+                    logging.info("No jobs in queue. Waiting...")
+
+                # Always close connection before sleep/continue
+                if conn:
+                    conn.close()
+                    conn = None
+
+            # Sleep outside the lock to allow other operations
+            if not job:
                 time.sleep(5)
+
+        except Exception as e:
+            logging.error(f"Worker thread error: {e}", exc_info=True)
+            # Close connection on error
+            if conn:
+                try:
+                    conn.close()
+                except:
+                    pass
+            # Sleep before retrying
+            time.sleep(5)

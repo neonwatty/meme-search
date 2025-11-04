@@ -3,7 +3,9 @@ import os
 
 # system constants
 APP_PORT = os.environ.get("APP_PORT", "3000")
-APP_URL = f"http://meme_search_pro:{APP_PORT}/image_cores/"
+# Use GEN_URL from environment (set by Docker) or fall back to default
+GEN_URL = os.environ.get("GEN_URL", f"http://meme_search_pro:{APP_PORT}")
+APP_URL = GEN_URL + "/image_cores/"
 JOB_DB = "/app/db/job_queue.db"
 
 # model constants
