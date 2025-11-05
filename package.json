@@ -10,7 +10,7 @@
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:report": "playwright show-report",
     "test:e2e:codegen": "playwright codegen http://localhost:3000",
-    "test:e2e:docker": "bash playwright-docker/scripts/docker-e2e-setup.sh && npm run test:e2e:docker:run; EXIT_CODE=$?; AUTO_CLEANUP=true npm run test:e2e:docker:teardown; exit $EXIT_CODE",
+    "test:e2e:docker": "bash -c 'trap \"AUTO_CLEANUP=true npm run test:e2e:docker:teardown\" EXIT; bash playwright-docker/scripts/docker-e2e-setup.sh && npm run test:e2e:docker:run'",
     "test:e2e:docker:setup": "bash playwright-docker/scripts/docker-e2e-setup.sh",
     "test:e2e:docker:run": "playwright test --config=playwright-docker/config/playwright.config.docker.ts",
     "test:e2e:docker:teardown": "bash playwright-docker/scripts/docker-e2e-teardown.sh",

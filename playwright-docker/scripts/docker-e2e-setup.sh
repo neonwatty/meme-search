@@ -19,20 +19,40 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 ENV_FILE="$SCRIPT_DIR/../.env.docker-e2e"
 
+# Cleanup function to ensure Docker services are stopped on any exit
+cleanup_on_exit() {
+  local exit_code=$?
+  if [ $exit_code -ne 0 ]; then
+    echo ""
+    echo -e "${YELLOW}⚠ Setup interrupted or failed - cleaning up Docker services...${NC}"
+    cd "$PROJECT_ROOT" 2>/dev/null || true
+    docker compose -f docker-compose.e2e.yml down -v --remove-orphans 2>/dev/null || true
+    echo -e "${GREEN}✓ Cleanup complete${NC}"
+  fi
+}
+
+# Set trap to cleanup on script error/interrupt (not on successful exit)
+trap cleanup_on_exit ERR INT TERM
+
 # Load environment
 if [ -f "$ENV_FILE" ]; then
-  echo -e "${GREEN} Loading environment from $ENV_FILE${NC}"
+  echo -e "${GREEN}✓ Loading environment from $ENV_FILE${NC}"
   set -a
   source "$ENV_FILE"
   set +a
 else
-  echo -e "${RED} Error: Environment file not found: $ENV_FILE${NC}"
+  echo -e "${RED}✗ Error: Environment file not found: $ENV_FILE${NC}"
   exit 1
 fi
 
 cd "$PROJECT_ROOT"
 
-# Check for port conflicts
+# Clean up previous containers and volumes FIRST
+echo -e "${YELLOW}Cleaning up previous test environment...${NC}"
+docker compose -f docker-compose.e2e.yml down -v --remove-orphans 2>/dev/null || true
+echo -e "${GREEN}✓ Cleanup complete${NC}"
+
+# Check for port conflicts (after cleanup)
 echo -e "${YELLOW}Checking for port conflicts...${NC}"
 PORTS_IN_USE=""
 for PORT in 3001 5433; do
@@ -42,43 +62,38 @@ for PORT in 3001 5433; do
 done
 
 if [ -n "$PORTS_IN_USE" ]; then
-  echo -e "${RED} Ports in use:$PORTS_IN_USE${NC}"
+  echo -e "${RED}✗ Ports in use:$PORTS_IN_USE${NC}"
   echo -e "${YELLOW}Run: lsof -ti:3001,5433 | xargs kill -9${NC}"
   exit 1
 fi
-echo -e "${GREEN} Ports 3001, 5433 are available${NC}"
-
-# Clean up previous containers and volumes
-echo -e "${YELLOW}Cleaning up previous test environment...${NC}"
-docker compose -f docker-compose.e2e.yml down -v --remove-orphans 2>/dev/null || true
-echo -e "${GREEN} Cleanup complete${NC}"
+echo -e "${GREEN}✓ Ports 3001, 5433 are available${NC}"
 
 # Build images
 echo -e "${YELLOW}Building Docker images (this may take a few minutes)...${NC}"
 docker compose -f docker-compose.e2e.yml build
 
 if [ $? -ne 0 ]; then
-  echo -e "${RED} Docker build failed${NC}"
+  echo -e "${RED}✗ Docker build failed${NC}"
   exit 1
 fi
-echo -e "${GREEN} Images built successfully${NC}"
+echo -e "${GREEN}✓ Images built successfully${NC}"
 
 # Start services
 echo -e "${YELLOW}Starting Docker services...${NC}"
 docker compose -f docker-compose.e2e.yml up -d
 
 if [ $? -ne 0 ]; then
-  echo -e "${RED} Failed to start services${NC}"
+  echo -e "${RED}✗ Failed to start services${NC}"
   exit 1
 fi
-echo -e "${GREEN} Services started${NC}"
+echo -e "${GREEN}✓ Services started${NC}"
 echo ""
 
 # Wait for services to be healthy
 bash "$SCRIPT_DIR/wait-for-services.sh"
 
 if [ $? -ne 0 ]; then
-  echo -e "${RED} Services did not become healthy${NC}"
+  echo -e "${RED}✗ Services did not become healthy${NC}"
   echo -e "${YELLOW}Displaying recent logs:${NC}"
   docker compose -f docker-compose.e2e.yml logs --tail=50
   exit 1
@@ -87,7 +102,7 @@ fi
 # Display helpful information
 echo -e "${BLUE}TPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPW${NC}"
 echo -e "${BLUE}Q     Environment Ready for Testing     Q${NC}"
-echo -e "${BLUE}ZPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP]${NC}"
+echo -e "${BLUE}ZPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP]${NC}"
 echo ""
 echo -e "${GREEN}Run tests:${NC}"
 echo "  npm run test:e2e:docker:run"

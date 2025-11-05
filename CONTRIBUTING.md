@@ -33,6 +33,16 @@ Make Changes: Make your changes and ensure they follow the coding style of the p
 
 Test Your Changes: Test your changes to ensure they work as expected.
 
+**Run Docker E2E Tests**: If your changes affect Docker, cross-service communication, or the image processing pipeline, you MUST run Docker E2E tests locally:
+
+```sh
+npm run test:e2e:docker
+```
+
+These tests validate the complete microservices stack (Rails + Python + PostgreSQL) and DO NOT run in CI. Local validation is required before submitting PRs.
+
+See `playwright-docker/README.md` for details on what these tests cover.
+
 Commit Your Changes: Commit your changes with a clear and descriptive commit message.
 
 ```sh

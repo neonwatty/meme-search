@@ -214,6 +214,35 @@ rubocop app
 
 to ensure the code is clean and well formatted.
 
+#### Docker E2E Tests (Local Validation Only)
+
+**Docker E2E tests validate the complete microservices stack** (Rails + Python + PostgreSQL) in isolated Docker containers. These tests run against fresh Docker builds and test cross-service communication, webhooks, and production-like deployment.
+
+**Current Status**: 12/12 tests passing (100% coverage)
+
+```bash
+# Run all Docker E2E tests
+npm run test:e2e:docker
+
+# Run with UI mode (recommended for debugging)
+npm run test:e2e:docker:ui
+```
+
+**What these tests cover**:
+- Complete image processing pipeline (Rails → Python → Rails webhooks)
+- Vector search with embedding generation
+- Keyword search functionality
+- Concurrent processing and job queueing
+- Embedding refresh operations
+
+**Important**: These tests **DO NOT run in CI** due to Docker build time (~10-15 minutes) and resource requirements. **Contributors MUST run these tests locally** before submitting PRs that affect:
+- Docker configurations
+- Cross-service communication
+- Image-to-text generation workflow
+- Embedding generation
+
+See `playwright-docker/README.md` for comprehensive documentation.
+
 ## Changelog
 
 Meme Search is under active development! See the `CHANGELOG.md` in this repo for a record of the most recent changes.
