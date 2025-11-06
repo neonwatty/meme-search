@@ -56,7 +56,7 @@ jobs:
 
       - name: Scan for security vulnerabilities in JavaScript dependencies
         working-directory: ./meme_search_pro/meme_search_app
-        run: gem uninstall error_highlight -v 0.3.0 && bin/importmap audit
+        run: gem uninstall error_highlight -v 0.3.0 -x 2>/dev/null || true && bin/importmap audit
 
   pro_app_lint:
     runs-on: ubuntu-latest
@@ -76,7 +76,7 @@ jobs:
         working-directory: ./meme_search_pro/meme_search_app
 
       - name: Lint code for consistent style
-        run: gem uninstall error_highlight -v 0.3.0 && bin/rubocop -f github
+        run: gem uninstall error_highlight -v 0.3.0 -x 2>/dev/null || true && bin/rubocop -f github
         working-directory: ./meme_search_pro/meme_search_app
 
   pro_app_unit_tests:
