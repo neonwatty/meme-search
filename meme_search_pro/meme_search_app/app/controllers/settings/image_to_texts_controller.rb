@@ -10,19 +10,18 @@ module Settings
       # Unset all "current" values
       ImageToText.update_all(current: false)
 
-      # puts all params
-      puts params
-
       # Set the selected "current" record
       if params[:current_id].present?
-        ImageToText.find(params[:current_id]).update(current: true)
+        begin
+          ImageToText.find(params[:current_id]).update(current: true)
+        rescue ActiveRecord::RecordNotFound => e
+          Rails.logger.warn "ImageToText record not found: #{params[:current_id]}"
+          # Continue gracefully - no model will be current
+        end
       end
 
       # Get name of the current model
-      current_model = ImageToText.find_by(current: true).name
-
-      # puts all image_to_texts
-      puts ImageToText.all
+      current_model = ImageToText.find_by(current: true)&.name
 
       respond_to do |format|
         flash = { notice: "Current model set to: #{current_model}" }

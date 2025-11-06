@@ -177,11 +177,22 @@ module Settings
 
     # Error handling tests
     test "should handle invalid current_id" do
-      assert_raises(ActiveRecord::RecordNotFound) do
-        post update_current_settings_image_to_texts_url, params: {
-          current_id: 99999
-        }
-      end
+      # Generate a guaranteed invalid ID
+      max_id = ImageToText.maximum(:id) || 0
+      invalid_id = max_id + 10000
+
+      post update_current_settings_image_to_texts_url, params: {
+        current_id: invalid_id
+      }
+
+      # Should handle gracefully without raising error
+      assert_redirected_to settings_image_to_texts_url
+
+      # Should set flash message (with empty model name since none is current)
+      assert_equal "Current model set to: ", flash[:notice]
+
+      # No model should be current (all were unset, invalid ID was skipped)
+      assert_equal 0, ImageToText.where(current: true).count
     end
 
     test "should handle empty params" do
@@ -189,6 +200,12 @@ module Settings
 
       # Should handle gracefully
       assert_redirected_to settings_image_to_texts_url
+
+      # Should set flash message (with empty model name since no current_id provided)
+      assert_equal "Current model set to: ", flash[:notice]
+
+      # No model should be current (all were unset, no new current_id set)
+      assert_equal 0, ImageToText.where(current: true).count
     end
 
     # Private method tests
