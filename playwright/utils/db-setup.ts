@@ -50,7 +50,12 @@ export async function resetTestDatabase(): Promise<void> {
       `${prefix}bin/rails ${task} RAILS_ENV=test`,
       {
         cwd: RAILS_APP_DIR,
-        env: { ...process.env, RAILS_ENV: 'test' },
+        env: {
+          ...process.env,
+          RAILS_ENV: 'test',
+          // Ensure DATABASE_URL is passed through in CI
+          ...(process.env.DATABASE_URL && { DATABASE_URL: process.env.DATABASE_URL })
+        },
       }
     );
 
@@ -77,7 +82,12 @@ export async function seedTestDatabase(): Promise<void> {
       `${prefix}bin/rails db:test:seed RAILS_ENV=test`,
       {
         cwd: RAILS_APP_DIR,
-        env: { ...process.env, RAILS_ENV: 'test' },
+        env: {
+          ...process.env,
+          RAILS_ENV: 'test',
+          // Ensure DATABASE_URL is passed through in CI
+          ...(process.env.DATABASE_URL && { DATABASE_URL: process.env.DATABASE_URL })
+        },
       }
     );
 
@@ -103,7 +113,12 @@ export async function cleanTestDatabase(): Promise<void> {
       `${prefix}bin/rails db:test:clean RAILS_ENV=test`,
       {
         cwd: RAILS_APP_DIR,
-        env: { ...process.env, RAILS_ENV: 'test' },
+        env: {
+          ...process.env,
+          RAILS_ENV: 'test',
+          // Ensure DATABASE_URL is passed through in CI
+          ...(process.env.DATABASE_URL && { DATABASE_URL: process.env.DATABASE_URL })
+        },
       }
     );
 
