@@ -319,7 +319,7 @@ class ImageCoresController < ApplicationController
   def search_params
     permitted_params = params.permit([ :query, :checkbox_value, :authenticity_token, :source, :controller, :action, :selected_tag_names, search_tags: [ :tag ] ])
     permitted_params.delete(:search_tags)
-    selected_tag_names = permitted_params[:selected_tag_names].split(",").map { |tag| tag.strip }
+    selected_tag_names = (permitted_params[:selected_tag_names] || "").split(",").map { |tag| tag.strip }
     permitted_params.delete(:selected_tag_names)
     permitted_params[:selected_tag_names] = selected_tag_names
     permitted_params

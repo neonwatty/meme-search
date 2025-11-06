@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   resources :image_tags
 
   # Redirect /settings to /settings/tag_names (default settings page)
-  get '/settings', to: redirect('/settings/tag_names')
+  get "/settings", to: redirect("/settings/tag_names")
 
   namespace :settings do
     resources :tag_names

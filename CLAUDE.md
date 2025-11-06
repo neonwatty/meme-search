@@ -75,6 +75,38 @@ mise run bundle install         # Alternative syntax
 
 ## Development Commands
 
+### Unified CI Test Runner (Recommended)
+
+Run all tests across Rails + Python + E2E from project root:
+
+```bash
+# Run ALL CI tests (mirrors GitHub Actions exactly)
+npm test                          # ~5-10 minutes (Rails + Python + E2E)
+
+# Quick CI validation (skip E2E for faster feedback)
+npm run test:ci:skip-e2e          # ~3-5 minutes (Rails + Python only)
+
+# Service-specific tests
+npm run test:rails                # Only Rails tests (~2-3 min)
+npm run test:python               # Only Python tests (~1-2 min)
+
+# Verbose output for debugging
+npm run test:ci:verbose           # Show all test output
+
+# Direct bash script usage (alternative)
+bash run_all_ci_tests.sh          # Same as npm test
+bash run_all_ci_tests.sh --skip-e2e
+bash run_all_ci_tests.sh --skip-rails
+bash run_all_ci_tests.sh --verbose
+```
+
+**Features:**
+- ✅ Checks prerequisites (mise, PostgreSQL with pgvector)
+- ✅ Color-coded output (green = pass, red = fail)
+- ✅ Tracks failures across all services
+- ✅ Auto-starts Rails test server for E2E tests
+- ✅ Exit code 0 on success, 1 on failure (CI-friendly)
+
 ### Rails Application
 
 ```bash
@@ -84,11 +116,10 @@ cd meme_search_pro/meme_search_app
 ./bin/dev                    # Start development server
 
 # Testing
-bash run_tests.sh            # Run all tests
+bash run_tests.sh            # Run all Rails tests (models + controllers + channels)
 bin/rails test test/models   # Run model tests only
 bin/rails test test/controllers # Run controller tests only
 bin/rails test test/channels    # Run channel tests only
-bin/rails test test/system      # Run system tests only
 
 # Coverage (requires SimpleCov gem)
 COVERAGE=true bin/rails test test/models
@@ -110,12 +141,13 @@ rails db:schema:load         # Load schema
 cd meme_search_pro/image_to_text_generator
 
 # Testing
+bash run_tests.sh            # Run all Python tests (lint + integration + unit with coverage)
 pytest tests/                # Run all tests
-pytest tests/unit/           # Run unit tests only
-pytest tests/test_app.py     # Run integration tests only
+pytest tests/unit/           # Run unit tests only (88 tests, 81.52% coverage)
+pytest tests/test_app.py     # Run integration tests only (6 tests)
 
 # Coverage
-pytest tests/unit/ --cov=app --cov-report=html --cov-report=term-missing
+pytest tests/unit/ --cov=app --cov-report=html --cov-report=term-missing --cov-fail-under=60
 
 # Linting
 ruff check app/

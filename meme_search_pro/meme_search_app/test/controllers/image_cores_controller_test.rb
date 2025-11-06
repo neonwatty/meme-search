@@ -307,7 +307,7 @@ class ImageCoresControllerTest < ActionDispatch::IntegrationTest
     new_description = "AI generated description"
 
     # Mock ActionCable broadcast
-    ActionCable.server.stub(:broadcast, -> (channel, data) {
+    ActionCable.server.stub(:broadcast, ->(channel, data) {
       assert_equal "image_description_channel", channel
       assert_equal new_description, data[:description]
     }) do
@@ -336,6 +336,8 @@ class ImageCoresControllerTest < ActionDispatch::IntegrationTest
             description: "New description"
           }
         }
+        # Verify the request succeeded
+        assert_response :success
       end
     end
   end
@@ -344,7 +346,7 @@ class ImageCoresControllerTest < ActionDispatch::IntegrationTest
     new_status = 3 # done
 
     # Mock ActionCable broadcast
-    ActionCable.server.stub(:broadcast, -> (channel, data) {
+    ActionCable.server.stub(:broadcast, ->(channel, data) {
       assert_equal "image_status_channel", channel
     }) do
       post status_receiver_image_cores_url, params: {

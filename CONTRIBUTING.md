@@ -43,6 +43,16 @@ These tests validate the complete microservices stack (Rails + Python + PostgreS
 
 See `playwright-docker/README.md` for details on what these tests cover.
 
+**Run CI Locally (Optional)**: You can validate your changes match GitHub Actions CI before pushing using [act](https://github.com/nektos/act):
+
+```sh
+# Install act (macOS)
+brew install act
+
+# Run all CI jobs
+act --container-architecture linux/amd64 -P ubuntu-latest=catthehacker/ubuntu:act-latest
+```
+
 Commit Your Changes: Commit your changes with a clear and descriptive commit message.
 
 ```sh

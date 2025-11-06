@@ -2,7 +2,13 @@ import pytest
 import sqlite3
 import os
 import tempfile
-from app.job_queue import init_db, check_queue
+import sys
+from pathlib import Path
+
+# Add app directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "app"))
+
+from job_queue import init_db, check_queue
 
 
 class TestJobQueue:

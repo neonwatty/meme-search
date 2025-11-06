@@ -214,6 +214,23 @@ rubocop app
 
 to ensure the code is clean and well formatted.
 
+#### Running CI Locally (Optional)
+
+You can run the complete GitHub Actions CI workflow locally using [act](https://github.com/nektos/act):
+
+```bash
+# Install act (macOS)
+brew install act
+
+# Run all CI jobs
+act --container-architecture linux/amd64 -P ubuntu-latest=catthehacker/ubuntu:act-latest
+
+# Run specific job
+act -j pro_app_unit_tests --container-architecture linux/amd64 -P ubuntu-latest=catthehacker/ubuntu:act-latest
+```
+
+This validates your changes match CI before pushing to GitHub.
+
 #### Docker E2E Tests (Local Validation Only)
 
 **Docker E2E tests validate the complete microservices stack** (Rails + Python + PostgreSQL) in isolated Docker containers. These tests run against fresh Docker builds and test cross-service communication, webhooks, and production-like deployment.

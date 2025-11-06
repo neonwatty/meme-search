@@ -99,7 +99,7 @@ def process_jobs(JOB_DB, APP_URL):
             if conn:
                 try:
                     conn.close()
-                except:
+                except Exception:
                     pass
             # Sleep before retrying
             time.sleep(5)
