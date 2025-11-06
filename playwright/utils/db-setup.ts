@@ -30,8 +30,18 @@ async function getCommandPrefix(): Promise<string> {
 /**
  * Reset and seed the test database with fixture data
  * This runs the Rails rake task to prepare and seed the test database
+ *
+ * In CI, database is already prepared and seeded before tests start,
+ * so we skip reset to avoid truncation issues with the running Rails server
  */
 export async function resetTestDatabase(): Promise<void> {
+  // In CI, database is already prepared and seeded before tests
+  // Skip reset to avoid truncation issues with active Rails server connections
+  if (process.env.CI === 'true') {
+    console.log('Skipping database reset in CI (already prepared)');
+    return;
+  }
+
   console.log('Resetting test database...');
 
   try {
