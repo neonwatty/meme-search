@@ -94,8 +94,12 @@ test.describe('Image Cores', () => {
     const firstMemeCount = await imageCoresPage.getMemeCount();
     console.log(`Initial meme count: ${firstMemeCount}`);
 
-    // 2. Visit first meme show page (ID 1 from test fixtures)
-    await imageCoresPage.gotoShow(1);
+    // 2. Get first available meme ID and visit its show page
+    const firstMemeId = await imageCoresPage.getFirstMemeId();
+    expect(firstMemeId).not.toBeNull();
+    console.log(`First meme ID: ${firstMemeId}`);
+
+    await imageCoresPage.gotoShow(firstMemeId!);
     console.log(`Navigated to meme show page: ${page.url()}`);
 
     // 3. Set up dialog handler BEFORE clicking delete

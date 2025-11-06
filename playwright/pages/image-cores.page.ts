@@ -43,6 +43,23 @@ export class ImageCoresPage {
   }
 
   /**
+   * Get the ID of the first visible meme card
+   * Returns null if no meme cards are found
+   */
+  async getFirstMemeId(): Promise<number | null> {
+    const firstCard = this.page.locator('div[id^="image_core_card_"]:visible').first();
+    const count = await firstCard.count();
+    if (count === 0) return null;
+
+    const id = await firstCard.getAttribute('id');
+    if (!id) return null;
+
+    // Extract ID from "image_core_card_123" format
+    const match = id.match(/image_core_card_(\d+)/);
+    return match ? parseInt(match[1], 10) : null;
+  }
+
+  /**
    * Get count of tags displayed on the show page
    * Note: Glassmorphic UI displays tags as <span> elements with tag_detail_ prefix
    */
