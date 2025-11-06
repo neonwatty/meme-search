@@ -174,7 +174,7 @@ jobs:
           cache: 'npm'
 
       - name: Install Ruby dependencies
-        run: gem install bundler && bundle install
+        run: gem install bundler && bundle install && bundle exec rake assets:precompile
         working-directory: ./meme_search_pro/meme_search_app
 
       - name: Install Node.js dependencies
