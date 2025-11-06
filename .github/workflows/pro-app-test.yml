@@ -225,6 +225,7 @@ jobs:
         env:
           CI: 'true'
           BASE_URL: http://localhost:3000
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
         run: npm run test:e2e
 
       - name: Upload Playwright test results
