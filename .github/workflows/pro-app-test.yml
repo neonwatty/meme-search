@@ -223,6 +223,7 @@ jobs:
 
       - name: Run Playwright tests
         env:
+          CI: 'true'
           BASE_URL: http://localhost:3000
         run: npm run test:e2e
 
