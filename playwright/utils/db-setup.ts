@@ -35,19 +35,19 @@ async function getCommandPrefix(): Promise<string> {
  * so we skip reset to avoid truncation issues with the running Rails server
  */
 export async function resetTestDatabase(): Promise<void> {
-  // In CI, database is already prepared and seeded before tests
-  // Skip reset to avoid truncation issues with active Rails server connections
-  if (process.env.CI === 'true') {
-    console.log('Skipping database reset in CI (already prepared)');
-    return;
-  }
-
   console.log('Resetting test database...');
 
   try {
     const prefix = await getCommandPrefix();
+
+    // In CI, schema is already prepared, just truncate and reseed
+    // Locally, do full reset (drop, create, schema load, seed)
+    const task = process.env.CI === 'true'
+      ? 'db:test:seed'
+      : 'db:test:reset_and_seed';
+
     const { stdout, stderr } = await execAsync(
-      `${prefix}bin/rails db:test:reset_and_seed RAILS_ENV=test`,
+      `${prefix}bin/rails ${task} RAILS_ENV=test`,
       {
         cwd: RAILS_APP_DIR,
         env: { ...process.env, RAILS_ENV: 'test' },
