@@ -33,47 +33,48 @@ module Settings
 
     # Create tests
     test "should create image_path with valid directory" do
-      File.stub(:directory?, true) do
-        Dir.stub(:entries, [ ".", "..", "test.jpg" ]) do
-          File.stub(:file?, true) do
-            assert_difference("ImagePath.count") do
-              post settings_image_paths_url, params: {
-                image_path: { name: "new_valid_directory" }
-              }
-            end
-
-            assert_redirected_to settings_image_path_url(ImagePath.last)
-            assert_equal "Directory path successfully created!", flash[:notice]
-          end
-        end
+      # Use real test directory: public/memes/test_valid_directory
+      assert_difference("ImagePath.count") do
+        post settings_image_paths_url, params: {
+          image_path: { name: "test_valid_directory" }
+        }
       end
+
+      assert_redirected_to settings_image_path_url(ImagePath.last)
+      assert_equal "Directory path successfully created!", flash[:notice]
+
+      # Verify ImageCore was created from the image file
+      created_path = ImagePath.last
+      assert_equal "test_valid_directory", created_path.name
+      assert_equal 1, created_path.image_cores.count
+      assert_equal "test_image.jpg", created_path.image_cores.first.name
     end
 
     test "should not create image_path with invalid directory" do
-      File.stub(:directory?, false) do
-        assert_no_difference("ImagePath.count") do
-          post settings_image_paths_url, params: {
-            image_path: { name: "invalid_directory" }
-          }
-        end
+      # Use a directory name that doesn't exist
+      non_existent_dir = "test_nonexistent_directory_#{SecureRandom.hex(8)}"
 
-        assert_response :unprocessable_entity
-        assert_equal "Invalid directory path!", flash[:alert]
+      assert_no_difference("ImagePath.count") do
+        post settings_image_paths_url, params: {
+          image_path: { name: non_existent_dir }
+        }
       end
+
+      assert_response :unprocessable_entity
+      assert_equal "Invalid directory path!", flash[:alert]
     end
 
     test "should not create duplicate image_path" do
-      File.stub(:directory?, true) do
-        Dir.stub(:entries, []) do
-          assert_no_difference("ImagePath.count") do
-            post settings_image_paths_url, params: {
-              image_path: { name: @image_path.name }
-            }
-          end
+      # @image_path.name is "example_memes_1" from fixtures (already in DB)
+      # The directory also exists on the filesystem
 
-          assert_response :unprocessable_entity
-        end
+      assert_no_difference("ImagePath.count") do
+        post settings_image_paths_url, params: {
+          image_path: { name: @image_path.name }
+        }
       end
+
+      assert_response :unprocessable_entity
     end
 
     # Edit tests
@@ -84,38 +85,34 @@ module Settings
 
     # Update tests
     test "should update image_path with valid directory" do
-      File.stub(:directory?, true) do
-        Dir.stub(:entries, []) do
-          patch settings_image_path_url(@image_path), params: {
-            image_path: { name: "updated_directory" }
-          }
+      # Use real test directory: public/memes/test_empty_directory
+      patch settings_image_path_url(@image_path), params: {
+        image_path: { name: "test_empty_directory" }
+      }
 
-          assert_redirected_to settings_image_path_url(@image_path)
-          assert_equal "Directory path succesfully updated!", flash[:notice]
-        end
-      end
+      assert_redirected_to settings_image_path_url(@image_path)
+      assert_equal "Directory path succesfully updated!", flash[:notice]
+
+      @image_path.reload
+      assert_equal "test_empty_directory", @image_path.name
     end
 
     test "should not update image_path with invalid directory" do
-      File.stub(:directory?, false) do
-        patch settings_image_path_url(@image_path), params: {
-          image_path: { name: "invalid_directory" }
-        }
+      # Use a directory name that doesn't exist
+      non_existent_dir = "test_invalid_update_#{SecureRandom.hex(8)}"
 
-        assert_response :unprocessable_entity
-        assert_equal "Invalid directory path!", flash[:alert]
-      end
+      patch settings_image_path_url(@image_path), params: {
+        image_path: { name: non_existent_dir }
+      }
+
+      assert_response :unprocessable_entity
+      assert_equal "Invalid directory path!", flash[:alert]
     end
 
     # Destroy tests
     test "should destroy image_path" do
-      image_path = ImagePath.new(name: "test_to_delete")
-
-      File.stub(:directory?, true) do
-        Dir.stub(:entries, []) do
-          image_path.save!
-        end
-      end
+      # Create a new ImagePath using real test directory
+      image_path = ImagePath.create!(name: "test_empty_directory")
 
       assert_difference("ImagePath.count", -1) do
         delete settings_image_path_url(image_path)
@@ -126,14 +123,10 @@ module Settings
     end
 
     test "destroy should cascade delete image_cores" do
-      image_path = ImagePath.new(name: "test_path")
+      # Create ImagePath with real directory
+      image_path = ImagePath.create!(name: "test_empty_directory")
 
-      File.stub(:directory?, true) do
-        Dir.stub(:entries, []) do
-          image_path.save!
-        end
-      end
-
+      # Manually create ImageCore (skip after_save hooks)
       image_core = ImageCore.create!(
         name: "test.jpg",
         description: "test",
