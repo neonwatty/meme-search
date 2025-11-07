@@ -4,6 +4,20 @@ Use AI to index your memes by their content and text, making them easily retriev
 
 All processing - from image-to-text extraction, to vector embedding, to search - is performed locally.
 
+## 🎉 What's New in Version 2.0
+
+**Meme Search 2.0** brings major upgrades to the core infrastructure:
+
+- **Rails 8.0.4** - Upgraded from Rails 7.2 for improved performance and modern features
+- **Ruby 3.4.2** - Latest Ruby version with enhanced performance
+- **Playwright E2E Testing** - Complete migration from Capybara with 16/16 tests passing (0% flakiness)
+- **Mise Development Environment** - Standardized tool version management for consistent development
+- **Enhanced Test Coverage** - Comprehensive unit, integration, and E2E testing infrastructure
+
+See [RELEASE_NOTES.md](RELEASE_NOTES.md) for complete details and migration guide.
+
+---
+
 Click below to watch a demo! 👇
 
 [![Polarize demo](https://img.youtube.com/vi/weL3IBHZpUs/maxresdefault.jpg)](https://youtu.be/weL3IBHZpUs)
@@ -18,6 +32,7 @@ A table of contents for the remainder of this README:
 - [Meme search](#meme-search)
 
   - [Features](#features)
+  - [Requirements](#requirements)
   - [Installation instructions](#installation-instructions)
   - [Time to first generation / downloading models](#time-to-first-generation--downloading-models)
   - [Index your memes](#index-your-memes)
@@ -91,6 +106,20 @@ Features of Meme Search include:
 7. **New Organizational Tools**
 
    Filter by tags, directory paths, and description embeddings, plus toggle between keyword and vector search for more control.
+
+### Requirements
+
+**For Docker deployment** (recommended):
+- Docker and Docker Compose
+
+**For local development**:
+- Ruby 3.4.2
+- Rails 8.0.4
+- Python 3.12
+- Node.js 20 LTS
+- PostgreSQL 17 with pgvector extension
+
+We recommend using [mise](https://mise.jdx.dev/) for managing Ruby, Python, and Node.js versions. See [CLAUDE.md](CLAUDE.md) for detailed setup instructions.
 
 ### Installation instructions
 
@@ -192,7 +221,7 @@ This will build the docker images for the app, database, and auto description ge
 
 ### Running tests
 
-To run tests locally pull the repo and cd into the `meme_search/meme_search_pro/meme_search_app` directory. Install the requird gems as
+To run tests locally pull the repo and cd into the `meme_search/meme_search_pro/meme_search_app` directory. Install the required gems as
 
 ```sh
 bundle install
