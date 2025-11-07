@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   meme_search_pro:
     image: ghcr.io/neonwatty/meme_search_pro:latest
