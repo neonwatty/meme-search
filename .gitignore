@@ -11,6 +11,12 @@ meme_search_pro/db_data
 **.ruff_cache
 **models
 
+# Test Coverage
+**/.coverage
+**/coverage/
+**/htmlcov/
+**/.nyc_output/
+
 # Playwright
 node_modules/
 playwright-report/
