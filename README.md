@@ -235,7 +235,7 @@ This validates your changes match CI before pushing to GitHub.
 
 **Docker E2E tests validate the complete microservices stack** (Rails + Python + PostgreSQL) in isolated Docker containers. These tests run against fresh Docker builds and test cross-service communication, webhooks, and production-like deployment.
 
-**Current Status**: 12/12 tests passing (100% coverage)
+**Current Status**: 6/7 smoke tests passing (85% coverage) - see `playwright-docker/README.md` for details
 
 ```bash
 # Run all Docker E2E tests
