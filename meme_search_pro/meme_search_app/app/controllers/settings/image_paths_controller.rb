@@ -1,6 +1,6 @@
 module Settings
   class ImagePathsController < ApplicationController
-    before_action :set_image_path, only: %i[ show edit update destroy ]
+    before_action :set_image_path, only: %i[ show edit update destroy rescan ]
 
     # GET /settings/image_paths
     def index
@@ -54,6 +54,21 @@ module Settings
 
       respond_to do |format|
         flash[:notice] = "Directory path successfully deleted!"
+        format.html { redirect_to [ :settings, :image_paths ], status: :see_other }
+      end
+    end
+
+    # POST /settings/image_paths/1/rescan
+    def rescan
+      # Trigger the existing list_files_in_directory callback
+      # by calling the private method directly
+      @image_path.send(:list_files_in_directory)
+
+      # Count images for feedback
+      image_count = @image_path.image_cores.count
+
+      respond_to do |format|
+        flash[:notice] = "Directory rescanned! Found #{image_count} #{'image'.pluralize(image_count)}."
         format.html { redirect_to [ :settings, :image_paths ], status: :see_other }
       end
     end

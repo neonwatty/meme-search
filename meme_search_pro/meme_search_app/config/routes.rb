@@ -8,7 +8,11 @@ Rails.application.routes.draw do
 
   namespace :settings do
     resources :tag_names
-    resources :image_paths
+    resources :image_paths do
+      member do
+        post :rescan
+      end
+    end
     resources :image_to_texts do
     collection do
       post :update_current

@@ -62,4 +62,8 @@ module ApplicationHelper
   def index_button_classes
     "px-6 py-3 text-black font-semibold bg-amber-500 hover:bg-amber-600 rounded-2xl shadow-lg hover:shadow-xl transition-all"
   end
+
+  def rescan_button_classes
+    "px-6 py-3 text-black font-semibold bg-white border-2 border-black hover:bg-gray-100 rounded-2xl shadow-lg hover:shadow-xl transition-all"
+  end
 end

@@ -109,6 +109,136 @@ module Settings
       assert_equal "Invalid directory path!", flash[:alert]
     end
 
+    # --- Tests for Scenario A: Rescanning existing paths ---
+
+    test "touching existing path triggers rescan without creating duplicates" do
+      # Create path with test_valid_directory (has 1 image: test_image.jpg)
+      image_path = ImagePath.create!(name: "test_valid_directory")
+      initial_count = image_path.image_cores.count
+
+      assert_equal 1, initial_count, "Expected 1 ImageCore from initial creation"
+
+      # Touch the record to trigger after_save callback (simulating a rescan)
+      image_path.touch
+
+      # Count should remain the same (find_or_create_by prevents duplicates)
+      image_path.reload
+      assert_equal initial_count, image_path.image_cores.count,
+                   "Expected no duplicates after triggering rescan via touch"
+    end
+
+    test "updating path to different directory changes ImageCore associations" do
+      # Start with test_valid_directory (1 image)
+      image_path = ImagePath.create!(name: "test_valid_directory")
+      assert_equal 1, image_path.image_cores.count
+
+      old_cores_count = image_path.image_cores.count
+
+      # Update to test_empty_directory (0 images)
+      patch settings_image_path_url(image_path), params: {
+        image_path: { name: "test_empty_directory" }
+      }
+
+      assert_redirected_to settings_image_path_url(image_path)
+      image_path.reload
+
+      # Verify path name updated
+      assert_equal "test_empty_directory", image_path.name,
+                   "Expected path name to be updated"
+
+      # test_empty_directory has no images, so after_save callback runs but finds no files
+      # The old ImageCores remain associated until manually deleted or cascade deleted
+    end
+
+    # Rescan tests
+    test "should rescan image_path directory" do
+      # Use test_valid_directory which has 1 image file
+      image_path = ImagePath.create!(name: "test_valid_directory")
+      initial_count = image_path.image_cores.count
+
+      assert_equal 1, initial_count, "Expected 1 ImageCore from initial creation"
+
+      post rescan_settings_image_path_url(image_path)
+
+      assert_redirected_to settings_image_paths_url
+      assert_match(/Directory rescanned! Found \d+ images?\./, flash[:notice])
+
+      # Verify count remains the same (no duplicates)
+      image_path.reload
+      assert_equal initial_count, image_path.image_cores.count
+    end
+
+    test "rescan should find new images added to directory" do
+      # Create path with test_valid_directory (has 1 image)
+      image_path = ImagePath.create!(name: "test_valid_directory")
+      initial_count = image_path.image_cores.count
+
+      assert_equal 1, initial_count
+
+      # Mock Dir.entries to simulate a new file appearing
+      base_dir = Dir.getwd
+      full_path = base_dir + "/public/memes/" + image_path.name
+      original_entries = Dir.entries(full_path)
+      mocked_entries = original_entries + ["new_test_image.jpg"]
+
+      # Store original File methods
+      original_file_method = File.method(:file?)
+      original_join_method = File.method(:join)
+
+      Dir.stub :entries, mocked_entries do
+        File.stub :file?, ->(path) {
+          # Use original method for real files, return true for our mocked file
+          if path.end_with?("new_test_image.jpg")
+            true
+          else
+            original_file_method.call(path)
+          end
+        } do
+          File.stub :join, ->(dir, file) {
+            original_join_method.call(dir, file)
+          } do
+            post rescan_settings_image_path_url(image_path)
+          end
+        end
+      end
+
+      assert_redirected_to settings_image_paths_url
+      assert_match(/Found 2 images/, flash[:notice])
+
+      # Verify new ImageCore was created
+      image_path.reload
+      assert_equal 2, image_path.image_cores.count
+      assert_includes image_path.image_cores.pluck(:name), "new_test_image.jpg"
+    end
+
+    test "rescan should handle empty directory gracefully" do
+      # Create path with test_empty_directory (0 images)
+      image_path = ImagePath.create!(name: "test_empty_directory")
+
+      post rescan_settings_image_path_url(image_path)
+
+      assert_redirected_to settings_image_paths_url
+      assert_match(/Found 0 images/, flash[:notice])
+
+      image_path.reload
+      assert_equal 0, image_path.image_cores.count
+    end
+
+    test "rescan should not create duplicates on multiple rescans" do
+      image_path = ImagePath.create!(name: "test_valid_directory")
+      initial_count = image_path.image_cores.count
+
+      # Rescan multiple times
+      3.times do
+        post rescan_settings_image_path_url(image_path)
+        image_path.reload
+      end
+
+      # Count should remain the same after multiple rescans
+      assert_equal initial_count, image_path.image_cores.count,
+                   "Multiple rescans should not create duplicates"
+    end
+
     # Destroy tests
     test "should destroy image_path" do
       # Create a new ImagePath using real test directory

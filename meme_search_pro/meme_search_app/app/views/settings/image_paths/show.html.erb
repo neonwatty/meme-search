@@ -4,6 +4,7 @@
   <div class="mx-auto">
     <%= render @image_path %>
     <%= link_to "Edit this directory path", [:edit, :settings, @image_path], class: edit_button_classes %>
+    <%= button_to "Rescan directory", rescan_settings_image_path_path(@image_path), method: :post, class: rescan_button_classes + " ml-2" %>
     <%= link_to "Back to directory paths", [:settings, :image_paths], class: back_button_classes %>
     <div class="inline-block ml-2">
       <%= button_to "Delete this directory path", [:settings, @image_path], method: :delete,  data: { turbo_confirm: "Are you sure?" }, class: delete_button_classes %>
