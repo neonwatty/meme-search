@@ -1,15 +1,17 @@
-<div class="text-black dark:text-white bg-slate-200 dark:bg-slate-700 rounded-2xl w-auto px-4 flex flex-row", id="image_core_card_<%=image_core.id%>">
-  <div class="flex flex-col space-x-10 mb-5 mt-5 w-auto content-center"  id="<%dom_id image_core %>">
-    <div class="flex flex-col items-center content-center h-full w-auto">
-      <% absolute_path, image_name = absolute_image_path(image_core) %>
-      <%= image_tag(absolute_path, size: "450", alt: image_name) %>
-      <div class="flex flex-col my-auto space-y-2 w-full items-center mt-3">
-        <div class="flex flex-row items-center w-full justify-between">
-          <div class="flex flex-row items-center justify-center space-x-2 mr-1">
-            <% div_id = "status-image-core-id-#{image_core.id}"%>
-          </div>
-        </div>
-      </div>
-    </div>
+<% absolute_path, image_name = absolute_image_path(image_core) %>
+<%= image_tag(absolute_path, size: "300", alt: image_name, class: "rounded-lg w-full mb-2") %>
+
+<% if image_core.description.present? %>
+  <p class="text-xs px-2 mb-1 line-clamp-2 text-slate-700 dark:text-slate-300"><%= image_core.description %></p>
+<% end %>
+
+<% if image_core.image_tags.any? %>
+  <div class="flex gap-1 px-2 pb-2 flex-wrap">
+    <% image_core.image_tags.includes(:tag_name).each do |image_tag| %>
+      <% tag_name = image_tag.tag_name %>
+      <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: <%= tag_name.color %>33;">
+        <%= tag_name.name %>
+      </span>
+    <% end %>
   </div>
-</div>
+<% end %>
