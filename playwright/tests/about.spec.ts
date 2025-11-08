@@ -48,11 +48,10 @@ test.describe('About Page', () => {
     // Check that button is visible
     await expect(subscribeButton).toBeVisible();
 
-    // Check that button has purple/fuchsia gradient background (check classes)
+    // Check that button has white/slate background (check classes)
     const classes = await subscribeButton.getAttribute('class');
-    expect(classes).toContain('bg-gradient-to-r');
-    expect(classes).toContain('from-purple-600');
-    expect(classes).toContain('to-fuchsia-600');
+    expect(classes).toContain('bg-white');
+    expect(classes).toContain('dark:bg-slate-700');
 
     // Check for border styling
     expect(classes).toContain('border-2');
