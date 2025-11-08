@@ -22,6 +22,7 @@ services:
     container_name: image_to_text_generator
     environment: # <-- you can adjust these values in your .env file
       APP_PORT: "${APP_PORT:-3000}"
+      GEN_URL: "http://meme_search_pro:3000"
     expose:
       - "8000" 
     volumes: # <-- any additional meme directory must be mounted here - and placed in the /app/public/memes directory in the container (see example below)

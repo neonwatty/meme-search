@@ -2,8 +2,11 @@
   <!-- Tag Preview Badge -->
   <div class="flex items-center justify-center">
     <span class="inline-flex items-center px-6 py-3 rounded-full text-lg font-medium shadow-md transition-all"
+          data-color-preview-target="fullTagBadge"
           style="background-color: <%= tag_name.color %>33; color: <%= tag_name.color %>; border: 2px solid <%= tag_name.color %>;">
-      <span class="w-3 h-3 rounded-full mr-3" style="background-color: <%= tag_name.color %>;"></span>
+      <span class="w-3 h-3 rounded-full mr-3"
+            data-color-preview-target="fullTagDot"
+            style="background-color: <%= tag_name.color %>;"></span>
       <%= tag_name.name %>
     </span>
   </div>

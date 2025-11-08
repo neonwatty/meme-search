@@ -113,4 +113,73 @@ test.describe('Tag Names Settings', () => {
     console.log(`Tag count after delete: ${fourthTagCount}`);
     expect(fourthTagCount).toBe(firstTagCount);
   });
+
+  test('color preview updates in real-time when changing color picker', async ({ page }) => {
+    // Navigate to tag edit page
+    await tagNamesPage.goto();
+    await tagNamesPage.clickAdjustDeleteFirst();
+    await tagNamesPage.clickEditThisTag();
+
+    // Wait for page to load
+    await page.waitForTimeout(500);
+
+    // Get the color picker input and preview badge
+    const colorPicker = page.locator('#hex_color_bg');
+    const previewBadge = page.locator('[data-color-preview-target="previewBadge"]');
+    const previewDot = page.locator('[data-color-preview-target="preview"]');
+    const hexDisplay = page.locator('[data-color-preview-target="hexDisplay"]');
+
+    // Verify elements exist
+    await expect(colorPicker).toBeVisible();
+    await expect(previewBadge).toBeVisible();
+    await expect(previewDot).toBeVisible();
+    await expect(hexDisplay).toBeVisible();
+
+    // Get initial color
+    const initialColor = await colorPicker.inputValue();
+    console.log(`Initial color: ${initialColor}`);
+
+    // Change to a new color (bright blue)
+    const newColor = '#0080ff';
+    await colorPicker.fill(newColor);
+
+    // Wait a brief moment for Stimulus controller to update
+    await page.waitForTimeout(300);
+
+    // Verify the preview badge updates
+    const previewBadgeStyle = await previewBadge.getAttribute('style');
+    console.log(`Preview badge style: ${previewBadgeStyle}`);
+
+    // Check that the preview badge has the new color in its style
+    // Browser converts hex to rgb, so check for rgb(0, 128, 255) instead of #0080ff
+    expect(previewBadgeStyle).toContain('rgb(0, 128, 255)');
+    expect(previewBadgeStyle).toContain('background-color');
+    expect(previewBadgeStyle).toContain('border');
+
+    // Verify the small dot updates
+    const previewDotStyle = await previewDot.getAttribute('style');
+    console.log(`Preview dot style: ${previewDotStyle}`);
+    expect(previewDotStyle).toContain('rgb(0, 128, 255)');
+
+    // Verify the hex display updates
+    const hexDisplayText = await hexDisplay.textContent();
+    console.log(`Hex display: ${hexDisplayText}`);
+    expect(hexDisplayText).toBe(newColor);
+
+    // Try another color (bright green)
+    const anotherColor = '#00ff00';
+    await colorPicker.fill(anotherColor);
+    await page.waitForTimeout(300);
+
+    // Verify all elements update again
+    const updatedBadgeStyle = await previewBadge.getAttribute('style');
+    const updatedDotStyle = await previewDot.getAttribute('style');
+    const updatedHexText = await hexDisplay.textContent();
+
+    expect(updatedBadgeStyle).toContain('rgb(0, 255, 0)');
+    expect(updatedDotStyle).toContain('rgb(0, 255, 0)');
+    expect(updatedHexText).toBe(anotherColor);
+
+    console.log('✅ Color preview updates correctly in real-time!');
+  });
 });
