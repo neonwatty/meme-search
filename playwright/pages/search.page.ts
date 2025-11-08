@@ -14,7 +14,8 @@ export class SearchPage {
     this.page = page;
     this.heading = page.locator('h1');
     this.searchBox = page.locator('#search-box');
-    this.searchToggle = page.locator('#search-toggle-div');
+    // The toggle is actually a label containing the checkbox, not a div
+    this.searchToggle = page.locator('label:has(#search-toggle-checkbox)');
     this.searchToggleCheckbox = page.locator('#search-toggle-checkbox');
     this.searchToggleText = page.locator('#search-toggle-text');
     this.tagToggle = page.locator('#tag_toggle');

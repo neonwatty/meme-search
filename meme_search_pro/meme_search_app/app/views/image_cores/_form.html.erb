@@ -1,12 +1,52 @@
+<% tag_names = TagName.all.map {|item| item.name.strip} %>
+<% existing_tag_names = image_core.image_tags.map { |tag| tag.tag_name&.name&.downcase }.compact %>
 <%= form_with(model: image_core, class: "contents") do |form| %>
   <div id="<%dom_id image_core %>" class="flex flex-row space-x-10 mb-5 mt-5">
     <% absolute_path, image_name = absolute_image_path(image_core) %>
     <%= image_tag(absolute_path, size: "300", alt: image_name) %>
-    <div class="flex flex-col my-auto">
-      <h3> Description </h3>
-      <textarea id="image_core_update_description_area" rows="4" cols="50" class="text-black">
-  <%= image_core.description%>
-  </textarea>
+    <div class="flex flex-col my-auto space-y-4">
+      <div>
+        <h3 class="mb-2"> Description </h3>
+        <%= form.text_area :description,
+                           rows: 4,
+                           cols: 50,
+                           class: "text-black rounded border border-gray-300 p-2",
+                           id: "image_core_update_description_area" %>
+      </div>
+      <div>
+        <h3 class="mb-2"> Tags </h3>
+        <!-- DEBUG: Form template v2 loaded -->
+        <div data-controller="multi-select" class="relative">
+          <%= hidden_field_tag "image_core[selected_tag_names]", existing_tag_names.join(", "), id: "hidden_selected_tag_names" %>
+          <button
+            type="button"
+            id="edit_image_core_edit_tags"
+            data-action="click->multi-select#toggle"
+            class="w-full px-4 py-2 text-left bg-white border border-gray-300 rounded shadow hover:shadow-md transition-all flex items-center justify-between">
+            <span class="flex-1 text-gray-900" id="selected_tag_names" data-multi-select-target="selectedItems">Choose tags</span>
+            <svg class="w-5 h-5 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div
+            data-multi-select-target="options"
+            class="absolute left-0 right-0 mt-2 hidden bg-white border border-gray-300 rounded shadow-lg z-10 max-h-64 overflow-y-auto">
+            <div class="p-3 space-y-2">
+              <% tag_names.each_with_index do |tag, index|  %>
+                <label class="flex items-center px-2 py-1 hover:bg-gray-100 rounded cursor-pointer transition" id='tag_edit_<%= index %>'>
+                  <input
+                    type="checkbox"
+                    class="mr-2 rounded"
+                    data-action="change->multi-select#updateSelection"
+                    value="<%= tag.to_s.downcase %>"
+                    <%= existing_tag_names.include?(tag.to_s.downcase) ? 'checked' : '' %> />
+                  <span><%= tag.to_s %></span>
+                </label>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="inline">

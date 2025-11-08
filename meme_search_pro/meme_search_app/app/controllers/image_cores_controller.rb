@@ -287,22 +287,30 @@ class ImageCoresController < ApplicationController
     def image_update_params
       permitted_params = params.require(:image_core).permit(:description, :selected_tag_names, image_tags_attributes: [ :id, :name, :_destroy ])
 
+      Rails.logger.debug "===== IMAGE_UPDATE_PARAMS DEBUG ====="
+      Rails.logger.debug "selected_tag_names: #{permitted_params[:selected_tag_names].inspect}"
+
       # Convert names TagName ids
-      if permitted_params[:selected_tag_names].present?
-        if permitted_params[:selected_tag_names].length > 0
-          tag_names = permitted_params[:selected_tag_names]
-          tag_names = tag_names.split(",").map { |name| name.strip }
+      if permitted_params[:selected_tag_names].present? && permitted_params[:selected_tag_names].length > 0
+        tag_names = permitted_params[:selected_tag_names]
+        tag_names = tag_names.split(",").map { |name| name.strip }.reject(&:empty?)
 
-          tag_names = tag_names.map { |name| TagName.find_by({ name: name }) } # .map {|result| result.id}
+        if tag_names.any?
+          tag_names = tag_names.map { |name| TagName.where("LOWER(name) = ?", name.downcase).first }.compact
           tag_names_hash = tag_names.map { |tag| { tag_name: tag } }
-          if tag_names_hash[0][:tag_name].nil?
-            tag_names_hash = []
-          end
-          permitted_params.delete(:image_tags_attributes)
 
+          permitted_params.delete(:image_tags_attributes)
           permitted_params[:image_tags_attributes] = tag_names_hash
+        else
+          permitted_params.delete(:image_tags_attributes)
+          permitted_params[:image_tags_attributes] = []
         end
+      else
+        # No tags selected, clear all tags
+        permitted_params.delete(:image_tags_attributes)
+        permitted_params[:image_tags_attributes] = []
       end
+
       permitted_params.delete(:selected_tag_names)
       permitted_params
     end

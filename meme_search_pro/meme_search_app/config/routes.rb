@@ -29,6 +29,9 @@ Rails.application.routes.draw do
     end
   end
 
+  # Pages
+  get "about", to: "pages#about"
+
   # Root
   root "image_cores#index"
 

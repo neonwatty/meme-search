@@ -55,7 +55,6 @@ test.describe('Image Cores', () => {
     await imageCoresPage.openTagDropdown();
     await imageCoresPage.selectTag(1); // Select tag at index 1
     await imageCoresPage.closeTagDropdown();
-    console.log('Selected tag and closed dropdown');
 
     // 7. Save the changes
     await imageCoresPage.clickSave();

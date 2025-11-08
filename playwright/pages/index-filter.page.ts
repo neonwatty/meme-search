@@ -139,8 +139,14 @@ export class IndexFilterPage {
    * Matches Capybara: find("#tag_toggle").click
    */
   async openTagToggle(): Promise<void> {
-    await this.tagToggle.click();
-    await this.page.waitForTimeout(300); // Wait for dropdown animation
+    // First verify the slideover is still open
+    await this.filterSlideover.waitFor({ state: 'visible', timeout: 2000 });
+
+    // Click the button inside the tag toggle that has the Stimulus action
+    const toggleButton = this.page.locator('#tag_toggle button[data-action*="multi-select#toggle"]');
+    await toggleButton.click();
+    await this.page.waitForTimeout(500); // Wait for dropdown animation
+
     console.log('Opened tag toggle');
   }
 
@@ -160,7 +166,12 @@ export class IndexFilterPage {
    * @param index - The tag index (0-based)
    */
   async checkTag(index: number): Promise<void> {
+    // Ensure the dropdown is visible first
+    const dropdown = this.page.locator('#tag_toggle div[data-multi-select-target="options"]');
+    await dropdown.waitFor({ state: 'visible', timeout: 2000 });
+
     const checkbox = this.page.locator(`#tag_${index} input[type="checkbox"]`);
+    await checkbox.waitFor({ state: 'visible', timeout: 2000 });
     await checkbox.check();
     await this.page.waitForTimeout(300); // Wait for state update
     console.log(`Checked tag ${index}`);
@@ -193,8 +204,14 @@ export class IndexFilterPage {
    * Matches Capybara: find("#path_toggle").click
    */
   async openPathToggle(): Promise<void> {
-    await this.pathToggle.click();
+    // Click the div inside the path toggle that has the Stimulus action
+    const toggleDiv = this.page.locator('#path_toggle div[data-action*="multi-select#toggle"]');
+    await toggleDiv.click();
     await this.page.waitForTimeout(300); // Wait for dropdown animation
+
+    // Verify the dropdown is now visible
+    const dropdown = this.page.locator('#path_toggle div[data-multi-select-target="options"]');
+    await dropdown.waitFor({ state: 'visible', timeout: 2000 });
     console.log('Opened path toggle');
   }
 

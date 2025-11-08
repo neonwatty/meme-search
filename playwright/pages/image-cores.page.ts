@@ -142,6 +142,8 @@ export class ImageCoresPage {
   async selectTag(tagIndex: number): Promise<void> {
     const checkbox = this.page.locator(`#tag_edit_${tagIndex} input[type="checkbox"]`);
     await checkbox.check();
+    // Manually dispatch change event to trigger Stimulus action
+    await checkbox.dispatchEvent('change');
     await this.page.waitForTimeout(300); // Wait for checkbox state to update
   }
 

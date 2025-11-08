@@ -2,11 +2,12 @@
 <div id="path_toggle">
   <%= fields_for :search_paths do |path_fields| %>
     <div class="flex flex-col">
-      <div data-controller="multi-select" class="relative">
+      <div data-controller="multi-select" data-multi-select-auto-submit-value="false" class="relative">
+        <input type="hidden" name="selected_path_names" value="" id="hidden_selected_path_names">
         <div
           data-action="click->multi-select#toggle"
           class="bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-gray-200/50 dark:border-gray-600/50 rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all cursor-pointer">
-          <input id="selected_path_names" readonly name="selected_path_names" data-multi-select-target="selectedItems" class="w-full bg-transparent text-gray-700 dark:text-gray-300 outline-none cursor-pointer" placeholder="Choose paths">
+          <input id="selected_path_names" readonly data-multi-select-target="selectedItems" class="w-full bg-transparent text-gray-700 dark:text-gray-300 outline-none cursor-pointer" placeholder="Choose paths">
         </div>
         <div
           data-multi-select-target="options"
