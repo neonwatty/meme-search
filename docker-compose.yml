@@ -1,6 +1,6 @@
 services:
   meme_search:
-    image: ghcr.io/neonwatty/meme_search:latest
+    image: ghcr.io/neonwatty/meme_search_pro:latest  # TODO: Update to meme_search:latest after GitHub Actions builds new images
     container_name: meme_search
     environment:
       DATABASE_URL: "postgres://postgres:postgres@meme-search-db:5432/meme_search"
