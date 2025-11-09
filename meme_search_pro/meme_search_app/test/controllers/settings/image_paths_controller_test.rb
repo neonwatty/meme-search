@@ -189,7 +189,7 @@ module Settings
       base_dir = Dir.getwd
       full_path = base_dir + "/public/memes/" + image_path.name
       original_entries = Dir.entries(full_path)
-      mocked_entries = original_entries + ["new_test_image.jpg"]
+      mocked_entries = original_entries + [ "new_test_image.jpg" ]
 
       # Store original File methods
       original_file_method = File.method(:file?)
@@ -329,7 +329,7 @@ module Settings
       base_dir = Dir.getwd
       full_path = base_dir + "/public/memes/" + image_path.name
       original_entries = Dir.entries(full_path)
-      mocked_entries = original_entries + ["brand_new.jpg"]
+      mocked_entries = original_entries + [ "brand_new.jpg" ]
 
       original_file_method = File.method(:file?)
       original_join_method = File.method(:join)

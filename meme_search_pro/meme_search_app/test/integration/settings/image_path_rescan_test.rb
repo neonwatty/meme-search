@@ -51,7 +51,7 @@ module Settings
     def mock_new_file(directory_path, new_filename)
       full_path = File.join(@memes_base, directory_path)
       original_entries = Dir.entries(full_path)
-      mocked_entries = original_entries + [new_filename]
+      mocked_entries = original_entries + [ new_filename ]
 
       # Capture original methods inside the test
       original_file_method = File.method(:file?)
@@ -191,7 +191,7 @@ module Settings
 
       # WHEN: Filesystem gains 3 new files
       full_path = File.join(@memes_base, "test_empty_directory")
-      mocked_entries = [".", "..", "meme1.jpg", "meme2.png", "meme3.webp"]
+      mocked_entries = [ ".", "..", "meme1.jpg", "meme2.png", "meme3.webp" ]
 
       # Capture original methods
       original_file_method = File.method(:file?)
@@ -218,7 +218,7 @@ module Settings
 
       image_path.reload
       assert_equal 3, image_path.image_cores.count
-      assert_equal ["meme1.jpg", "meme2.png", "meme3.webp"].sort,
+      assert_equal [ "meme1.jpg", "meme2.png", "meme3.webp" ].sort,
                    image_path.image_cores.pluck(:name).sort
     end
 
@@ -346,7 +346,7 @@ module Settings
 
       # WHEN: 2 new files added
       full_path = File.join(@memes_base, "test_empty_directory")
-      mocked_entries = [".", "..", "first.jpg", "second.png"]
+      mocked_entries = [ ".", "..", "first.jpg", "second.png" ]
 
       # Capture original methods
       original_file_method = File.method(:file?)
@@ -426,7 +426,7 @@ module Settings
 
       # WHEN: Add 2 new files + remove 1 orphan
       full_path = File.join(@memes_base, "test_empty_directory")
-      mocked_entries = [".", "..", "new1.jpg", "new2.jpg"]
+      mocked_entries = [ ".", "..", "new1.jpg", "new2.jpg" ]
 
       # Capture original methods
       original_file_method = File.method(:file?)
@@ -526,7 +526,7 @@ module Settings
         Thread.new do
           full_path = File.join(@memes_base, "test_empty_directory")
 
-          Dir.stub :entries, [".", "..", mock_filename] do
+          Dir.stub :entries, [ ".", "..", mock_filename ] do
             File.stub :file?, ->(path) {
               path.end_with?(mock_filename) || original_file_method.call(path)
             } do
