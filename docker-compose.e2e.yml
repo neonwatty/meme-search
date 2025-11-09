@@ -21,7 +21,7 @@ services:
 
   rails-app:
     build:
-      context: ./meme_search_pro/meme_search_app
+      context: ./meme_search/meme_search_app
       dockerfile: Dockerfile
     container_name: meme_search_e2e_rails
     environment:
@@ -37,7 +37,7 @@ services:
       postgres:
         condition: service_healthy
     volumes:
-      - ./meme_search_pro/memes:/rails/public/memes:ro
+      - ./meme_search/memes:/rails/public/memes:ro
       - rails_e2e_assets:/rails/public/assets
     networks:
       - meme_search_e2e_network
@@ -55,7 +55,7 @@ services:
 
   python-service:
     build:
-      context: ./meme_search_pro/image_to_text_generator
+      context: ./meme_search/image_to_text_generator
       dockerfile: Dockerfile
     container_name: meme_search_e2e_python
     environment:
@@ -68,7 +68,7 @@ services:
       rails-app:
         condition: service_healthy
     volumes:
-      - ./meme_search_pro/memes:/app/public/memes:ro
+      - ./meme_search/memes:/app/public/memes:ro
       - python_e2e_models:/app/models
       - python_e2e_db:/app/db
     networks:

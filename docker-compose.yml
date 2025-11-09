@@ -10,7 +10,7 @@ services:
       meme_search_db:
         condition: service_healthy
     volumes: # <-- any additional meme directory must be mounted here - and placed in the /rails/public/memes directory in the container (see example below)
-      - ./meme_search_pro/memes/:/rails/public/memes # <-- example meme directory from the repository
+      - ./meme_search/memes/:/rails/public/memes # <-- example meme directory from the repository
       # -  /route/to/my/personal/additional_memes/:/rails/public/memes/additional_memes # <-- personal meme collection - must be placed inside /rails/public/memes in the container
 
 
@@ -23,10 +23,10 @@ services:
     expose:
       - "8000"
     volumes: # <-- any additional meme directory must be mounted here - and placed in the /app/public/memes directory in the container (see example below)
-      - ./meme_search_pro/memes/:/app/public/memes # <-- example meme directory from the repository
+      - ./meme_search/memes/:/app/public/memes # <-- example meme directory from the repository
       # -  /route/to/my/personal/additional_memes/:/app/public/memes/additional_memes # <-- personal meme collection - must be placed inside /app/public/memes in the container
-      - ./meme_search_pro/db_data/image_to_text_generator:/app/db
-      - ./meme_search_pro/models:/root/.cache/huggingface
+      - ./meme_search/db_data/image_to_text_generator:/app/db
+      - ./meme_search/models:/root/.cache/huggingface
     deploy:
       resources:
         limits: # <-- roughly tested min memory for cpu usage
@@ -41,7 +41,7 @@ services:
     image: pgvector/pgvector:pg17
     container_name: meme-search-db # note: must use - and not _ as ActiveRecord uses URI::RFC2396_Parser to parse database URLs
     volumes:
-      - ./meme_search_pro/db_data/meme-search-db:/var/lib/postgresql/data
+      - ./meme_search/db_data/meme-search-db:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: meme_search
       POSTGRES_USER: postgres
