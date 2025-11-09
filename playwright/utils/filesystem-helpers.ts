@@ -6,7 +6,7 @@ import * as path from 'path';
  * Manages test image files in meme directories
  */
 
-const MEMES_DIR = path.join(__dirname, '../../meme_search_pro/meme_search_app/public/memes');
+const MEMES_DIR = path.join(__dirname, '../../meme_search/meme_search_app/public/memes');
 
 /**
  * Copy a file from source to destination

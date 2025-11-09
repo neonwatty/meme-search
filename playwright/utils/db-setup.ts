@@ -4,7 +4,7 @@ import * as path from 'path';
 
 const execAsync = promisify(exec);
 
-const RAILS_APP_DIR = path.join(__dirname, '../../meme_search_pro/meme_search_app');
+const RAILS_APP_DIR = path.join(__dirname, '../../meme_search/meme_search_app');
 
 /**
  * Check if mise is available in the current environment
