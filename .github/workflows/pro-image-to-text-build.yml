@@ -39,10 +39,10 @@ jobs:
         with:
           python-version: "3.12"
           cache: 'pip'
-          cache-dependency-path: 'meme_search_pro/image_to_text_generator/requirements.txt'
+          cache-dependency-path: 'meme_search/image_to_text_generator/requirements.txt'
 
       - name: Install dependencies with retry
-        working-directory: ./meme_search_pro/image_to_text_generator
+        working-directory: ./meme_search/image_to_text_generator
         run: |
           # Upgrade pip with extended timeout
           pip install --timeout=300 --retries 5 --upgrade pip
@@ -90,7 +90,7 @@ jobs:
         uses: docker/build-push-action@v6
         timeout-minutes: 60
         with:
-          context: ./meme_search_pro/image_to_text_generator
+          context: ./meme_search/image_to_text_generator
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ghcr.io/neonwatty/image_to_text_generator:latest

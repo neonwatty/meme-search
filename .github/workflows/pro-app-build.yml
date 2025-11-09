@@ -40,7 +40,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          working-directory: ./meme_search_pro/meme_search_app
+          working-directory: ./meme_search/meme_search_app
           bundler-cache: true
 
       - name: Log in to Github Docker Image Registry
@@ -55,7 +55,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ghcr.io/${{ github.actor }}/meme_search_pro
+            ghcr.io/${{ github.actor }}/meme_search
           tags: type=ref,event=tag
           flavor: latest=true
 
@@ -77,10 +77,10 @@ jobs:
         uses: docker/build-push-action@v6
         timeout-minutes: 60
         with:
-          context: ./meme_search_pro/meme_search_app
+          context: ./meme_search/meme_search_app
           platforms: ${{ matrix.platform }}
           push: true
-          tags: ghcr.io/neonwatty/meme_search_pro:latest
+          tags: ghcr.io/neonwatty/meme_search:latest
           cache-from: type=gha,scope=build-${{ matrix.platform }}
           cache-to: type=gha,mode=max,scope=build-${{ matrix.platform }}
           build-args: |

@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: ["main"]
     paths:
-      - "meme_search_pro/image_to_text_generator/**"
+      - "meme_search/image_to_text_generator/**"
       - ".github/workflows/pro-image-to-text-test.yml"
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
         with:
           args: "check --fix"
           config: .ruff.toml
-          working-directory: ./meme_search_pro/image_to_text_generator/app
+          working-directory: ./meme_search/image_to_text_generator/app
   image_to_text_tests:
     name: run pytest
     runs-on: ubuntu-latest
@@ -32,18 +32,18 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install dependencies
-        working-directory: ./meme_search_pro/image_to_text_generator
+        working-directory: ./meme_search/image_to_text_generator
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.test
           pip install -r requirements.txt
       - name: Run integration tests
-        working-directory: ./meme_search_pro/image_to_text_generator
+        working-directory: ./meme_search/image_to_text_generator
         run: |
           PYTHONPATH=. python3.12 -m pytest tests/test_app.py
 
       - name: Run unit tests with coverage
-        working-directory: ./meme_search_pro/image_to_text_generator
+        working-directory: ./meme_search/image_to_text_generator
         run: |
           PYTHONPATH=. python3.12 -m pytest tests/unit/ --cov=app --cov-report=term-missing --cov-report=html --cov-fail-under=60
 
@@ -52,5 +52,5 @@ jobs:
         if: always()
         with:
           name: python-coverage-report
-          path: ./meme_search_pro/image_to_text_generator/htmlcov/
+          path: ./meme_search/image_to_text_generator/htmlcov/
           if-no-files-found: ignore
