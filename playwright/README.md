@@ -27,7 +27,7 @@
 
 1. **Rails server running** in test mode:
    ```bash
-   cd meme_search_pro/meme_search_app
+   cd meme_search/meme_search_app
    mise exec -- bin/rails server -e test -p 3000
    ```
 
@@ -692,7 +692,7 @@ test.beforeEach(async () => {
 **Solutions**:
 ```bash
 # 1. Start Rails test server
-cd meme_search_pro/meme_search_app
+cd meme_search/meme_search_app
 mise exec -- bin/rails server -e test -p 3000
 
 # 2. Check port not in use
@@ -704,7 +704,7 @@ lsof -i :3000
 **Solutions**:
 ```bash
 # Reset test database
-cd meme_search_pro/meme_search_app
+cd meme_search/meme_search_app
 mise exec -- bin/rails db:test:reset_and_seed
 
 # Verify PostgreSQL running

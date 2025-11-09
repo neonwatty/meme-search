@@ -265,7 +265,7 @@ jobs:
       - name: Build Python Service (AMD64 only, no push)
         uses: docker/build-push-action@v6
         with:
-          context: ./meme_search_pro/image_to_text_generator
+          context: ./meme_search/image_to_text_generator
           platforms: linux/amd64
           push: false
           load: true

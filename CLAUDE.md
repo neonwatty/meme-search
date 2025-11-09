@@ -55,8 +55,8 @@ Task(subagent_type="general-purpose",
 ## Project Overview
 
 Meme Search is a self-hosted AI-powered meme search engine with a microservices architecture:
-- **Rails Application** (`meme_search_pro/meme_search_app`) - Main web app on port 3000
-- **Python Image-to-Text Service** (`meme_search_pro/image_to_text_generator`) - AI inference service on port 8000
+- **Rails Application** (`meme_search/meme_search_app`) - Main web app on port 3000
+- **Python Image-to-Text Service** (`meme_search/image_to_text_generator`) - AI inference service on port 8000
 - **PostgreSQL with pgvector** - Database with vector similarity search
 
 ## Environment Setup
@@ -86,7 +86,7 @@ npm run test:rails           # Rails only
 npm run test:python          # Python only
 ```
 
-**Rails** (`meme_search_pro/meme_search_app`):
+**Rails** (`meme_search/meme_search_app`):
 ```bash
 ./bin/dev                    # Start dev server
 bash run_tests.sh            # All Rails tests
@@ -95,7 +95,7 @@ COVERAGE=true bin/rails test # With coverage
 rubocop app && brakeman      # Lint + security scan
 ```
 
-**Python** (`meme_search_pro/image_to_text_generator`):
+**Python** (`meme_search/image_to_text_generator`):
 ```bash
 bash run_tests.sh            # All Python tests (lint + integration + unit)
 pytest tests/unit/           # Unit tests (88 tests, 81.52% coverage)

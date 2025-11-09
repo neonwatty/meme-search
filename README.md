@@ -135,7 +135,7 @@ This pulls and starts containers for the app, database, and auto description gen
 http://localhost:3000
 ```
 
-To start the app alone pull the repo and cd into the `meme_search/meme_search_pro/meme_search_app`. Once there execute the following to start the app in development mode
+To start the app alone pull the repo and cd into the `meme_search/meme_search/meme_search_app`. Once there execute the following to start the app in development mode
 
 ```sh
 ./bin/dev
@@ -143,7 +143,7 @@ To start the app alone pull the repo and cd into the `meme_search/meme_search_pr
 
 When doing this ensure you have an available Postgres instance running locally on port `5432`.
 
-**Note Linux users:** you may need to add the following `extra_hosts` to your `meme_search_pro` service for inter-container communication
+**Note Linux users:** you may need to add the following `extra_hosts` to your `meme_search` service for inter-container communication
 
 ```sh
 extra_hosts:
@@ -162,15 +162,15 @@ You can index your memes by creating your own descriptions, or by generating des
 
 <img align="center" src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-generate-example.gif" height="225">
 
-To start indexing your own memes, first adjust the [compose file](https://github.com/neonwatty/meme-search/blob/main/docker-compose.yml) by adding `volume` mount to the `meme_search_pro` and `image_to_text_generator` services to properly connect your local meme subdirectory to the app.
+To start indexing your own memes, first adjust the [compose file](https://github.com/neonwatty/meme-search/blob/main/docker-compose.yml) by adding `volume` mount to the `meme_search` and `image_to_text_generator` services to properly connect your local meme subdirectory to the app.
 
 For example, if suppose (one of your) meme directories was called `new_memes` and was located at the following path on your machine: `/local/path/to/my/memes/new_memes`.
 
-To properly mount this subdirectory to the `meme_search_pro` service adjust the `volumes` portion of its configuration to the following:
+To properly mount this subdirectory to the `meme_search` service adjust the `volumes` portion of its configuration to the following:
 
 ```yaml
 volumes:
-  - ./meme_search_pro/memes/:/app/public/memes # <-- example meme directory from the repository
+  - ./meme_search/memes/:/app/public/memes # <-- example meme directory from the repository
   -  /route/to/my/personal/additional_memes/:/rails/public/memes/additional_memes # <-- personal meme collection - must be placed inside /rails/public/memes in the container
 ```
 
@@ -180,7 +180,7 @@ To properly mount this same subdirectory to the `image_to_text_generator` servic
 
 ```yaml
 volumes:
-  - ./meme_search_pro/memes/:/app/public/memes # <-- example meme directory from the repository
+  - ./meme_search/memes/:/app/public/memes # <-- example meme directory from the repository
   -  /route/to/my/personal/additional_memes/:/app/public/memes/additional_memes # <-- personal meme collection - must be placed inside /app/public/memes in the container
 ...
 ```
@@ -199,7 +199,7 @@ The image-to-text models used to auto generate descriptions for your memes are a
 
 ### Custom app port
 
-Easily customize the app's port to more easily use the it with tools like [Unraid](https://unraid.net/?srsltid=AfmBOorvWvSZbCHKnqdR__AcllotnsLR6did_FhAaNfUowqqU2IprD1v) or [Portainer](https://www.portainer.io/), or because you already have services running on the default `meme_search_pro` app port `3000`.
+Easily customize the app's port to more easily use the it with tools like [Unraid](https://unraid.net/?srsltid=AfmBOorvWvSZbCHKnqdR__AcllotnsLR6did_FhAaNfUowqqU2IprD1v) or [Portainer](https://www.portainer.io/), or because you already have services running on the default `meme_search` app port `3000`.
 
 To customize the main app port create a `.env` file locally in the root of the directory. In this file you can define the following custom environment variables which define how the app, image to text generator, and database are accessed. These values are:
 
@@ -221,7 +221,7 @@ This will build the docker images for the app, database, and auto description ge
 
 ### Running tests
 
-To run tests locally pull the repo and cd into the `meme_search/meme_search_pro/meme_search_app` directory. Install the required gems as
+To run tests locally pull the repo and cd into the `meme_search/meme_search/meme_search_app` directory. Install the required gems as
 
 ```sh
 bundle install
@@ -338,12 +338,12 @@ flowchart TD
     Docker ---|"orchestrates"| DB
 
     %% Click Events
-    click Rails "https://github.com/neonwatty/meme-search/tree/main/meme_search_pro/meme_search_app"
-    click Python "https://github.com/neonwatty/meme-search/tree/main/meme_search_pro/image_to_text_generator"
-    click DB "https://github.com/neonwatty/meme-search/blob/main/meme_search_pro/meme_search_app/config/database.yml"
+    click Rails "https://github.com/neonwatty/meme-search/tree/main/meme_search/meme_search_app"
+    click Python "https://github.com/neonwatty/meme-search/tree/main/meme_search/image_to_text_generator"
+    click DB "https://github.com/neonwatty/meme-search/blob/main/meme_search/meme_search_app/config/database.yml"
     click Docker "https://github.com/neonwatty/meme-search/blob/main/docker-compose.yml"
-    click PublicMemes "https://github.com/neonwatty/meme-search/tree/main/meme_search_pro/meme_search_app/public/memes"
-    click MemeDir "https://github.com/neonwatty/meme-search/tree/main/meme_search_pro/memes"
+    click PublicMemes "https://github.com/neonwatty/meme-search/tree/main/meme_search/meme_search_app/public/memes"
+    click MemeDir "https://github.com/neonwatty/meme-search/tree/main/meme_search/memes"
 
     %% Styles
     classDef user fill:#fceabb,stroke:#d79b00,stroke-width:2px;
