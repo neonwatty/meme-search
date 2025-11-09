@@ -176,7 +176,7 @@ done
 # =============================================================================
 
 if [ "$SKIP_RAILS" = false ]; then
-    cd meme_search_pro/meme_search_app
+    cd meme_search/meme_search_app
 
     # 1. Brakeman Security Scan
     print_header "Rails: Brakeman Security Scan"
@@ -276,7 +276,7 @@ fi
 # =============================================================================
 
 if [ "$SKIP_PYTHON" = false ]; then
-    cd meme_search_pro/image_to_text_generator
+    cd meme_search/image_to_text_generator
 
     # 1. Ruff Linting
     print_header "Python: Ruff Linting"
@@ -334,7 +334,7 @@ if [ "$SKIP_E2E" = false ] && [ "$SKIP_RAILS" = false ]; then
     # Check if Rails test server is running
     if ! curl -s http://localhost:3000 > /dev/null 2>&1; then
         echo -e "${YELLOW}⚠️  Rails test server not running. Starting in background...${NC}"
-        cd meme_search_pro/meme_search_app
+        cd meme_search/meme_search_app
         mise exec -- bin/rails db:test:seed
         mise exec -- bin/rails server -e test -p 3000 > /tmp/rails_test_server.log 2>&1 &
         RAILS_SERVER_PID=$!

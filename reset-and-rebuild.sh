@@ -27,9 +27,9 @@ docker compose -f "$COMPOSE_FILE" down
 
 if [ "$KEEP_MODELS" = true ]; then
   echo "🗑️  Removing database volumes (keeping model cache)..."
-  rm -rf ./meme_search_pro/db_data/meme-search-db
-  rm -rf ./meme_search_pro/db_data/image_to_text_generator
-  echo "✅ Models cache preserved in ./meme_search_pro/models/"
+  rm -rf ./meme_search/db_data/meme-search-db
+  rm -rf ./meme_search/db_data/image_to_text_generator
+  echo "✅ Models cache preserved in ./meme_search/models/"
 else
   echo "🗑️  Removing all volumes (including models)..."
   docker compose -f "$COMPOSE_FILE" down -v
