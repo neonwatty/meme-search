@@ -15,10 +15,10 @@
     <div id="image_to_texts" class="grid grid-cols-1 gap-4">
       <% @image_to_texts.each do |image_to_text| %>
         <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all <%= 'ring-2 ring-indigo-500 ring-offset-2 dark:ring-offset-slate-900' if image_to_text.current %>">
-          <div class="flex flex-row items-center justify-between">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
             <!-- Model Info Column -->
-            <div class="flex-1 pr-6">
+            <div class="flex-1">
               <div class="flex items-center space-x-3 mb-2">
                 <h3 class="text-xl font-bold text-gray-800 dark:text-white"><%= image_to_text.name %></h3>
                 <% if image_to_text.current %>
@@ -45,7 +45,7 @@
             </div>
 
             <!-- Toggle Switch Column -->
-            <div data-controller="toggle" class="flex-shrink-0">
+            <div data-controller="toggle" class="flex-shrink-0 sm:pl-6">
               <input type="checkbox" class="hidden peer sr-only opacity-0"
                     id="<%= image_to_text.id %>"
                     value="<%= image_to_text.id %>"
