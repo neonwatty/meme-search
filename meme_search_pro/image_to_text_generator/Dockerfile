@@ -1,18 +1,28 @@
-# Use the official Python image
+# syntax=docker/dockerfile:1.4
 FROM python:3.12-slim
-
-# install uv
-RUN pip --timeout=1000 install uv
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the requirements file and app code
-COPY ./requirements.txt ./
-COPY ./app ./
+# Install uv with BuildKit cache mount and retry
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --timeout=300 --retries 5 uv
 
-# Install the required Python packages
-RUN uv pip install --system -r requirements.txt
+# Copy only requirements first (optimize layer caching)
+COPY ./requirements.txt ./
+
+# Install dependencies with BuildKit cache mounts
+# Cache both pip and uv caches across builds
+RUN --mount=type=cache,target=/root/.cache/pip \
+    --mount=type=cache,target=/root/.cache/uv \
+    uv pip install \
+      --system \
+      --timeout 300 \
+      --retry 5 \
+      -r requirements.txt
+
+# Copy application code AFTER dependencies (separate layer)
+COPY ./app ./
 
 # Expose the port the app runs on
 EXPOSE 8000
