@@ -218,4 +218,140 @@ export class ImagePathsPage {
     await this.clickAdjustDeleteFirst();
     await this.clickDeleteThisPathWithConfirmation();
   }
+
+  /**
+   * Click "Rescan" button on index page for a specific path
+   * @param pathName - The path name to rescan (e.g., 'test_valid_directory')
+   */
+  async clickRescanOnIndex(pathName: string): Promise<void> {
+    // Find the card containing the path name using getByText which includes code elements
+    // then navigate to the Rescan button within that card's ancestor
+    await this.page.getByText(`/public/memes/${pathName}`)
+      .locator('..')  // Go up to code element
+      .locator('..')  // Go up to the containing div
+      .locator('..')  // Go up to inner card div
+      .locator('..')  // Go up to outer card div
+      .getByRole('button', { name: 'Rescan' })
+      .click();
+
+    await this.page.waitForTimeout(500);
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  /**
+   * Click "Rescan directory" button on show page
+   */
+  async clickRescanOnShow(): Promise<void> {
+    const rescanButton = this.page.getByRole('button', { name: 'Rescan directory' });
+    await rescanButton.click();
+    await this.page.waitForTimeout(500);
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  /**
+   * Navigate to a specific image path show page
+   * @param id - ImagePath ID
+   */
+  async gotoShow(id: number): Promise<void> {
+    await this.page.goto(`/settings/image_paths/${id}`);
+    await this.page.waitForLoadState('networkidle');
+  }
+
+  /**
+   * Get flash message text (success or error)
+   * Returns the text content or empty string if not found
+   */
+  async getFlashMessage(): Promise<string> {
+    try {
+      // Try to find alert controller div
+      const alertDiv = this.page.locator('[data-controller="alert"]').first();
+      await alertDiv.waitFor({ state: 'visible', timeout: 3000 });
+      const text = await alertDiv.textContent();
+      return text?.trim() || '';
+    } catch {
+      // Try alternative selectors
+      try {
+        const greenAlert = this.page.locator('div.bg-green-400').first();
+        await greenAlert.waitFor({ state: 'visible', timeout: 2000 });
+        const text = await greenAlert.textContent();
+        return text?.trim() || '';
+      } catch {
+        return '';
+      }
+    }
+  }
+
+  /**
+   * Wait for flash message to appear and return its text
+   * More reliable than getFlashMessage for assertions
+   */
+  async waitForFlashMessage(timeoutMs = 3000): Promise<string> {
+    try {
+      const alertDiv = this.page.locator('[data-controller="alert"]').first();
+      await alertDiv.waitFor({ state: 'visible', timeout: timeoutMs });
+      const text = await alertDiv.textContent();
+      return text?.trim() || '';
+    } catch {
+      console.log('No flash message found within timeout');
+      return '';
+    }
+  }
+
+  /**
+   * Check if Rescan button exists on index page
+   */
+  async hasRescanButtonOnIndex(): Promise<boolean> {
+    const rescanButton = this.page.locator('button', { hasText: 'Rescan' }).first();
+    try {
+      await rescanButton.waitFor({ state: 'visible', timeout: 2000 });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Check if Rescan button exists on show page
+   */
+  async hasRescanButtonOnShow(): Promise<boolean> {
+    const rescanButton = this.page.getByRole('button', { name: 'Rescan directory' });
+    try {
+      await rescanButton.waitFor({ state: 'visible', timeout: 2000 });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Get the ID of the first image path on the index page
+   * Useful for navigating to show page
+   */
+  async getFirstPathId(): Promise<number | null> {
+    const firstPathDiv = this.page.locator('div[id^="image_path_"]').first();
+    const id = await firstPathDiv.getAttribute('id');
+
+    if (!id) return null;
+
+    // Extract number from "image_path_123"
+    const match = id.match(/image_path_(\d+)/);
+    return match ? parseInt(match[1], 10) : null;
+  }
+
+  /**
+   * Get image core count for a specific path from database via API
+   * This is used to verify rescan results
+   *
+   * @param pathId - ImagePath ID
+   */
+  async getImageCoreCountForPath(pathId: number): Promise<number> {
+    // We'll query this via the page content since we don't have direct DB access
+    // Navigate to the show page and count image cores displayed
+    await this.gotoShow(pathId);
+
+    // Look for image core cards or count display
+    // This is a placeholder - adjust based on actual show page structure
+    const imageCoreCards = this.page.locator('div[id^="image_core_"]');
+    return await imageCoreCards.count();
+  }
 }

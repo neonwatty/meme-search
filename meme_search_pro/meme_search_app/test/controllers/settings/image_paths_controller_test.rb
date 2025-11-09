@@ -85,6 +85,10 @@ module Settings
 
     # Update tests
     test "should update image_path with valid directory" do
+      # Mock HTTP DELETE for orphaned records that get removed during rescan
+      stub_request(:delete, /\/remove_job\//)
+        .to_return(status: 200, body: "success", headers: {})
+
       # Use real test directory: public/memes/test_empty_directory
       patch settings_image_path_url(@image_path), params: {
         image_path: { name: "test_empty_directory" }
@@ -128,6 +132,10 @@ module Settings
     end
 
     test "updating path to different directory changes ImageCore associations" do
+      # Mock HTTP DELETE for orphaned records
+      stub_request(:delete, /\/remove_job\//)
+        .to_return(status: 200, body: "success", headers: {})
+
       # Start with test_valid_directory (1 image)
       image_path = ImagePath.create!(name: "test_valid_directory")
       assert_equal 1, image_path.image_cores.count
@@ -146,8 +154,9 @@ module Settings
       assert_equal "test_empty_directory", image_path.name,
                    "Expected path name to be updated"
 
-      # test_empty_directory has no images, so after_save callback runs but finds no files
-      # The old ImageCores remain associated until manually deleted or cascade deleted
+      # With removal detection, old ImageCores are now removed
+      assert_equal 0, image_path.image_cores.count,
+                   "Old ImageCores should be removed when directory changes"
     end
 
     # Rescan tests
@@ -161,7 +170,8 @@ module Settings
       post rescan_settings_image_path_url(image_path)
 
       assert_redirected_to settings_image_paths_url
-      assert_match(/Directory rescanned! Found \d+ images?\./, flash[:notice])
+      # After initial scan, rescan finds no changes
+      assert_match(/No changes detected/i, flash[:notice])
 
       # Verify count remains the same (no duplicates)
       image_path.reload
@@ -203,7 +213,8 @@ module Settings
       end
 
       assert_redirected_to settings_image_paths_url
-      assert_match(/Found 2 images/, flash[:notice])
+      # Should show that 1 new image was added
+      assert_match(/Added 1 new image/i, flash[:notice])
 
       # Verify new ImageCore was created
       image_path.reload
@@ -218,7 +229,8 @@ module Settings
       post rescan_settings_image_path_url(image_path)
 
       assert_redirected_to settings_image_paths_url
-      assert_match(/Found 0 images/, flash[:notice])
+      # Empty directory shows "No changes" since nothing was added or removed
+      assert_match(/No changes detected/i, flash[:notice])
 
       image_path.reload
       assert_equal 0, image_path.image_cores.count
@@ -237,6 +249,109 @@ module Settings
       # Count should remain the same after multiple rescans
       assert_equal initial_count, image_path.image_cores.count,
                    "Multiple rescans should not create duplicates"
+    end
+
+    test "rescan should show 'no changes' message when nothing changed" do
+      image_path = ImagePath.create!(name: "test_valid_directory")
+      image_path.send(:list_files_in_directory) # Initial scan
+
+      # Rescan with same files
+      post rescan_settings_image_path_url(image_path)
+
+      assert_redirected_to settings_image_paths_url
+      assert_match(/No changes detected/i, flash[:notice])
+    end
+
+    test "rescan should show added count in flash message" do
+      image_path = ImagePath.create!(name: "test_empty_directory")
+
+      # Mock Dir.entries to simulate new file
+      base_dir = Dir.getwd
+      full_path = base_dir + "/public/memes/" + image_path.name
+      original_file_method = File.method(:file?)
+
+      Dir.stub :entries, [ ".", "..", "new_image.jpg" ] do
+        File.stub :file?, ->(path) {
+          if path.end_with?("new_image.jpg")
+            true
+          else
+            original_file_method.call(path)
+          end
+        } do
+          post rescan_settings_image_path_url(image_path)
+        end
+      end
+
+      assert_redirected_to settings_image_paths_url
+      assert_match(/Added 1 new image/i, flash[:notice])
+    end
+
+    test "rescan should show removed count in flash message" do
+      image_path = ImagePath.create!(name: "test_valid_directory")
+      image_path.send(:list_files_in_directory) # Create initial ImageCore
+
+      # Manually create orphaned ImageCore
+      orphaned = ImageCore.create!(
+        image_path: image_path,
+        name: "orphaned.jpg",
+        description: "Orphaned",
+        status: :not_started
+      )
+
+      # Mock HTTP DELETE
+      stub_request(:delete, /\/remove_job\/#{orphaned.id}/)
+        .to_return(status: 200, body: "success", headers: {})
+
+      # Rescan - should detect and remove orphaned record
+      post rescan_settings_image_path_url(image_path)
+
+      assert_redirected_to settings_image_paths_url
+      assert_match(/Removed 1 orphaned record/i, flash[:notice])
+    end
+
+    test "rescan should show both added and removed counts in flash message" do
+      image_path = ImagePath.create!(name: "test_valid_directory")
+      image_path.send(:list_files_in_directory) # Create initial ImageCore
+
+      # Manually create orphaned ImageCore
+      orphaned = ImageCore.create!(
+        image_path: image_path,
+        name: "orphaned.jpg",
+        description: "Orphaned",
+        status: :not_started
+      )
+
+      # Mock HTTP DELETE
+      stub_request(:delete, /\/remove_job\/#{orphaned.id}/)
+        .to_return(status: 200, body: "success", headers: {})
+
+      # Mock Dir.entries to include original file + new file (orphaned removed)
+      base_dir = Dir.getwd
+      full_path = base_dir + "/public/memes/" + image_path.name
+      original_entries = Dir.entries(full_path)
+      mocked_entries = original_entries + ["brand_new.jpg"]
+
+      original_file_method = File.method(:file?)
+      original_join_method = File.method(:join)
+
+      Dir.stub :entries, mocked_entries do
+        File.stub :file?, ->(path) {
+          if path.end_with?("brand_new.jpg")
+            true
+          else
+            original_file_method.call(path)
+          end
+        } do
+          File.stub :join, ->(dir, file) {
+            original_join_method.call(dir, file)
+          } do
+            post rescan_settings_image_path_url(image_path)
+          end
+        end
+      end
+
+      assert_redirected_to settings_image_paths_url
+      assert_match(/Added 1 new image.*removed 1 orphaned record/i, flash[:notice])
     end
 
     # Destroy tests

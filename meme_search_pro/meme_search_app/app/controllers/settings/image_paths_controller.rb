@@ -60,15 +60,22 @@ module Settings
 
     # POST /settings/image_paths/1/rescan
     def rescan
-      # Trigger the existing list_files_in_directory callback
-      # by calling the private method directly
-      @image_path.send(:list_files_in_directory)
+      # Trigger rescan and get counts of added/removed images
+      result = @image_path.send(:list_files_in_directory)
 
-      # Count images for feedback
-      image_count = @image_path.image_cores.count
+      # Build detailed flash message based on what changed
+      message = if result[:added].zero? && result[:removed].zero?
+        "No changes detected in directory."
+      elsif result[:removed].zero?
+        "Added #{result[:added]} new #{'image'.pluralize(result[:added])}."
+      elsif result[:added].zero?
+        "Removed #{result[:removed]} orphaned #{'record'.pluralize(result[:removed])}."
+      else
+        "Added #{result[:added]} new #{'image'.pluralize(result[:added])}, removed #{result[:removed]} orphaned #{'record'.pluralize(result[:removed])}."
+      end
 
       respond_to do |format|
-        flash[:notice] = "Directory rescanned! Found #{image_count} #{'image'.pluralize(image_count)}."
+        flash[:notice] = message
         format.html { redirect_to [ :settings, :image_paths ], status: :see_other }
       end
     end
