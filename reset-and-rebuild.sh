@@ -36,7 +36,7 @@ else
 fi
 
 echo "🏗️  Rebuilding Rails and Python services without cache..."
-docker compose -f "$COMPOSE_FILE" build --no-cache meme_search_pro image_to_text_generator
+docker compose -f "$COMPOSE_FILE" build --no-cache meme_search image_to_text_generator
 
 echo "🚀 Starting fresh containers..."
 docker compose -f "$COMPOSE_FILE" up

@@ -1,9 +1,9 @@
 services:
-  meme_search_pro:
+  meme_search:
     build:
       context: ./meme_search/meme_search_app
       dockerfile: Dockerfile
-    container_name: meme_search_pro
+    container_name: meme_search
     environment:
       DATABASE_URL: "postgres://postgres:postgres@meme-search-db:${DB_PORT:-5432}/meme_search"
     ports:
@@ -22,7 +22,7 @@ services:
     container_name: image_to_text_generator
     environment: # <-- you can adjust these values in your .env file
       APP_PORT: "${APP_PORT:-3000}"
-      GEN_URL: "http://meme_search_pro:3000"
+      GEN_URL: "http://meme_search:3000"
     expose:
       - "8000" 
     volumes: # <-- any additional meme directory must be mounted here - and placed in the /app/public/memes directory in the container (see example below)

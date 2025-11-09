@@ -1,7 +1,7 @@
 services:
-  meme_search_pro:
-    image: ghcr.io/neonwatty/meme_search_pro:latest
-    container_name: meme_search_pro
+  meme_search:
+    image: ghcr.io/neonwatty/meme_search:latest
+    container_name: meme_search
     environment:
       DATABASE_URL: "postgres://postgres:postgres@meme-search-db:5432/meme_search"
     ports:
@@ -19,7 +19,7 @@ services:
     container_name: image_to_text_generator
     environment:
       APP_PORT: "${APP_PORT:-3000}"
-      GEN_URL: "http://meme_search_pro:3000"
+      GEN_URL: "http://meme_search:3000"
     expose:
       - "8000"
     volumes: # <-- any additional meme directory must be mounted here - and placed in the /app/public/memes directory in the container (see example below)
