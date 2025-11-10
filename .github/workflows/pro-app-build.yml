@@ -5,6 +5,7 @@ on:
 jobs:
   build_pro_app:
     runs-on: ubuntu-22.04
+    timeout-minutes: 90
     permissions:
       contents: read
       packages: write
@@ -14,12 +15,32 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@v1
+      - name: Free Disk Space
+        run: |
+          echo "=== Disk space before cleanup ==="
+          df -h
+
+          # Remove unnecessary pre-installed software
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/share/boost
+
+          # Clean apt cache
+          sudo apt-get clean
+
+          # Prune Docker system
+          docker system prune -af --volumes
+
+          echo "=== Disk space after cleanup ==="
+          df -h
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          working-directory: ./meme_search_pro/meme_search_app
+          working-directory: ./meme_search/meme_search_app
           bundler-cache: true
 
       - name: Log in to Github Docker Image Registry
@@ -34,22 +55,41 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ghcr.io/${{ github.actor }}/meme_search_pro
+            ghcr.io/${{ github.actor }}/meme_search
           tags: type=ref,event=tag
           flavor: latest=true
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
+        with:
+          platforms: ${{ matrix.platform }}
 
       - name: Set Buildx
         uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: image=moby/buildkit:buildx-stable-1
+
+      - name: Record build start time
+        id: start_time
+        run: echo "timestamp=$(date +%s)" >> $GITHUB_OUTPUT
 
       - name: Build and Push for ${{ matrix.platform }}
         uses: docker/build-push-action@v6
+        timeout-minutes: 60
         with:
-          context: ./meme_search_pro/meme_search_app
+          context: ./meme_search/meme_search_app
           platforms: ${{ matrix.platform }}
           push: true
-          tags: ghcr.io/neonwatty/meme_search_pro:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          tags: ghcr.io/neonwatty/meme_search:latest
+          cache-from: type=gha,scope=build-${{ matrix.platform }}
+          cache-to: type=gha,mode=max,scope=build-${{ matrix.platform }}
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+
+      - name: Calculate build duration
+        if: always()
+        run: |
+          END_TIME=$(date +%s)
+          DURATION=$((END_TIME - ${{ steps.start_time.outputs.timestamp }}))
+          echo "Build duration: $((DURATION / 60)) minutes $((DURATION % 60)) seconds"
+          echo "Platform: ${{ matrix.platform }}"

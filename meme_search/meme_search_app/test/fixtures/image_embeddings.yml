@@ -1,0 +1,23 @@
+# Image Embeddings Fixtures
+# Used for testing vector search and embedding functionality
+
+one:
+  image_core: one
+  snippet: "this image says all the fucks"
+  embedding: <%= "[" + Array.new(384, 0.1).join(", ") + "]" %>
+  created_at: 2019-01-01 00:00:00
+  updated_at: 2019-01-01 00:00:00
+
+two:
+  image_core: two
+  snippet: "this image says did you just take both pills"
+  embedding: <%= "[" + Array.new(384, 0.2).join(", ") + "]" %>
+  created_at: 2019-01-01 00:00:00
+  updated_at: 2019-01-01 00:00:00
+
+three:
+  image_core: three
+  snippet: "this image has a bunny saying no"
+  embedding: <%= "[" + Array.new(384, 0.3).join(", ") + "]" %>
+  created_at: 2019-01-01 00:00:00
+  updated_at: 2019-01-01 00:00:00

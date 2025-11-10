@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0] - 2025-11-03
+
+Testing infrastructure and quality improvements:
+
+- **Playwright E2E Testing**: Complete migration from Capybara to Playwright
+  - 16 E2E tests with 100% passing rate (vs 13/15 with Capybara)
+  - Zero flakiness (vs 13% flakiness rate with Capybara)
+  - Better debugging with traces and time-travel inspector
+  - Page Object Model pattern for improved maintainability
+  - Full CI/CD integration with browser caching
+- **Rails 8 Upgrade**: Updated from Rails 7.2 to 8.0.4 with optimized configuration
+- **Development Tools**: Added mise for consistent development environment (Ruby 3.4.2, Python 3.12, Node 20)
+- **Testing Infrastructure**: New rake tasks for E2E test database management
+- **Code Cleanup**: Removed Capybara and Selenium dependencies (614 lines of code removed)
+- **Documentation**: Comprehensive testing documentation in `playwright/README.md` and `CLAUDE.md`
+
+Technical improvements:
+- Enhanced CI pipeline with Playwright browser caching (saves 1-2 minutes per run)
+- Test database seeding for isolated E2E tests
+- Detailed test coverage comparison documentation
+
 ## 2025-2-15
 
 Quality of life updates to the Pro version including:

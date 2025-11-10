@@ -1,0 +1,54 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# Testing
+tests/
+.pytest_cache/
+htmlcov/
+.coverage
+.coverage.*
+
+# Development
+.git/
+.github/
+.gitignore
+*.md
+README.md
+CHANGELOG.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.vim
+
+# OS
+.DS_Store
+Thumbs.db
+*.tmp
+
+# Docker
+Dockerfile*
+.dockerignore
+docker-compose*.yml
+
+# Model cache (models downloaded at runtime, not build)
+models/
+*.bin
+*.safetensors
+*.gguf
+
+# Logs
+*.log
+logs/

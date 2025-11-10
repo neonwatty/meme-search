@@ -1,10 +1,16 @@
 name: rails tests for meme search pro app
 
 on:
+  workflow_dispatch:
   pull_request:
-    branches: ["main"]
+    branches: ["main", "develop"]
     paths:
-      - "meme_search_pro/meme_search_app/**"
+      - "meme_search/meme_search_app/**"
+      - ".github/workflows/pro-app-test.yml"
+  push:
+    branches: ["main", "develop"]
+    paths:
+      - "meme_search/meme_search_app/**"
       - ".github/workflows/pro-app-test.yml"
 
 jobs:
@@ -20,15 +26,15 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: false
-          working-directory: ./meme_search_pro/meme_search_app
+          working-directory: ./meme_search/meme_search_app
 
       - name: Install dependencies
         run: gem install bundler && bundle install
-        working-directory: ./meme_search_pro/meme_search_app
+        working-directory: ./meme_search/meme_search_app
 
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman -w3 --no-pager
-        working-directory: ./meme_search_pro/meme_search_app
+        working-directory: ./meme_search/meme_search_app
 
   pro_app_js_check:
     runs-on: ubuntu-latest
@@ -42,15 +48,15 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: false
-          working-directory: ./meme_search_pro/meme_search_app
+          working-directory: ./meme_search/meme_search_app
 
       - name: Install dependencies
         run: gem install bundler && bundle install
-        working-directory: ./meme_search_pro/meme_search_app
+        working-directory: ./meme_search/meme_search_app
 
       - name: Scan for security vulnerabilities in JavaScript dependencies
-        working-directory: ./meme_search_pro/meme_search_app
-        run: gem uninstall error_highlight -v 0.3.0 && bin/importmap audit
+        working-directory: ./meme_search/meme_search_app
+        run: bin/importmap audit
 
   pro_app_lint:
     runs-on: ubuntu-latest
@@ -63,17 +69,17 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: false
-          working-directory: ./meme_search_pro/meme_search_app
+          working-directory: ./meme_search/meme_search_app
 
       - name: Install dependencies
         run: gem install bundler && bundle install
-        working-directory: ./meme_search_pro/meme_search_app
+        working-directory: ./meme_search/meme_search_app
 
       - name: Lint code for consistent style
-        run: gem uninstall error_highlight -v 0.3.0 && bin/rubocop -f github
-        working-directory: ./meme_search_pro/meme_search_app
+        run: bin/rubocop -f github
+        working-directory: ./meme_search/meme_search_app
 
-  pro_app_tests:
+  pro_app_unit_tests:
     runs-on: ubuntu-latest
 
     services:
@@ -89,7 +95,7 @@ jobs:
 
     steps:
       - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips postgresql-client
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -99,65 +105,149 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: false
-          working-directory: ./meme_search_pro/meme_search_app
+          working-directory: ./meme_search/meme_search_app
 
       - name: Install dependencies
         run: gem install bundler && bundle install && bundle exec rake assets:precompile
-        working-directory: ./meme_search_pro/meme_search_app
+        working-directory: ./meme_search/meme_search_app
 
       - name: Prepare database for tests
-        working-directory: ./meme_search_pro/meme_search_app
+        working-directory: ./meme_search/meme_search_app
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
         run: bin/rails db:test:prepare
 
-      - name: Run image cores system test
-        working-directory: ./meme_search_pro/meme_search_app
+      - name: Run model tests
+        working-directory: ./meme_search/meme_search_app
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
-        run: bin/rails test test/system/image_cores_test.rb
+          COVERAGE: true
+        run: bin/rails test test/models
 
-      - name: Run image paths test
-        working-directory: ./meme_search_pro/meme_search_app
+      - name: Run controller tests
+        working-directory: ./meme_search/meme_search_app
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
-        run: bin/rails test test/system/image_paths_test.rb
+          COVERAGE: true
+        run: bin/rails test test/controllers
 
-      - name: Run image to texts system test
-        working-directory: ./meme_search_pro/meme_search_app
+      - name: Run channel tests
+        working-directory: ./meme_search/meme_search_app
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
-        run: bin/rails test test/system/image_to_texts_test.rb
+          COVERAGE: true
+        run: bin/rails test test/channels
 
-      - name: Run index filter test
-        working-directory: ./meme_search_pro/meme_search_app
+  playwright_tests:
+    runs-on: ubuntu-latest
+
+    services:
+      meme-search-db:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_DB: meme_search
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd="pg_isready -U postgres" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: false
+          working-directory: ./meme_search/meme_search_app
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Ruby dependencies
+        run: gem install bundler && bundle install && bundle exec rake assets:precompile
+        working-directory: ./meme_search/meme_search_app
+
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      - name: Prepare test database
+        working-directory: ./meme_search/meme_search_app
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
-        run: bin/rails test test/system/index_filter_test.rb
+        run: bin/rails db:test:prepare
 
-      - name: Run search test
-        working-directory: ./meme_search_pro/meme_search_app
+      - name: Seed test database
+        working-directory: ./meme_search/meme_search_app
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
-        run: bin/rails test test/system/search_test.rb
+        run: bin/rails db:test:seed
 
-      - name: Run tag names test
-        working-directory: ./meme_search_pro/meme_search_app
+      - name: Start Rails server in background
+        working-directory: ./meme_search/meme_search_app
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
-        run: bin/rails test test/system/tag_names_test.rb
+        run: |
+          bin/rails server -e test -p 3000 &
+          sleep 10
+          curl --retry 10 --retry-delay 2 --retry-connrefused http://localhost:3000 || echo "Server may not be ready"
 
-      - name: Keep screenshots from failed system tests
+      - name: Run Playwright tests
+        env:
+          CI: 'true'
+          BASE_URL: http://localhost:3000
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+        run: npm run test:e2e
+
+      - name: Upload Playwright test results
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: screenshots
-          path: ${{ github.workspace }}/tmp/screenshots
+          name: playwright-test-results
+          path: test-results/
+          if-no-files-found: ignore
+
+      - name: Upload Playwright traces
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-traces
+          path: test-results/**/trace.zip
+          if-no-files-found: ignore
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
           if-no-files-found: ignore

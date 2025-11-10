@@ -1,0 +1,13 @@
+<div class="mx-auto md:w-2/3 w-full flex">
+  <div class="mx-auto">
+    <% if notice.present? %>
+      <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+    <% end %>
+    <%= render @image_tag %>
+    <%= link_to "Edit this image tag", edit_image_tag_path(@image_tag), class: edit_button_classes %>
+    <%= link_to "Back to image tags", image_tags_path, class: back_button_classes %>
+    <div class="inline-block ml-2">
+      <%= button_to "Destroy this image tag", @image_tag, method: :delete, class: delete_button_classes %>
+    </div>
+  </div>
+</div>

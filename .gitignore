@@ -5,8 +5,25 @@
 **/.DS_Store
 **/*.db
 **/*.pyc
-meme_search_pro/db_data
+meme_search/db_data
 **/.vscode
 **/__pycache__
 **.ruff_cache
 **models
+
+# Test Coverage
+**/.coverage
+**/coverage/
+**/htmlcov/
+**/.nyc_output/
+
+# Playwright
+node_modules/
+playwright-report/
+playwright-docker/playwright-report-docker/
+test-results/
+playwright/.cache/
+dist/
+playwright-docker/logs/
+playwright-docker/fixtures/
+playground-docker/

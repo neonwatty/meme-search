@@ -1,0 +1,17 @@
+<% absolute_path, image_name = absolute_image_path(image_core) %>
+<%= image_tag(absolute_path, size: "300", alt: image_name, class: "rounded-lg w-full mb-2") %>
+
+<% if image_core.description.present? %>
+  <p class="text-xs px-2 mb-1 line-clamp-2 text-slate-700 dark:text-slate-300"><%= image_core.description %></p>
+<% end %>
+
+<% if image_core.image_tags.any? %>
+  <div class="flex gap-1 px-2 pb-2 flex-wrap">
+    <% image_core.image_tags.includes(:tag_name).each do |image_tag| %>
+      <% tag_name = image_tag.tag_name %>
+      <span class="text-xs px-2 py-0.5 rounded-full" style="background-color: <%= tag_name.color %>33;">
+        <%= tag_name.name %>
+      </span>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,85 @@
+<div class="min-w-full flex flex-col items-center">
+  <div id="filters_slideover" data-controller="slideover">
+    <style>
+      dialog.slideover[open] {
+        animation: slide-in-from-left 300ms forwards ease-in-out;
+      }
+
+      dialog.slideover[closing] {
+        pointer-events: none;
+        animation: slide-out-to-left 300ms forwards ease-in-out;
+      }
+
+      @keyframes slide-in-from-left{
+        from {
+          transform: translateX(-100%);
+        }
+      }
+
+      @keyframes slide-out-to-left{
+        to {
+          transform: translateX(-100%);
+        }
+      }
+    </style>
+    <dialog data-slideover-target="dialog" class="slideover h-full max-h-full m-0 w-96 p-0 backdrop:bg-black/80 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-r border-white/20 dark:border-white/10 shadow-2xl">
+      <%= form_with url: image_cores_path, method: :get do %>
+        <div class="flex flex-col h-full">
+          <!-- Header -->
+          <div class="p-6 border-b border-gray-200/50 dark:border-gray-700/50">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Filters</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Refine your meme search</p>
+          </div>
+
+          <!-- Filter Content -->
+          <div class="flex-1 overflow-y-auto p-6 space-y-6">
+            <!-- Tags Filter -->
+            <div class="flex flex-col space-y-3">
+              <%= label_tag :search, 'Tags', class: "text-sm font-semibold text-gray-700 dark:text-gray-300" %>
+              <%= render 'tag_toggle' %>
+            </div>
+
+            <!-- Paths Filter -->
+            <div class="flex flex-col space-y-3">
+              <%= label_tag :search, 'Paths', class: "text-sm font-semibold text-gray-700 dark:text-gray-300" %>
+              <%= render 'path_toggle' %>
+            </div>
+
+            <!-- Has Embeddings Filter -->
+            <div class="bg-gradient-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-900/20 dark:to-purple-900/20 border border-indigo-200/50 dark:border-indigo-700/50 rounded-2xl p-4">
+              <div class="flex items-center justify-between">
+                <%= label_tag :has_embeddings, 'Has embeddings', class: "text-sm font-semibold text-gray-700 dark:text-gray-300" %>
+                <%= check_box_tag :has_embeddings, checked: true, id: "has_embeddings_checkbox", class:"w-5 h-5 text-indigo-600 bg-white dark:bg-slate-700 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-600 transition cursor-pointer" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer Actions -->
+          <div class="p-6 border-t border-gray-200/50 dark:border-gray-700/50 space-y-3 bg-gray-50/50 dark:bg-slate-900/50">
+            <%= submit_tag 'Apply Filters', class: primary_button_classes + " w-full" %>
+            <%= button_tag "Close", data: { action: 'slideover#close' }, type: "button", class: "w-full px-6 py-3 text-gray-700 dark:text-gray-300 font-semibold bg-gray-200/80 dark:bg-slate-700/80 hover:bg-gray-300/80 dark:hover:bg-slate-600/80 rounded-2xl shadow-lg hover:shadow-xl transition-all"%>
+          </div>
+        </div>
+      <% end %>
+    </dialog>
+
+    <!-- Filter Toggle Buttons -->
+    <div class="flex items-center gap-4">
+      <button id="open_filters_button" data-action="slideover#open" class="px-6 py-3 text-white font-semibold bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all cursor-pointer">
+        <span class="flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+          </svg>
+          Filters
+        </span>
+      </button>
+
+      <button
+        data-action="click->view-switcher#toggleView"
+        class="px-6 py-3 text-white font-semibold bg-cyan-700 hover:bg-cyan-600 rounded-2xl shadow-lg hover:shadow-xl transition-all cursor-pointer"
+        data-view-switcher-target="toggleButton">
+        Switch to Grid View
+      </button>
+    </div>
+  </div>
+</div>

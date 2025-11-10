@@ -1,0 +1,39 @@
+<% tag_names = TagName.all.map {|item| item.name.strip} %>
+<div id="tag_toggle">
+  <%= fields_for :search_tags do |tag_fields| %>
+    <div class="flex flex-col">
+      <div data-controller="multi-select" data-multi-select-auto-submit-value="false" class="relative">
+        <input type="hidden" name="selected_tag_names" value="" id="hidden_selected_tag_names">
+        <button
+          type="button"
+          data-action="click->multi-select#toggle"
+          class="w-full px-6 py-4 text-left bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-white/20 dark:border-white/10 rounded-2xl shadow-lg hover:shadow-xl transition-all flex items-center justify-between">
+          <span class="flex-1 text-gray-900 dark:text-white" id="selected_tag_names" data-multi-select-target="selectedItems">Choose tags</span>
+          <svg class="w-5 h-5 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div
+          data-multi-select-target="options"
+          class="absolute left-0 right-0 mt-2 hidden bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl shadow-2xl z-10 max-h-64 overflow-y-auto">
+          <div class="p-4 space-y-2">
+            <% tag_names.each_with_index do |tag, index|  %>
+              <label class="flex items-center px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg cursor-pointer transition" id='tag_<%= index %>'>
+                <%= tag_fields.text_field :tag,
+                          class: 'mr-3 rounded',
+                          data: {
+                            action: "change->multi-select#updateSelection"
+                          },
+                          type: "checkbox",
+                          value: tag.to_s.downcase,
+                          checked: false
+                    %>
+                <span><%= tag.to_s %></span>
+              </label>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

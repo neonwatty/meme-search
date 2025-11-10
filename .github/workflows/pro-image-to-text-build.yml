@@ -5,6 +5,7 @@ on:
 jobs:
   build_pro_image_to_text:
     runs-on: ubuntu-22.04
+    timeout-minutes: 90
     permissions:
       contents: read
       packages: write
@@ -13,15 +14,49 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Free Disk Space
+        run: |
+          echo "=== Disk space before cleanup ==="
+          df -h
+
+          # Remove unnecessary pre-installed software
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/share/boost
+
+          # Clean apt cache
+          sudo apt-get clean
+
+          # Prune Docker system
+          docker system prune -af --volumes
+
+          echo "=== Disk space after cleanup ==="
+          df -h
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: 'pip'
+          cache-dependency-path: 'meme_search/image_to_text_generator/requirements.txt'
 
-      - name: Install dependencies
-        working-directory: ./meme_search_pro/image_to_text_generator
+      - name: Install dependencies with retry
+        working-directory: ./meme_search/image_to_text_generator
         run: |
-          pip install -r requirements.txt
+          # Upgrade pip with extended timeout
+          pip install --timeout=300 --retries 5 --upgrade pip
+
+          # Install dependencies with retry logic and extended timeout
+          for i in {1..3}; do
+            pip install \
+              --timeout=300 \
+              --retries 5 \
+              -r requirements.txt && break || {
+                echo "Attempt $i failed, retrying in 10 seconds..."
+                sleep 10
+              }
+          done
 
       - name: Log in to Github Docker Image Registry
         uses: docker/login-action@v3
@@ -44,11 +79,30 @@ jobs:
 
       - name: Set Buildx
         uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: image=moby/buildkit:buildx-stable-1
+
+      - name: Record build start time
+        id: start_time
+        run: echo "timestamp=$(date +%s)" >> $GITHUB_OUTPUT
 
       - name: Build and Upload for AMD64 and ARM64
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
+        timeout-minutes: 60
         with:
-          context: ./meme_search_pro/image_to_text_generator
+          context: ./meme_search/image_to_text_generator
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ghcr.io/neonwatty/image_to_text_generator:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+
+      - name: Calculate build duration
+        if: always()
+        run: |
+          END_TIME=$(date +%s)
+          DURATION=$((END_TIME - ${{ steps.start_time.outputs.timestamp }}))
+          echo "Build duration: $((DURATION / 60)) minutes $((DURATION % 60)) seconds"
+          echo "Platforms: linux/amd64,linux/arm64"

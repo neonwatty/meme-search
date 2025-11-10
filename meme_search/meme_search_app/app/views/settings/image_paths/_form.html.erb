@@ -1,0 +1,38 @@
+<%= form_with(model: [:settings, image_path], class: "w-full") do |form| %>
+  <div class="flex flex-col space-y-6">
+
+    <!-- Instructions -->
+    <div class="bg-blue-50/80 dark:bg-blue-900/20 border border-blue-200/50 dark:border-blue-700/50 rounded-2xl p-4">
+      <div class="flex items-start space-x-3">
+        <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <div class="text-sm text-blue-700 dark:text-blue-300">
+          <p class="font-semibold mb-1">Directory Path Format</p>
+          <p>Enter a valid subdirectory name within <code class="font-mono bg-blue-100 dark:bg-blue-800 px-2 py-0.5 rounded">/public/memes</code></p>
+          <p class="text-xs mt-1 text-blue-600 dark:text-blue-400">Note: Browser cannot verify directory validity</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Directory Name Field -->
+    <div class="w-full">
+      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+        Directory Name
+      </label>
+      <%= form.text_field :name,
+        placeholder: "example_memes",
+        class: "w-full px-4 py-3 font-mono text-gray-700 dark:text-gray-200 bg-white/80 dark:bg-slate-700/80 backdrop-blur-lg border-2 border-indigo-200/50 dark:border-indigo-700/50 rounded-2xl shadow-lg focus:outline-none focus:ring-4 focus:ring-indigo-500/50 dark:focus:ring-indigo-600/50 focus:border-indigo-500 dark:focus:border-indigo-600 transition-all",
+        id: "new_image_path_text_area" %>
+      <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+        Full path will be: <code class="font-mono bg-gray-100 dark:bg-slate-600 px-2 py-1 rounded">/public/memes/your-directory-name</code>
+      </p>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="flex justify-center pt-4">
+      <%= form.submit "Save Path", class: submit_button_classes + " w-full sm:w-auto" %>
+    </div>
+
+  </div>
+<% end %>

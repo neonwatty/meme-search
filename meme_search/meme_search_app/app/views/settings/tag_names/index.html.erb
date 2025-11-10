@@ -1,0 +1,35 @@
+<div class="w-full px-4 py-8">
+  <%= render 'settings/shared/tabs' %>
+
+  <!-- Page Header -->
+  <div class="flex flex-col sm:flex-row items-center justify-between mb-8 mt-6">
+    <div>
+      <h1 class="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-purple-400">
+        Manage Tags
+      </h1>
+      <p class="text-gray-600 dark:text-gray-400 mt-2">Create and organize your meme tags</p>
+    </div>
+    <div class="mt-4 sm:mt-0">
+      <%= link_to "Create new", [:new, :settings, :tag_name], class: new_button_classes %>
+    </div>
+  </div>
+
+  <% content_for :title, "Current tags" %>
+
+  <!-- Tags Grid -->
+  <div id="tag_names" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <% @tag_names.each do |tag_name| %>
+      <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all">
+        <%= render tag_name %>
+        <div class="mt-4 pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
+          <%= link_to "Edit tag", [:settings, tag_name], class: "inline-flex items-center px-4 py-2 bg-indigo-100/80 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-xl hover:bg-indigo-200/80 dark:hover:bg-indigo-900/50 transition-all text-sm font-medium" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-center mt-8">
+    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+  </div>
+</div>

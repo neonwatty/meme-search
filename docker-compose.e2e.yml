@@ -1,0 +1,96 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: meme_search_e2e_postgres
+    environment:
+      POSTGRES_DB: meme_search_e2e
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_e2e_data:/var/lib/postgresql/data
+    networks:
+      - meme_search_e2e_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d meme_search_e2e"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  rails-app:
+    build:
+      context: ./meme_search/meme_search_app
+      dockerfile: Dockerfile
+    container_name: meme_search_e2e_rails
+    environment:
+      RAILS_ENV: production
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/meme_search_e2e
+      SECRET_KEY_BASE: docker_e2e_test_secret_key_base_do_not_use_in_production
+      RAILS_LOG_TO_STDOUT: "true"
+      RAILS_SERVE_STATIC_FILES: "true"
+      GEN_URL: http://python-service:8000
+    ports:
+      - "3001:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./meme_search/memes:/rails/public/memes:ro
+      - rails_e2e_assets:/rails/public/assets
+    networks:
+      - meme_search_e2e_network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    command: >
+      sh -c "
+      bin/rails db:prepare &&
+      bin/rails server -b 0.0.0.0
+      "
+
+  python-service:
+    build:
+      context: ./meme_search/image_to_text_generator
+      dockerfile: Dockerfile
+    container_name: meme_search_e2e_python
+    environment:
+      GEN_URL: http://rails-app:3000
+      LOG_LEVEL: INFO
+      MODEL_NAME: test
+    ports:
+      - "8000:8000"
+    depends_on:
+      rails-app:
+        condition: service_healthy
+    volumes:
+      - ./meme_search/memes:/app/public/memes:ro
+      - python_e2e_models:/app/models
+      - python_e2e_db:/app/db
+    networks:
+      - meme_search_e2e_network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+networks:
+  meme_search_e2e_network:
+    name: meme_search_e2e_network
+    driver: bridge
+
+volumes:
+  postgres_e2e_data:
+    name: meme_search_e2e_postgres_data
+  rails_e2e_assets:
+    name: meme_search_e2e_rails_assets
+  python_e2e_models:
+    name: meme_search_e2e_python_models
+  python_e2e_db:
+    name: meme_search_e2e_python_db

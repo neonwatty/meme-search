@@ -1,0 +1,12 @@
+# Mise configuration for Meme Search project
+# https://mise.jdx.dev/
+
+[tools]
+ruby = "3.4.2"
+python = "3.12"
+node = "20"
+# postgres = "17"  # Not needed - runs in Docker via docker-compose.yml
+
+[env]
+# PostgreSQL with pgvector extension runs in Docker
+POSTGRES_VERSION = "17"
