@@ -169,7 +169,7 @@ npm run test:e2e:report   # View last report
 
 **Rails CI** (`.github/workflows/pro-app-test.yml`): Brakeman, JS audit, RuboCop, Playwright E2E (16 tests, browser caching), unit tests, PostgreSQL+pgvector
 **Python CI** (`.github/workflows/pro-image-to-text-test.yml`): Ruff linting, integration + unit tests (60% coverage), artifacts
-**Build**: Multi-platform Docker (AMD64, ARM64) → GitHub Container Registry on main branch
+**Build**: Manual-only Docker builds via `workflow_dispatch` or local `build_and_push.sh` script. Multi-platform support (AMD64, ARM64) → GitHub Container Registry
 
 ## Common Workflows
 
