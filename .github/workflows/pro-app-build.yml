@@ -1,10 +1,7 @@
+# Manual-only Docker build workflow for Rails application
+# Automated builds disabled - use workflow_dispatch for manual runs or scripts/build_and_push.sh for local builds
 name: "pro app build"
 on:
-  push:
-    tags:
-      - 'v*'
-  release:
-    types: [published]
   workflow_dispatch:
 
 jobs:

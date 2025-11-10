@@ -197,10 +197,18 @@ This value is automatically detected and loaded into each service via the `docke
 
 ### Building the app locally with Docker
 
+**Docker images are built manually only** - there are no automated CI builds on releases or tags.
+
 To build the app - including all services defined in the `docker-compose.yml` file - locally run the local compose file at your terminal as
 
 ```sh
 docker compose -f docker-compose-local-build.yml up --build
+```
+
+For multi-platform builds (AMD64 + ARM64) and pushing to GitHub Container Registry, use the local build script:
+
+```sh
+bash scripts/build_and_push.sh
 ```
 
 This will build the docker images for the app, database, and auto description generator, and start the app at `http://localhost:3000`.
