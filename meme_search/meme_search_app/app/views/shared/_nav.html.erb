@@ -1,0 +1,39 @@
+<%# Navigation with Glassmorphism %>
+<nav class="bg-gray-300/80 dark:bg-slate-700/80 backdrop-blur-xl border-b border-white/20 dark:border-white/10 shadow-lg fixed top-0 left-0 right-0 z-50" id="navbar">
+  <div class="container mx-auto px-6 py-4">
+    <div class="flex items-center justify-between">
+      <%= link_to 'MemeSearch', root_path, class: "text-2xl font-bold text-slate-800 dark:text-white" %>
+
+      <ul class="flex items-center space-x-8" id="navigation">
+        <li>
+          <%= link_to 'All memes', root_path,
+            id: "all_memes",
+            class: current_page?(root_path) ?
+              "text-black bg-fuchsia-300 px-3 py-2 rounded-xl transition" :
+              "text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30" %>
+        </li>
+        <li>
+          <%= link_to 'Search memes', search_image_cores_path,
+            id: "search_memes",
+            class: current_page?(search_image_cores_path) ?
+              "text-black bg-fuchsia-300 px-3 py-2 rounded-xl transition" :
+              "text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30" %>
+        </li>
+        <li>
+          <%= link_to 'Settings', settings_tag_names_path,
+            id: "settings",
+            class: request.path.start_with?('/settings') ?
+              "text-black bg-fuchsia-300 px-3 py-2 rounded-xl transition" :
+              "text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30" %>
+        </li>
+        <li>
+          <%= link_to 'About', about_path,
+            id: "about",
+            class: current_page?(about_path) ?
+              "text-black bg-fuchsia-300 px-3 py-2 rounded-xl transition" :
+              "text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30" %>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

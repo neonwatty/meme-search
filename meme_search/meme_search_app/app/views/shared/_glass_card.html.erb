@@ -1,0 +1,14 @@
+<%# Glassmorphic Card Component %>
+<%# Usage: <%= render 'shared/glass_card', padding: 8, extra_classes: "" do %>
+<%#   Card content goes here %>
+<%# <% end %>
+
+<%
+  # Default values
+  padding ||= local_assigns.fetch(:padding, 8)
+  extra_classes ||= local_assigns.fetch(:extra_classes, "")
+%>
+
+<div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-white/20 dark:border-white/10 rounded-3xl p-<%= padding %> shadow-2xl <%= extra_classes %>">
+  <%= yield %>
+</div>

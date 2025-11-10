@@ -1,0 +1,79 @@
+<%# Filter Chips Display - Shows active filters as removable chips %>
+
+<%
+  # Parse filter params
+  selected_tag_names = params[:selected_tag_names]&.split(",")&.map(&:strip) || []
+  selected_path_names = params[:selected_path_names]&.split(",")&.map(&:strip) || []
+  has_embeddings_filter = params[:has_embeddings].present?
+
+  # Check if any filters are active
+  has_active_filters = selected_tag_names.any? || selected_path_names.any? || has_embeddings_filter
+
+  # Tag colors (matching mockup)
+  tag_colors = {
+    "funny" => "#FF6B6B",
+    "programming" => "#4ECDC4",
+    "debugging" => "#95E1D3",
+    "relatable" => "#F38181"
+  }
+%>
+
+<% if has_active_filters %>
+  <div class="flex flex-wrap items-center gap-3 mb-6 max-w-4xl mx-auto" id="filterChips">
+    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Active filters:</span>
+
+    <%# Tag Filter Chips %>
+    <% selected_tag_names.each do |tag_name| %>
+      <%
+        # Build remove URL (remove this tag but keep others)
+        remaining_tags = selected_tag_names - [tag_name]
+        remove_url = image_cores_path(
+          selected_tag_names: remaining_tags.join(","),
+          selected_path_names: params[:selected_path_names],
+          has_embeddings: params[:has_embeddings]
+        )
+        color = tag_colors[tag_name] || "#4ECDC4"
+      %>
+      <%= render 'filter_chip',
+        label: "Tag: #{tag_name}",
+        color: color,
+        remove_url: remove_url %>
+    <% end %>
+
+    <%# Path Filter Chips %>
+    <% selected_path_names.each do |path_name| %>
+      <%
+        # Build remove URL (remove this path but keep others)
+        remaining_paths = selected_path_names - [path_name]
+        remove_url = image_cores_path(
+          selected_tag_names: params[:selected_tag_names],
+          selected_path_names: remaining_paths.join(","),
+          has_embeddings: params[:has_embeddings]
+        )
+      %>
+      <%= render 'filter_chip',
+        label: "Path: #{path_name}",
+        color: "#95A5A6",
+        remove_url: remove_url %>
+    <% end %>
+
+    <%# Has Embeddings Filter Chip %>
+    <% if has_embeddings_filter %>
+      <%
+        # Build remove URL (remove embeddings filter but keep others)
+        remove_url = image_cores_path(
+          selected_tag_names: params[:selected_tag_names],
+          selected_path_names: params[:selected_path_names]
+        )
+      %>
+      <%= render 'filter_chip',
+        label: "Has embeddings",
+        color: "#3498DB",
+        remove_url: remove_url %>
+    <% end %>
+
+    <%# Clear All Link %>
+    <%= link_to "Clear all", image_cores_path,
+      class: "text-sm text-gray-600 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition ml-2 font-medium" %>
+  </div>
+<% end %>

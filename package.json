@@ -1,0 +1,46 @@
+{
+  "name": "meme-search",
+  "version": "2.0.0",
+  "description": "Use AI to index your memes by their content and text, making them easily retrievable for your meme warfare pleasures.",
+  "main": "index.js",
+  "scripts": {
+    "test": "bash run_all_ci_tests.sh",
+    "test:ci": "bash run_all_ci_tests.sh",
+    "test:ci:skip-e2e": "bash run_all_ci_tests.sh --skip-e2e",
+    "test:ci:verbose": "bash run_all_ci_tests.sh --verbose",
+    "test:rails": "bash run_all_ci_tests.sh --skip-python --skip-e2e",
+    "test:python": "bash run_all_ci_tests.sh --skip-rails --skip-e2e",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:report": "playwright show-report",
+    "test:e2e:codegen": "playwright codegen http://localhost:3000",
+    "test:e2e:docker": "bash -c 'trap \"AUTO_CLEANUP=true npm run test:e2e:docker:teardown\" EXIT; bash playwright-docker/scripts/docker-e2e-setup.sh && npm run test:e2e:docker:run'",
+    "test:e2e:docker:setup": "bash playwright-docker/scripts/docker-e2e-setup.sh",
+    "test:e2e:docker:run": "playwright test --config=playwright-docker/config/playwright.config.docker.ts",
+    "test:e2e:docker:teardown": "bash playwright-docker/scripts/docker-e2e-teardown.sh",
+    "test:e2e:docker:ui": "playwright test --config=playwright-docker/config/playwright.config.docker.ts --ui",
+    "test:e2e:docker:headed": "playwright test --config=playwright-docker/config/playwright.config.docker.ts --headed",
+    "test:e2e:docker:debug": "playwright test --config=playwright-docker/config/playwright.config.docker.ts --debug",
+    "test:e2e:docker:report": "playwright show-report playwright-docker/playwright-report-docker"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neonwatty/meme-search.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/neonwatty/meme-search/issues"
+  },
+  "homepage": "https://github.com/neonwatty/meme-search#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.10.0",
+    "axios": "^1.13.1",
+    "dotenv": "^17.2.3",
+    "typescript": "^5.9.3"
+  }
+}

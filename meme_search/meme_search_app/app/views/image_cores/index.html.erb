@@ -1,0 +1,50 @@
+<div class="flex flex-col content-center items-center justify-center w-auto h-full">
+
+  <div data-controller="view-switcher">
+
+  <%= render "filters" %>
+
+  <%# Active Filter Chips Display %>
+  <%= render "filter_chips" %>
+
+    <!-- List View -->
+    <div class="flex flex-col content-center items-center justify-center w-full h-full" id="index_image_cores" data-view-switcher-target="listView">
+      <% @image_cores.each do |image_core| %>
+        <%= link_to image_core do %>
+          <div id="image_core_<%= image_core.id %>" class="transition-transform duration-300 transform hover:scale-105 bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-800/95 p-4 rounded-2xl shadow-lg hover:shadow-2xl w-auto flex m-5">
+            <%= render partial: "image_core", locals: { image_core: image_core } %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- Grid View (hidden by default) -->
+    <div
+      class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4" id="grid_image_cores" data-view-switcher-target="gridView">
+      <% @image_cores.each do |image_core| %>
+        <%= link_to image_core do %>
+          <div id="image_core_grid_<%= image_core.id %>" class="transition-transform duration-300 transform hover:scale-105 bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-800/95 p-4 rounded-2xl shadow-lg hover:shadow-2xl">
+            <%= render partial: "image_only", locals: { image_core: image_core } %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- Masonry View (hidden by default) -->
+    <div
+      class="hidden columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 mt-4 w-full px-4" id="masonry_image_cores" data-view-switcher-target="masonryView">
+      <% @image_cores.each do |image_core| %>
+        <%= link_to image_core, class: "break-inside-avoid inline-block w-full mb-4 bg-slate-200/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-white/95 hover:backdrop-blur-xl dark:hover:bg-slate-700/95 transition-all duration-300 rounded-2xl p-2 shadow-lg hover:shadow-2xl cursor-pointer" do %>
+          <div id="image_core_masonry_<%= image_core.id %>">
+            <%= render partial: "image_only", locals: { image_core: image_core } %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <!-- Pagination (No changes to this) -->
+  <div id="index_image_cores_pagination" class="pagy-nav flex pb-5 justify-center center-content bg-white dark:bg-slate-800">
+    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+  </div>
+</div>
+ 

@@ -1,0 +1,23 @@
+<%# Individual Filter Chip Component %>
+<%# Usage: <%= render 'filter_chip', label: "Tag: funny", color: "#FF6B6B", remove_url: remove_filter_path(tag: "funny") %>
+
+<%
+  # Local variables
+  label = local_assigns[:label]
+  color = local_assigns.fetch(:color, "#4ECDC4")
+  remove_url = local_assigns[:remove_url]
+%>
+
+<span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all hover:shadow-md"
+  style="background-color: <%= color %>33; color: <%= color %>;"
+  data-filter-chip>
+  <span class="w-2 h-2 rounded-full" style="background-color: <%= color %>;"></span>
+  <%= label %>
+  <%= link_to remove_url,
+    class: "ml-1 hover:opacity-70 transition",
+    data: { turbo_method: :get } do %>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+  <% end %>
+</span>

@@ -1,0 +1,77 @@
+<div class="flex flex-col items-center space-y-6" id="image_core_detail_<%=image_core.id%>">
+
+  <!-- Image Display -->
+  <div class="w-full flex justify-center">
+    <% absolute_path, image_name = absolute_image_path(image_core) %>
+    <%= image_tag(absolute_path,
+      class: "rounded-2xl shadow-2xl max-w-full h-auto",
+      style: "max-height: 600px;",
+      alt: image_name) %>
+  </div>
+
+  <!-- Generation Status -->
+  <div class="w-full">
+    <div class="flex items-center justify-center space-x-2">
+      <%= render partial: "generate_status",
+        locals: {
+          img_id: image_core.id,
+          div_id: "status-image-core-id-#{image_core.id}",
+          status: image_core.status
+        } %>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="w-full">
+    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+      Description
+    </label>
+    <div class="bg-white/80 dark:bg-slate-700/80 backdrop-blur-lg border border-gray-200/50 dark:border-gray-600/50 rounded-2xl p-4 shadow-lg">
+      <p class="text-gray-800 dark:text-gray-200 leading-relaxed">
+        <%= image_core.description.present? ? image_core.description : "No description yet" %>
+      </p>
+    </div>
+  </div>
+
+  <!-- Tags Section -->
+  <% image_tags = image_core.image_tags.map {|assoc| assoc.tag_name}.map {|item| {name: item.name, color: item.color}} %>
+  <% if image_tags.any? %>
+    <div class="w-full">
+      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+        Tags
+      </label>
+      <div class="flex flex-wrap gap-3">
+        <% image_tags.each_with_index do |tag, index| %>
+          <span
+            id='tag_detail_<%= index %>'
+            class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium shadow-md hover:shadow-lg transition-all"
+            style="background-color: <%= tag[:color] %>33; color: <%= tag[:color] %>; border: 2px solid <%= tag[:color] %>;">
+            <span class="w-2 h-2 rounded-full mr-2" style="background-color: <%= tag[:color] %>;"></span>
+            <%= tag[:name] %>
+          </span>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="w-full">
+      <p class="text-sm text-gray-500 dark:text-gray-400 italic text-center">
+        No tags assigned
+      </p>
+    </div>
+  <% end %>
+
+  <!-- Metadata -->
+  <div class="w-full pt-4 border-t border-gray-200/50 dark:border-gray-700/50">
+    <div class="flex flex-col space-y-2 text-sm text-gray-600 dark:text-gray-400">
+      <div class="flex justify-between">
+        <span class="font-semibold">File Name:</span>
+        <span class="font-mono"><%= image_name %></span>
+      </div>
+      <div class="flex justify-between">
+        <span class="font-semibold">ID:</span>
+        <span class="font-mono">#<%= image_core.id %></span>
+      </div>
+    </div>
+  </div>
+
+</div>
