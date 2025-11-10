@@ -7,11 +7,15 @@ on:
     paths:
       - "meme_search/meme_search_app/**"
       - ".github/workflows/pro-app-test.yml"
+      - "!meme_search/meme_search_app/**/*.md"
+      - "!meme_search/meme_search_app/**/LICENSE"
   push:
     branches: ["main", "develop"]
     paths:
       - "meme_search/meme_search_app/**"
       - ".github/workflows/pro-app-test.yml"
+      - "!meme_search/meme_search_app/**/*.md"
+      - "!meme_search/meme_search_app/**/LICENSE"
 
 jobs:
   pro_app_ruby_check:

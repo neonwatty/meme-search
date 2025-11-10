@@ -2,10 +2,12 @@ name: image to text generator tests for pro app
 
 on:
   pull_request:
-    branches: ["main"]
+    branches: ["main", "develop"]
     paths:
       - "meme_search/image_to_text_generator/**"
       - ".github/workflows/pro-image-to-text-test.yml"
+      - "!meme_search/image_to_text_generator/**/*.md"
+      - "!meme_search/image_to_text_generator/**/LICENSE"
 
 jobs:
   image_to_text_lint:
