@@ -35,7 +35,7 @@ RUN apt-get update -qq && \
 COPY Gemfile Gemfile.lock ./
 RUN --mount=type=cache,target=/usr/local/bundle/cache \
     --mount=type=cache,target=/root/.bundle \
-    bundle config set jobs 1 && \
+    bundle config set --local jobs 4 && \
     bundle install --jobs 4 --retry 5 && \
     rm -rf "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
