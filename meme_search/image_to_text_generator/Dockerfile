@@ -13,12 +13,11 @@ COPY ./requirements.txt ./
 
 # Install dependencies with BuildKit cache mounts
 # Cache both pip and uv caches across builds
+# Note: uv doesn't support --timeout or --retry flags
 RUN --mount=type=cache,target=/root/.cache/pip \
     --mount=type=cache,target=/root/.cache/uv \
     uv pip install \
       --system \
-      --timeout 300 \
-      --retry 5 \
       -r requirements.txt
 
 # Copy application code AFTER dependencies (separate layer)
