@@ -1,5 +1,5 @@
 # Manual-only Docker build workflow for Python image-to-text service
-# Automated builds disabled - use workflow_dispatch for manual runs or build_and_push.sh for local builds
+# Automated builds disabled - use workflow_dispatch for manual runs or scripts/build_and_push.sh for local builds
 name: "pro image to text build"
 on:
   workflow_dispatch:

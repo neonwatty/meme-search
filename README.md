@@ -222,7 +222,7 @@ docker compose -f docker-compose-local-build.yml up --build
 For multi-platform builds (AMD64 + ARM64) and pushing to GitHub Container Registry, use the local build script:
 
 ```sh
-bash build_and_push.sh
+bash scripts/build_and_push.sh
 ```
 
 This will build the docker images for the app, database, and auto description generator, and start the app at `http://localhost:3000`.
