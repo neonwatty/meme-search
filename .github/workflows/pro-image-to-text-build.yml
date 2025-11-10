@@ -1,5 +1,10 @@
 name: "pro image to text build"
 on:
+  push:
+    tags:
+      - 'v*'
+  release:
+    types: [published]
   workflow_dispatch:
 
 jobs:
@@ -88,7 +93,7 @@ jobs:
 
       - name: Build and Upload for AMD64 and ARM64
         uses: docker/build-push-action@v6
-        timeout-minutes: 60
+        timeout-minutes: 120
         with:
           context: ./meme_search/image_to_text_generator
           platforms: linux/amd64,linux/arm64

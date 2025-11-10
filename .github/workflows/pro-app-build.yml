@@ -1,5 +1,10 @@
 name: "pro app build"
 on:
+  push:
+    tags:
+      - 'v*'
+  release:
+    types: [published]
   workflow_dispatch:
 
 jobs:
@@ -75,7 +80,7 @@ jobs:
 
       - name: Build and Push for ${{ matrix.platform }}
         uses: docker/build-push-action@v6
-        timeout-minutes: 60
+        timeout-minutes: 120
         with:
           context: ./meme_search/meme_search_app
           platforms: ${{ matrix.platform }}
