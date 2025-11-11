@@ -1,4 +1,16 @@
 class ImagePath < ApplicationRecord
+  include ActionView::Helpers::DateHelper
+
+  SCAN_FREQUENCIES = {
+    nil => "Manual only",
+    30 => "Every 30 minutes",
+    60 => "Every hour",
+    360 => "Every 6 hours",
+    1440 => "Daily"
+  }.freeze
+
+  enum :scan_status, { idle: 0, scanning: 1, failed: 2 }, prefix: false
+
   validates :name, presence: true, uniqueness: { message: "path already used" }
   validates :name, length: {
     minimum: 1,
@@ -6,11 +18,69 @@ class ImagePath < ApplicationRecord
     too_short: "Path name must have at least %{count} characters.",
     too_long: "Path name must have no more than %{count} characters."
   }
+  validates :scan_frequency_minutes, inclusion: { in: SCAN_FREQUENCIES.keys }, allow_nil: true
+
   has_many :image_cores, dependent: :destroy
   has_many :image_tags, through: :image_cores
 
   validate :valid_dir
   after_save :list_files_in_directory
+
+  # Auto-scan feature methods
+  def auto_scan_enabled?
+    scan_frequency_minutes.present?
+  end
+
+  def due_for_scan?
+    return false unless auto_scan_enabled?
+    return true if last_scanned_at.nil?
+    Time.current >= next_scan_time
+  end
+
+  def next_scan_time
+    return nil unless auto_scan_enabled?
+    return Time.current if last_scanned_at.nil?
+    last_scanned_at + scan_frequency_minutes.minutes
+  end
+
+  def time_until_next_scan
+    return "Manual only" unless auto_scan_enabled?
+    return "Due now" if due_for_scan?
+    distance_of_time_in_words(Time.current, next_scan_time, include_seconds: false)
+  end
+
+  def scan_and_update!
+    return if currently_scanning?
+
+    with_lock do
+      update_columns(currently_scanning: true, scan_status: :scanning, last_scan_error: nil)
+      start_time = Time.current
+
+      begin
+        result = list_files_in_directory
+        duration_ms = ((Time.current - start_time) * 1000).to_i
+
+        update_columns(
+          last_scanned_at: Time.current,
+          scan_status: :idle,
+          currently_scanning: false,
+          last_scan_duration_ms: duration_ms,
+          last_scan_error: nil
+        )
+
+        Rails.logger.info "[Scan] #{name} - Duration: #{duration_ms}ms, Added: #{result[:added]}, Removed: #{result[:removed]}"
+        result
+      rescue => e
+        update_columns(
+          scan_status: :failed,
+          currently_scanning: false,
+          last_scan_error: e.message
+        )
+        Rails.logger.error "[Scan] #{name} - Failed: #{e.message}"
+        raise
+      end
+    end
+  end
 
   private
 

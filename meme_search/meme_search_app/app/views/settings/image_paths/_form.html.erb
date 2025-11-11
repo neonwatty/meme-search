@@ -29,6 +29,20 @@
       </p>
     </div>
 
+    <!-- Scan Frequency Field -->
+    <div class="w-full">
+      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+        Scan Frequency
+      </label>
+      <%= form.select :scan_frequency_minutes,
+        options_for_select(ImagePath::SCAN_FREQUENCIES.map { |k, v| [v, k] }, image_path.scan_frequency_minutes),
+        {},
+        class: "w-full px-4 py-3 text-gray-700 dark:text-gray-200 bg-white/80 dark:bg-slate-700/80 backdrop-blur-lg border-2 border-indigo-200/50 dark:border-indigo-700/50 rounded-2xl shadow-lg focus:outline-none focus:ring-4 focus:ring-indigo-500/50 dark:focus:ring-indigo-600/50 focus:border-indigo-500 dark:focus:border-indigo-600 transition-all" %>
+      <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+        Auto-scan this folder for new/removed images? Default is 'Manual only'.
+      </p>
+    </div>
+
     <!-- Submit Button -->
     <div class="flex justify-center pt-4">
       <%= form.submit "Save Path", class: submit_button_classes + " w-full sm:w-auto" %>

@@ -2,6 +2,14 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 📁 File Organization Guidelines
+
+**⚠️ IMPORTANT - Temporary Documentation Files**:
+- **All temporary markdown files** created without explicit user request **MUST** be saved to `/plans/temp/`
+- Examples: exploration notes, research summaries, draft documentation, intermediate analysis
+- Permanent documentation (user-requested plans, design docs) goes in `/plans/`
+- The `/plans/temp/` directory is git-ignored and not tracked in version control
+
 ## 🤖 Task Agent Usage Guidelines
 
 **IMPORTANT**: Use specialized Task agents liberally for exploration, planning, and research tasks.
