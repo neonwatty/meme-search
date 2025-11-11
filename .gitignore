@@ -10,3 +10,14 @@ meme_search_pro/db_data
 **/__pycache__
 **.ruff_cache
 **models
+
+# Node.js dependencies
+node_modules/
+
+# Test artifacts
+screenshots/
+test-results/
+
+# Docker playground files
+playground-docker/
+playwright-docker/
