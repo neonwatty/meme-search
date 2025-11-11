@@ -30,3 +30,11 @@ dist/
 playwright-docker/logs/
 playwright-docker/fixtures/
 playground-docker/
+
+# Screenshots directory (exclude PNG files, keep documentation)
+screenshots/**/*.png
+screenshots/**/*.jpg
+screenshots/**/*.jpeg
+!screenshots/README.md
+!screenshots/SCREENSHOT_PLAN.md
+!screenshots/QUICK_REFERENCE.md
