@@ -31,11 +31,15 @@ class TestTestImageToText:
         result = model.download()
         assert result is None
 
-    def test_extract_returns_test_string(self):
-        """Test extract method returns test string"""
+    def test_extract_returns_deterministic_output(self):
+        """Test extract method returns deterministic output based on filename"""
         model = TestImageToText()
-        result = model.extract("fake_path.jpg")
-        assert result == "this is a test"
+        result = model.extract("/path/to/fake_path.jpg")
+        assert result == "Test description for fake_path"
+
+        # Test with different filename
+        result2 = model.extract("/another/path/image123.png")
+        assert result2 == "Test description for image123"
 
 
 class TestMoondreamImageToText:
