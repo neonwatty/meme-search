@@ -1,0 +1,9 @@
+<script>
+  // Execute immediately before page renders to prevent FOUC (Flash of Unstyled Content)
+  // Priority: 1) localStorage user choice, 2) system preference, 3) default light
+  if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark')
+  } else {
+    document.documentElement.classList.remove('dark')
+  }
+</script>
