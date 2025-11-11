@@ -21,3 +21,13 @@ test-results/
 # Docker playground files
 playground-docker/
 playwright-docker/
+
+# Database data and logs in meme_search directory
+meme_search/db_data/
+meme_search/**/log/
+meme_search/**/*.log
+
+# Rails/Ruby artifacts in meme_search
+meme_search/**/coverage/
+meme_search/**/tmp/
+meme_search/**/.coverage
