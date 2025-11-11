@@ -478,7 +478,7 @@ module Settings
       end
 
       # We need to ensure the controller gets our mocked instance
-      ImagePath.stub(:find, image_path.id) { image_path } do
+      ImagePath.stub :find, image_path do
         post rescan_settings_image_path_url(image_path)
       end
 

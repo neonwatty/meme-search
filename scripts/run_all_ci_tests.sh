@@ -117,7 +117,7 @@ fi
 echo -e "${GREEN}✓ PostgreSQL running${NC}"
 
 # Check if in correct directory
-if [ ! -f "run_all_ci_tests.sh" ]; then
+if [ ! -f "package.json" ] || [ ! -d "meme_search" ]; then
     echo -e "${RED}❌ Must run from project root directory${NC}"
     exit 1
 fi
