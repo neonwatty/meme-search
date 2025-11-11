@@ -24,14 +24,30 @@ tokenizer = None
 
 
 class TestImageToText:
+    """
+    Test/dummy model for E2E testing that doesn't require actual ML inference.
+    Returns deterministic output based on filename with a fixed 1-second delay
+    to simulate realistic processing time for testing batch operations and
+    real-time updates.
+    """
     def __init__(self):
-        pass
+        import time
+        from pathlib import Path
+        self.model_id = "test-dummy-model"
+        self.device = "cpu"
+        self.time = time
+        self.Path = Path
 
     def download(self):
         return None
 
     def extract(self, image_path):
-        return "this is a test"
+        # Fixed 1-second delay to simulate realistic processing
+        self.time.sleep(1)
+
+        # Return deterministic output based on filename for assertions
+        filename = self.Path(image_path).stem
+        return f"Test description for {filename}"
 
 
 class MoondreamImageToText:
