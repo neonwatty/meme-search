@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulk Generation - Page Context Diagram</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 min-h-screen p-8">
+
+  <div class="max-w-6xl mx-auto">
+
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-slate-800 dark:text-white mb-3">
+        Bulk Generation: Complete Page Context
+      </h1>
+      <p class="text-lg text-slate-600 dark:text-slate-400">
+        Understanding where each component fits in the existing application
+      </p>
+    </div>
+
+    <!-- Main Diagram -->
+    <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg rounded-2xl p-8 shadow-xl mb-8">
+
+      <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-6 text-center">
+        Gallery Page (<code>/image_cores</code>) - Current + New Components
+      </h2>
+
+      <!-- Page Layout Diagram -->
+      <div class="border-4 border-slate-300 dark:border-slate-600 rounded-xl p-6 space-y-4">
+
+        <!-- Top Bar (EXISTING) -->
+        <div class="border-2 border-slate-400 dark:border-slate-500 rounded-lg p-4 bg-slate-100 dark:bg-slate-700">
+          <p class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
+            <span class="bg-slate-500 text-white text-xs px-2 py-1 rounded">EXISTING</span>
+            Top Bar
+          </p>
+          <div class="flex gap-2 text-xs">
+            <div class="px-3 py-2 bg-indigo-500 text-white rounded font-semibold">Filters Button</div>
+            <div class="px-3 py-2 bg-cyan-700 text-white rounded font-semibold">View Switcher</div>
+            <div class="ml-auto text-slate-600 dark:text-slate-300">Showing X of Y memes</div>
+          </div>
+        </div>
+
+        <!-- Filter Chips (EXISTING) -->
+        <div class="border-2 border-slate-400 dark:border-slate-500 rounded-lg p-4 bg-slate-100 dark:bg-slate-700">
+          <p class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
+            <span class="bg-slate-500 text-white text-xs px-2 py-1 rounded">EXISTING</span>
+            Active Filter Chips (conditional)
+          </p>
+          <div class="flex gap-2 text-xs">
+            <span class="px-2 py-1 bg-purple-500/20 border border-purple-400 rounded">funny ×</span>
+            <span class="px-2 py-1 bg-gray-500/20 border border-gray-400 rounded">Has embeddings: false ×</span>
+          </div>
+        </div>
+
+        <!-- Gallery Grid (EXISTING) -->
+        <div class="border-2 border-slate-400 dark:border-slate-500 rounded-lg p-4 bg-slate-100 dark:bg-slate-700">
+          <p class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+            <span class="bg-slate-500 text-white text-xs px-2 py-1 rounded">EXISTING</span>
+            Gallery Grid (List/Grid/Masonry views)
+          </p>
+          <div class="grid grid-cols-3 gap-2">
+            <div class="bg-white dark:bg-slate-600 rounded p-2 text-xs text-center">
+              <div class="h-16 bg-slate-300 dark:bg-slate-500 rounded mb-1"></div>
+              Image Card
+            </div>
+            <div class="bg-white dark:bg-slate-600 rounded p-2 text-xs text-center">
+              <div class="h-16 bg-slate-300 dark:bg-slate-500 rounded mb-1"></div>
+              Image Card
+            </div>
+            <div class="bg-white dark:bg-slate-600 rounded p-2 text-xs text-center">
+              <div class="h-16 bg-slate-300 dark:bg-slate-500 rounded mb-1"></div>
+              Image Card
+            </div>
+          </div>
+        </div>
+
+        <!-- Pagination (EXISTING) -->
+        <div class="border-2 border-slate-400 dark:border-slate-500 rounded-lg p-3 bg-slate-100 dark:bg-slate-700">
+          <p class="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+            <span class="bg-slate-500 text-white text-xs px-2 py-1 rounded">EXISTING</span>
+            Pagination
+          </p>
+        </div>
+
+        <!-- Filter Panel Slideover (MODIFIED) -->
+        <div class="border-2 border-emerald-500 dark:border-emerald-400 rounded-lg p-4 bg-emerald-50 dark:bg-emerald-900/20 relative">
+          <div class="absolute -top-3 -right-3 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+            MODIFIED
+          </div>
+          <p class="text-sm font-bold text-emerald-700 dark:text-emerald-300 mb-3">
+            Filter Panel (Slideover from left)
+          </p>
+          <div class="space-y-2 text-xs">
+            <div class="bg-white dark:bg-slate-700 rounded p-2 border border-slate-300 dark:border-slate-600">
+              <span class="bg-slate-500 text-white text-xs px-2 py-1 rounded">EXISTING</span> Tags Filter
+            </div>
+            <div class="bg-white dark:bg-slate-700 rounded p-2 border border-slate-300 dark:border-slate-600">
+              <span class="bg-slate-500 text-white text-xs px-2 py-1 rounded">EXISTING</span> Paths Filter
+            </div>
+            <div class="bg-white dark:bg-slate-700 rounded p-2 border border-slate-300 dark:border-slate-600">
+              <span class="bg-slate-500 text-white text-xs px-2 py-1 rounded">EXISTING</span> Has Embeddings
+            </div>
+            <div class="border-t-2 border-emerald-300 dark:border-emerald-700 pt-2 mt-2">
+              <div class="bg-emerald-100 dark:bg-emerald-900 rounded p-2 border-2 border-emerald-400">
+                <span class="bg-emerald-500 text-white text-xs px-2 py-1 rounded">NEW</span> Bulk Generation Section
+                <div class="mt-2 text-xs">
+                  • Count display<br>
+                  • "Generate All Descriptions (X)" button
+                </div>
+              </div>
+            </div>
+            <div class="bg-white dark:bg-slate-700 rounded p-2 border border-slate-300 dark:border-slate-600">
+              <span class="bg-slate-500 text-white text-xs px-2 py-1 rounded">EXISTING</span> Apply Filters button
+            </div>
+            <div class="bg-white dark:bg-slate-700 rounded p-2 border border-slate-300 dark:border-slate-600">
+              <span class="bg-slate-500 text-white text-xs px-2 py-1 rounded">EXISTING</span> Close button
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Overlay (NEW) -->
+        <div class="border-2 border-emerald-500 dark:border-emerald-400 rounded-lg p-4 bg-emerald-50 dark:bg-emerald-900/20 relative">
+          <div class="absolute -top-3 -right-3 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+            NEW
+          </div>
+          <p class="text-sm font-bold text-emerald-700 dark:text-emerald-300 mb-2">
+            Progress Overlay (Fixed position: bottom-right corner)
+          </p>
+          <p class="text-xs text-emerald-600 dark:text-emerald-400">
+            Floats above all content. Shows real-time progress, percentage, counts, cancel button.
+            <br>
+            Appears after user confirms bulk generation. Auto-dismisses when complete (if no errors).
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- File Mapping -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+
+      <!-- Existing Files (Modified) -->
+      <div class="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-400 dark:border-amber-600 rounded-xl p-6">
+        <h3 class="text-xl font-bold text-amber-700 dark:text-amber-300 mb-4 flex items-center gap-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+          </svg>
+          Files to Modify
+        </h3>
+        <ul class="space-y-3 text-sm">
+          <li class="bg-white dark:bg-slate-800 rounded-lg p-3">
+            <code class="text-xs font-mono text-amber-700 dark:text-amber-300">app/views/image_cores/_filters.html.erb</code>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
+              Add bulk generation section before footer buttons
+            </p>
+          </li>
+          <li class="bg-white dark:bg-slate-800 rounded-lg p-3">
+            <code class="text-xs font-mono text-amber-700 dark:text-amber-300">app/controllers/image_cores_controller.rb</code>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
+              Add 3 new actions: bulk_generate_descriptions, bulk_operation_status, bulk_operation_cancel
+            </p>
+          </li>
+          <li class="bg-white dark:bg-slate-800 rounded-lg p-3">
+            <code class="text-xs font-mono text-amber-700 dark:text-amber-300">config/routes.rb</code>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
+              Add 3 new collection routes
+            </p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- New Files (Create) -->
+      <div class="bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-400 dark:border-emerald-600 rounded-xl p-6">
+        <h3 class="text-xl font-bold text-emerald-700 dark:text-emerald-300 mb-4 flex items-center gap-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          Files to Create
+        </h3>
+        <ul class="space-y-3 text-sm">
+          <li class="bg-white dark:bg-slate-800 rounded-lg p-3">
+            <code class="text-xs font-mono text-emerald-700 dark:text-emerald-300">app/views/image_cores/_bulk_progress.html.erb</code>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
+              Progress overlay partial (rendered in layout or conditionally)
+            </p>
+          </li>
+          <li class="bg-white dark:bg-slate-800 rounded-lg p-3">
+            <code class="text-xs font-mono text-emerald-700 dark:text-emerald-300">app/javascript/controllers/bulk_progress_controller.js</code>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
+              Stimulus controller for polling, localStorage, minimize/cancel
+            </p>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- User Journey -->
+    <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg rounded-2xl p-8 shadow-xl mb-8">
+      <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-6">
+        🗺️ User Journey: Step-by-Step
+      </h2>
+
+      <div class="space-y-4">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 bg-indigo-500 text-white rounded-full flex items-center justify-center font-bold">1</div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-1">User Opens Gallery</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+              Navigates to <code>/image_cores</code>. Sees existing gallery with top bar, filter chips, image grid.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 bg-indigo-500 text-white rounded-full flex items-center justify-center font-bold">2</div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-1">User Clicks "Filters" Button</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+              Left sidebar slides in. User sees existing filter options (tags, paths, has embeddings).
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 bg-indigo-500 text-white rounded-full flex items-center justify-center font-bold">3</div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-1">User Selects Filters</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+              Checks boxes for tags/paths, unchecks "Has embeddings" to show only images WITHOUT descriptions.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">4</div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span class="bg-emerald-500 text-white text-xs px-2 py-1 rounded mr-2">NEW</span>
+              User Sees Bulk Generation Section
+            </h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+              Above "Apply Filters" button, sees: "23 images without descriptions" and emerald "Generate All Descriptions (23)" button.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">5</div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span class="bg-emerald-500 text-white text-xs px-2 py-1 rounded mr-2">NEW</span>
+              User Clicks "Generate All" Button
+            </h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+              Native browser confirm() dialog appears: "Generate descriptions for 23 images?" with model name and time estimate.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">6</div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span class="bg-emerald-500 text-white text-xs px-2 py-1 rounded mr-2">NEW</span>
+              User Confirms → Progress Overlay Appears
+            </h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+              Page redirects back to gallery. Filter panel closes. Progress overlay slides in from bottom-right corner.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">7</div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-1">Real-time Updates Begin</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+              <strong>Progress overlay:</strong> Polls backend every 2-10s for aggregate counts.
+              <br>
+              <strong>Individual cards:</strong> Update instantly via ActionCable (status badges + descriptions appear).
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">8</div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span class="bg-emerald-500 text-white text-xs px-2 py-1 rounded mr-2">NEW</span>
+              Operation Completes
+            </h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+              Progress overlay shows 100% complete. Auto-dismisses after 5 seconds (if no errors) or stays visible with retry button (if failures).
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-6">
+      <h3 class="font-semibold text-blue-700 dark:text-blue-300 mb-3 text-xl">
+        📝 Summary: What's Being Added
+      </h3>
+      <div class="space-y-3 text-sm text-blue-700 dark:text-blue-300">
+        <p>
+          <strong>1 Component Modified:</strong> Filter panel (<code>_filters.html.erb</code>) - Add bulk generation section with count + button
+        </p>
+        <p>
+          <strong>1 New Component:</strong> Progress overlay (<code>_bulk_progress.html.erb</code> + Stimulus controller) - Floats in bottom-right
+        </p>
+        <p>
+          <strong>3 New Routes:</strong> POST bulk_generate_descriptions, GET bulk_operation_status, POST bulk_operation_cancel
+        </p>
+        <p>
+          <strong>0 Breaking Changes:</strong> All existing gallery functionality remains unchanged. New feature is additive only.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -4,6 +4,11 @@
 
 This document proposes a user-facing feature for bulk description generation that follows existing Meme Search UI/UX patterns and integrates seamlessly with the current filtering system, status management, and real-time feedback mechanisms.
 
+**📄 Visual Mockups**: See `/plans/mockups/START_HERE_SIMPLE.md` for interactive HTML mockups showing:
+- Filter panel before/after comparison
+- Progress overlay placement
+- Complete page context diagram
+
 ## Table of Contents
 
 1. [Feature Overview](#feature-overview)
@@ -70,6 +75,8 @@ Enable users to generate descriptions for multiple images simultaneously, elimin
 ### Option 1: Gallery Index Page with Filter Panel (RECOMMENDED)
 
 **Placement**: Add button to filter panel footer in `/image_cores`
+
+**📄 See Interactive Mockup**: Open `plans/mockups/SIMPLE-01-filter-panel-before-after.html` for side-by-side before/after comparison
 
 **Visual Mock**:
 ```
@@ -199,6 +206,8 @@ Enable users to generate descriptions for multiple images simultaneously, elimin
 ## Visual Feedback Design
 
 ### Progress Overlay (Recommended)
+
+**📄 See Interactive Mockup**: Open `plans/mockups/SIMPLE-02-progress-overlay-placement.html` to see exactly where this appears on the page
 
 When user clicks "Generate All Descriptions", show a **persistent progress card** that:
 - Floats in bottom-right corner (toast-like positioning)
@@ -817,11 +826,17 @@ async fetchProgress() {
 
 ## Recommended Implementation Path
 
+**📄 See Complete Context**: Open `plans/mockups/SIMPLE-03-page-context-diagram.html` for:
+- Visual diagram of all components (existing + new)
+- 8-step user journey
+- File mapping (what to modify vs. create)
+- Implementation checklist
+
 ### Start Here (MVP)
 
 **Option 1 Placement** + **Phase 1 Implementation**
 
-1. Add button to filter panel footer
+1. Add button to filter panel footer (see `SIMPLE-01-filter-panel-before-after.html`)
 2. Use existing filter logic to get image IDs
 3. Loop through and queue each image (reuse existing `generate_description` logic)
 4. Flash message: "Queued N images for processing"
