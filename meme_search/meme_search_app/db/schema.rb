@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_16_131509) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_11_145709) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
 
   create_table "image_cores", force: :cascade do |t|
@@ -38,7 +38,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_16_131509) do
     t.string "name", limit: 300
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "scan_frequency_minutes"
+    t.datetime "last_scanned_at"
+    t.integer "scan_status", default: 0, null: false
+    t.text "last_scan_error"
+    t.boolean "currently_scanning", default: false, null: false
+    t.integer "last_scan_duration_ms"
+    t.index ["last_scanned_at"], name: "index_image_paths_on_last_scanned_at"
     t.index ["name"], name: "index_image_paths_on_name", unique: true
+    t.index ["scan_frequency_minutes"], name: "index_image_paths_on_scan_frequency_minutes"
   end
 
   create_table "image_tags", force: :cascade do |t|

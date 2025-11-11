@@ -11,6 +11,9 @@ meme_search/db_data
 **.ruff_cache
 **models
 
+# Temporary planning/documentation files
+plans/temp*
+
 # Test Coverage
 **/.coverage
 **/coverage/

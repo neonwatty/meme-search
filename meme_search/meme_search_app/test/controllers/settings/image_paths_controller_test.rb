@@ -389,10 +389,11 @@ module Settings
     end
 
     # Parameter tests
-    test "should only permit name parameter" do
+    test "should permit name and scan_frequency_minutes parameters" do
       params = ActionController::Parameters.new(
         image_path: {
           name: "test_path",
+          scan_frequency_minutes: 30,
           unauthorized_param: "should_not_be_permitted"
         }
       )
@@ -402,7 +403,87 @@ module Settings
 
       permitted = controller.send(:image_path_params)
       assert_includes permitted.keys, "name"
+      assert_includes permitted.keys, "scan_frequency_minutes"
       assert_not_includes permitted.keys, "unauthorized_param"
+    end
+
+    # Auto-scan feature tests
+    test "create action triggers immediate scan if auto-scan enabled" do
+      # Create with auto-scan enabled - scan should be triggered
+      post settings_image_paths_url, params: {
+        image_path: {
+          name: "test_valid_directory",
+          scan_frequency_minutes: 30
+        }
+      }
+
+      assert_redirected_to settings_image_path_url(ImagePath.last)
+
+      # Verify the path was created with auto-scan enabled
+      created_path = ImagePath.last
+      assert_equal 30, created_path.scan_frequency_minutes
+      assert_not_nil created_path.last_scanned_at, "Expected immediate scan to set last_scanned_at"
+    end
+
+    test "create action skips immediate scan if manual only" do
+      # Create with manual only (nil frequency)
+      post settings_image_paths_url, params: {
+        image_path: {
+          name: "test_valid_directory",
+          scan_frequency_minutes: nil
+        }
+      }
+
+      assert_redirected_to settings_image_path_url(ImagePath.last)
+
+      # Verify the path was created without auto-scan
+      created_path = ImagePath.last
+      assert_nil created_path.scan_frequency_minutes
+    end
+
+    test "update action accepts scan_frequency_minutes" do
+      # Mock HTTP DELETE for orphaned records
+      stub_request(:delete, /\/remove_job\//)
+        .to_return(status: 200, body: "success", headers: {})
+
+      patch settings_image_path_url(@image_path), params: {
+        image_path: {
+          name: @image_path.name,
+          scan_frequency_minutes: 60
+        }
+      }
+
+      assert_redirected_to settings_image_path_url(@image_path)
+      @image_path.reload
+      assert_equal 60, @image_path.scan_frequency_minutes
+    end
+
+    test "rescan action uses scan_and_update! for tracking" do
+      image_path = ImagePath.create!(name: "test_valid_directory", scan_frequency_minutes: 30)
+
+      # Verify scan_and_update! is called (not just list_files_in_directory)
+      post rescan_settings_image_path_url(image_path)
+
+      image_path.reload
+      assert_not_nil image_path.last_scanned_at, "Expected last_scanned_at to be set"
+      assert_not_nil image_path.last_scan_duration_ms, "Expected duration to be tracked"
+    end
+
+    test "rescan action shows error message on failure" do
+      image_path = ImagePath.create!(name: "test_valid_directory")
+
+      # Mock scan_and_update! on the specific instance to raise error
+      image_path.define_singleton_method(:scan_and_update!) do
+        raise "Test scan error"
+      end
+
+      # We need to ensure the controller gets our mocked instance
+      ImagePath.stub :find, image_path do
+        post rescan_settings_image_path_url(image_path)
+      end
+
+      assert_redirected_to settings_image_paths_url
+      assert_match(/Scan failed: Test scan error/i, flash[:alert])
     end
   end
 end

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-Scan Feature - Paths Index Page Overview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'selector',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter var', 'system-ui', '-apple-system', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-900 dark:to-slate-800 min-h-screen font-sans">
+    <!-- Navigation (simplified mockup) -->
+    <nav class="bg-gray-300/80 dark:bg-slate-700/80 backdrop-blur-xl border-b border-white/20 dark:border-white/10 shadow-lg fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-purple-400">
+                    Meme Search
+                </h1>
+                <div class="flex gap-4">
+                    <a href="#" class="text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 px-3 py-2 rounded-lg hover:bg-white/30">Search</a>
+                    <a href="#" class="text-white bg-fuchsia-300 px-3 py-2 rounded-xl">Settings</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-28 px-6 pb-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Page Header -->
+            <div class="mb-8">
+                <h1 class="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-purple-400 mb-2">
+                    Image Paths
+                </h1>
+                <p class="text-gray-600 dark:text-gray-400">Manage folders with auto-scan settings</p>
+            </div>
+
+            <!-- Info Box explaining auto-scan -->
+            <div class="mb-8 bg-blue-50/80 dark:bg-blue-900/20 border border-blue-200/50 dark:border-blue-700/50 rounded-2xl p-6">
+                <div class="flex gap-3">
+                    <svg class="w-6 h-6 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div>
+                        <h3 class="font-semibold text-blue-900 dark:text-blue-200 mb-1">Auto-Scan Feature</h3>
+                        <p class="text-sm text-blue-800 dark:text-blue-300">
+                            Enable auto-scan on any path to automatically detect new or removed images.
+                            Choose a frequency (30min, 1hr, 6hr, or Daily) or keep it as "Manual only" (default).
+                            Paths are scanned in the background without manual intervention.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="mb-6">
+                <button class="px-6 py-3 text-white font-semibold bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all">
+                    + New Image Path
+                </button>
+            </div>
+
+            <!-- Paths Grid (showing mix of different states) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Path 1: Manual Only -->
+                <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all">
+                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">
+                        My Meme Collection
+                    </h3>
+                    <div class="bg-gray-100/80 dark:bg-slate-700/80 backdrop-blur-lg border border-gray-300/50 dark:border-gray-600/50 rounded-xl px-3 py-2 shadow-md mb-4">
+                        <code class="text-xs text-gray-600 dark:text-gray-300">/memes/collection-1</code>
+                    </div>
+
+                    <div class="mb-4 p-3 bg-gray-50/80 dark:bg-slate-700/50 border border-gray-200/50 dark:border-gray-600/50 rounded-xl">
+                        <div class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <span class="font-medium">Manual only</span>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button class="flex-1 px-4 py-2 text-sm text-black font-semibold bg-white border-2 border-black hover:bg-gray-100 rounded-xl shadow-lg transition-all">
+                            Rescan
+                        </button>
+                        <button class="px-4 py-2 text-sm text-black font-semibold bg-fuchsia-500 hover:bg-fuchsia-600 rounded-xl shadow-lg transition-all">
+                            Edit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Path 2: Auto-scan active (up to date) -->
+                <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all">
+                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">
+                        Dank Memes
+                    </h3>
+                    <div class="bg-gray-100/80 dark:bg-slate-700/80 backdrop-blur-lg border border-gray-300/50 dark:border-gray-600/50 rounded-xl px-3 py-2 shadow-md mb-4">
+                        <code class="text-xs text-gray-600 dark:text-gray-300">/memes/dank</code>
+                    </div>
+
+                    <div class="mb-4 p-3 bg-emerald-50/80 dark:bg-emerald-900/20 border border-emerald-200/50 dark:border-emerald-700/50 rounded-xl">
+                        <div class="flex items-center gap-2 text-sm text-emerald-700 dark:text-emerald-400 mb-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="font-medium">Every 30 min</span>
+                        </div>
+                        <div class="text-xs text-gray-600 dark:text-gray-400 ml-6">
+                            Next in <strong class="text-emerald-600 dark:text-emerald-400">12m</strong>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button class="flex-1 px-4 py-2 text-sm text-black font-semibold bg-white border-2 border-black hover:bg-gray-100 rounded-xl shadow-lg transition-all">
+                            Rescan
+                        </button>
+                        <button class="px-4 py-2 text-sm text-black font-semibold bg-fuchsia-500 hover:bg-fuchsia-600 rounded-xl shadow-lg transition-all">
+                            Edit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Path 3: Currently scanning -->
+                <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all">
+                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">
+                        Reaction GIFs
+                    </h3>
+                    <div class="bg-gray-100/80 dark:bg-slate-700/80 backdrop-blur-lg border border-gray-300/50 dark:border-gray-600/50 rounded-xl px-3 py-2 shadow-md mb-4">
+                        <code class="text-xs text-gray-600 dark:text-gray-300">/memes/reactions</code>
+                    </div>
+
+                    <div class="mb-4 p-3 bg-blue-50/80 dark:bg-blue-900/20 border border-blue-200/50 dark:border-blue-700/50 rounded-xl">
+                        <div class="flex items-center gap-2 text-sm text-blue-700 dark:text-blue-400 mb-1">
+                            <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                            <span class="font-medium">Scanning...</span>
+                        </div>
+                        <div class="text-xs text-gray-600 dark:text-gray-400 ml-6">
+                            Every 6 hours
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button disabled class="flex-1 px-4 py-2 text-sm text-gray-400 dark:text-gray-500 font-semibold bg-gray-200 dark:bg-slate-700 border-2 border-gray-300 dark:border-gray-600 rounded-xl cursor-not-allowed opacity-60">
+                            Scanning...
+                        </button>
+                        <button class="px-4 py-2 text-sm text-black font-semibold bg-fuchsia-500 hover:bg-fuchsia-600 rounded-xl shadow-lg transition-all">
+                            Edit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Path 4: Due for scan -->
+                <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all">
+                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">
+                        Cat Memes
+                    </h3>
+                    <div class="bg-gray-100/80 dark:bg-slate-700/80 backdrop-blur-lg border border-gray-300/50 dark:border-gray-600/50 rounded-xl px-3 py-2 shadow-md mb-4">
+                        <code class="text-xs text-gray-600 dark:text-gray-300">/memes/cats</code>
+                    </div>
+
+                    <div class="mb-4 p-3 bg-amber-50/80 dark:bg-amber-900/20 border border-amber-200/50 dark:border-amber-700/50 rounded-xl">
+                        <div class="flex items-center gap-2 text-sm text-amber-700 dark:text-amber-400 mb-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="font-medium">Every hour</span>
+                        </div>
+                        <div class="text-xs ml-6">
+                            <span class="px-2 py-0.5 bg-amber-200 dark:bg-amber-700 text-amber-900 dark:text-amber-100 font-semibold rounded-full">
+                                Due now
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button class="flex-1 px-4 py-2 text-sm text-black font-semibold bg-white border-2 border-black hover:bg-gray-100 rounded-xl shadow-lg transition-all">
+                            Rescan
+                        </button>
+                        <button class="px-4 py-2 text-sm text-black font-semibold bg-fuchsia-500 hover:bg-fuchsia-600 rounded-xl shadow-lg transition-all">
+                            Edit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Path 5: Failed scan -->
+                <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all">
+                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">
+                        Classic Memes
+                    </h3>
+                    <div class="bg-gray-100/80 dark:bg-slate-700/80 backdrop-blur-lg border border-gray-300/50 dark:border-gray-600/50 rounded-xl px-3 py-2 shadow-md mb-4">
+                        <code class="text-xs text-gray-600 dark:text-gray-300">/memes/classic</code>
+                    </div>
+
+                    <div class="mb-4 p-3 bg-red-50/80 dark:bg-red-900/20 border border-red-200/50 dark:border-red-700/50 rounded-xl">
+                        <div class="flex items-center gap-2 text-sm text-red-700 dark:text-red-400 mb-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="font-medium">Scan failed</span>
+                        </div>
+                        <div class="text-xs text-red-600 dark:text-red-400 ml-6 font-mono">
+                            Permission denied
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button class="flex-1 px-4 py-2 text-sm text-white font-semibold bg-red-500 hover:bg-red-600 rounded-xl shadow-lg transition-all">
+                            Retry
+                        </button>
+                        <button class="px-4 py-2 text-sm text-black font-semibold bg-fuchsia-500 hover:bg-fuchsia-600 rounded-xl shadow-lg transition-all">
+                            Edit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Path 6: First scan pending -->
+                <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all">
+                    <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">
+                        New Collection
+                    </h3>
+                    <div class="bg-gray-100/80 dark:bg-slate-700/80 backdrop-blur-lg border border-gray-300/50 dark:border-gray-600/50 rounded-xl px-3 py-2 shadow-md mb-4">
+                        <code class="text-xs text-gray-600 dark:text-gray-300">/memes/new</code>
+                    </div>
+
+                    <div class="mb-4 p-3 bg-purple-50/80 dark:bg-purple-900/20 border border-purple-200/50 dark:border-purple-700/50 rounded-xl">
+                        <div class="flex items-center gap-2 text-sm text-purple-700 dark:text-purple-400 mb-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            <span class="font-medium">Every 30 min</span>
+                        </div>
+                        <div class="text-xs ml-6">
+                            <span class="px-2 py-0.5 bg-purple-200 dark:bg-purple-700 text-purple-900 dark:text-purple-100 font-semibold rounded-full">
+                                First scan pending
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button class="flex-1 px-4 py-2 text-sm text-black font-semibold bg-white border-2 border-black hover:bg-gray-100 rounded-xl shadow-lg transition-all">
+                            Scan Now
+                        </button>
+                        <button class="px-4 py-2 text-sm text-black font-semibold bg-fuchsia-500 hover:bg-fuchsia-600 rounded-xl shadow-lg transition-all">
+                            Edit
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Dark Mode Toggle (for demo purposes) -->
+            <div class="mt-12 text-center">
+                <button
+                    onclick="document.documentElement.classList.toggle('dark')"
+                    class="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 bg-white/50 dark:bg-slate-700/50 backdrop-blur-lg border border-gray-300 dark:border-gray-600 rounded-xl shadow-md hover:shadow-lg transition-all"
+                >
+                    Toggle Dark Mode
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

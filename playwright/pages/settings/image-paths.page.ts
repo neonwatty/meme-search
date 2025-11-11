@@ -354,4 +354,77 @@ export class ImagePathsPage {
     const imageCoreCards = this.page.locator('div[id^="image_core_"]');
     return await imageCoreCards.count();
   }
+
+  /**
+   * Select scan frequency from dropdown on create/edit form
+   * @param minutes - Scan frequency in minutes (e.g., '30', '60', '360', '1440', or '' for Manual only)
+   */
+  async selectScanFrequency(minutes: string): Promise<void> {
+    const dropdown = this.page.locator('select[name="image_path[scan_frequency_minutes]"]');
+    await dropdown.waitFor({ state: 'visible', timeout: 3000 });
+    await dropdown.selectOption(minutes);
+  }
+
+  /**
+   * Get currently selected scan frequency value from dropdown
+   * @returns The selected value (e.g., '30', '60', etc., or '' for Manual only)
+   */
+  async getScanFrequency(): Promise<string> {
+    const dropdown = this.page.locator('select[name="image_path[scan_frequency_minutes]"]');
+    return await dropdown.inputValue();
+  }
+
+  /**
+   * Check if scan frequency dropdown is visible on the form
+   */
+  async hasScanFrequencyDropdown(): Promise<boolean> {
+    const dropdown = this.page.locator('select[name="image_path[scan_frequency_minutes]"]');
+    try {
+      await dropdown.waitFor({ state: 'visible', timeout: 2000 });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Check if auto-scan status indicator is visible on path card
+   * @param pathName - The path name to check (e.g., 'test_valid_directory')
+   */
+  async hasAutoScanStatusIndicator(pathName: string): Promise<boolean> {
+    try {
+      // Find the path card by the path name
+      const pathCard = this.page.getByText(`/public/memes/${pathName}`)
+        .locator('..')  // Go up to code element
+        .locator('..')  // Go up to the containing div
+        .locator('..')  // Go up to inner card div
+        .locator('..');  // Go up to outer card div
+
+      // Check if the card contains auto-scan status text
+      const text = await pathCard.textContent();
+      const hasStatus = /auto-scan|scans every|manual only|first scan pending|scanning|due for scan|scan failed/i.test(text || '');
+      return hasStatus;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Get auto-scan status text from path card
+   * @param pathName - The path name (e.g., 'test_valid_directory')
+   */
+  async getAutoScanStatusText(pathName: string): Promise<string> {
+    try {
+      const pathCard = this.page.getByText(`/public/memes/${pathName}`)
+        .locator('..')
+        .locator('..')
+        .locator('..')
+        .locator('..');
+
+      const text = await pathCard.textContent();
+      return text?.trim() || '';
+    } catch {
+      return '';
+    }
+  }
 }
