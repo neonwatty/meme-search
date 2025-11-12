@@ -26,6 +26,9 @@ Rails.application.routes.draw do
       post "search_items"
       post "description_receiver"
       post "status_receiver"
+      post "bulk_generate_descriptions"
+      get "bulk_operation_status"
+      post "bulk_operation_cancel"
     end
     member do
       post "generate_description"

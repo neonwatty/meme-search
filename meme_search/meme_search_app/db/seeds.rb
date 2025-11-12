@@ -1,38 +1,79 @@
-# create image_path record for example_memes_1 directory
-base_dir = Dir.getwd
-example_memes_subdir =  "example_memes_1"
-example_dir = base_dir + "/public/memes/" +  example_memes_subdir
-if File.directory?(example_dir)
-  examples_path = ImagePath.new({ name: example_memes_subdir })
-  examples_path.save!
+# Helper method to scan an image path directory
+def scan_image_path(image_path)
+  image_dir = Rails.root.join("public", "memes", image_path.name).to_s
+  return unless File.directory?(image_dir)
+
+  puts "  Scanning #{image_path.name}..."
+  entries = Dir.entries(image_dir)
+  allowed_extensions = %w[.jpeg .jpg .png .gif]
+
+  entries.each do |entry|
+    next if entry.start_with?('.')
+    ext = File.extname(entry).downcase
+    next unless allowed_extensions.include?(ext)
+
+    # Create ImageCore if it doesn't exist
+    unless ImageCore.exists?(name: entry, image_path: image_path)
+      ImageCore.create!(
+        name: entry,
+        image_path: image_path,
+        status: 0  # not_started
+      )
+      puts "    Created: #{entry}"
+    end
+  end
 end
 
-# add description and embedding to both images in example_memes_1 directory
-example_1 = ImageCore.find(1)
-example_1.update({ description: "This image contains a bald man wearing sunglasses.  The text 'did you just take both pills?' is printed on the image." })
-example_1.refresh_description_embeddings
-
-example_2 = ImageCore.find(2)
-example_2.update({ description: "In this image a woman dances in a field of flowers.  The text 'look at all the fucks I do not give' is printed on the image." })
-example_2.refresh_description_embeddings
+# create image_path record for example_memes_1 directory
+base_dir = Dir.getwd
+example_memes_subdir = "example_memes_1"
+example_dir = base_dir + "/public/memes/" + example_memes_subdir
+if File.directory?(example_dir)
+  examples_path = ImagePath.find_or_create_by!(name: example_memes_subdir)
+  # Scan the directory to create ImageCore records
+  scan_image_path(examples_path)
+end
 
 # create image_path for memes in example_memes_2 directory
 base_dir = Dir.getwd
-example_memes_subdir =  "example_memes_2"
-example_dir = base_dir + "/public/memes/" +  example_memes_subdir
+example_memes_subdir = "example_memes_2"
+example_dir = base_dir + "/public/memes/" + example_memes_subdir
 if File.directory?(example_dir)
-  examples_path = ImagePath.new({ name: example_memes_subdir })
-  examples_path.save!
+  examples_path = ImagePath.find_or_create_by!(name: example_memes_subdir)
+  # Scan the directory to create ImageCore records
+  scan_image_path(examples_path)
 end
 
-# add description and embedding to both images in example_memes_2 directory
-example_3 = ImageCore.find(3)
-example_3.update({ description: "This image contains a bunny rabbit saying the word 'no'." })
-example_3.refresh_description_embeddings
+# Now add descriptions and embeddings to the images
+puts "\nAdding descriptions to seed images..."
 
-example_4 = ImageCore.find(4)
-example_4.update({ description: "This image contains a strange looking cat.  The text 'weird knowledge increased' is printed on the image." })
-example_4.refresh_description_embeddings
+if ImageCore.exists?(1)
+  example_1 = ImageCore.find(1)
+  example_1.update({ description: "This image contains a bald man wearing sunglasses.  The text 'did you just take both pills?' is printed on the image.", status: 3 })
+  example_1.refresh_description_embeddings
+  puts "  Updated image 1"
+end
+
+if ImageCore.exists?(2)
+  example_2 = ImageCore.find(2)
+  example_2.update({ description: "In this image a woman dances in a field of flowers.  The text 'look at all the fucks I do not give' is printed on the image.", status: 3 })
+  example_2.refresh_description_embeddings
+  puts "  Updated image 2"
+end
+
+if ImageCore.exists?(3)
+  example_3 = ImageCore.find(3)
+  example_3.update({ description: "This image contains a bunny rabbit saying the word 'no'.", status: 3 })
+  example_3.refresh_description_embeddings
+  puts "  Updated image 3"
+end
+
+if ImageCore.exists?(4)
+  example_4 = ImageCore.find(4)
+  example_4.update({ description: "This image contains a strange looking cat.  The text 'weird knowledge increased' is printed on the image.", status: 3 })
+  example_4.refresh_description_embeddings
+  puts "  Updated image 4"
+end
 
 # create two tags
 my_tag_name = "tag_one"

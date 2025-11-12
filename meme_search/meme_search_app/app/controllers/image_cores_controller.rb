@@ -117,6 +117,170 @@ class ImageCoresController < ApplicationController
     end
   end
 
+  def bulk_generate_descriptions
+    # Get filtered image cores based on current filter params
+    image_cores = get_filtered_image_cores
+
+    # Filter only images without descriptions
+    # Include: status = 0 (never generated) OR blank/null description (manually deleted)
+    images_without_descriptions = image_cores.where(
+      "status = ? OR description IS NULL OR description = ?",
+      0, ""
+    )
+
+    # Store operation metadata in session
+    session[:bulk_operation] = {
+      total_count: images_without_descriptions.count,
+      started_at: Time.current.to_i,
+      image_ids: images_without_descriptions.pluck(:id),  # Track specific images in this operation
+      filter_params: {
+        selected_tag_names: params[:selected_tag_names],
+        selected_path_names: params[:selected_path_names],
+        has_embeddings: params[:has_embeddings]
+      }
+    }
+
+    # Get current model
+    current_model = ImageToText.find_by(current: true)
+
+    # Queue all images for description generation
+    queued_count = 0
+    failed_count = 0
+
+    images_without_descriptions.each do |image_core|
+      # Update status to in_queue
+      image_core.update(status: 1)
+
+      # Send request to Python service
+      begin
+        uri = URI("http://image_to_text_generator:8000/add_job")
+        http = Net::HTTP.new(uri.host, uri.port)
+        request = Net::HTTP::Post.new(uri)
+        request["Content-Type"] = "application/json"
+        data = {
+          image_core_id: image_core.id,
+          image_path: image_core.image_path.name + "/" + image_core.name,
+          model: current_model.name
+        }
+        request.body = data.to_json
+        response = http.request(request)
+
+        if response.is_a?(Net::HTTPSuccess)
+          queued_count += 1
+        else
+          image_core.update(status: 5) # failed
+          failed_count += 1
+        end
+      rescue => e
+        Rails.logger.error "Failed to queue image #{image_core.id}: #{e.message}"
+        image_core.update(status: 5) # failed
+        failed_count += 1
+      end
+    end
+
+    respond_to do |format|
+      flash[:notice] = "Queued #{queued_count} images for description generation."
+      flash[:alert] = "Failed to queue #{failed_count} images." if failed_count > 0
+      format.html { redirect_to image_cores_path(
+        selected_tag_names: params[:selected_tag_names],
+        selected_path_names: params[:selected_path_names],
+        has_embeddings: params[:has_embeddings]
+      ) }
+    end
+  end
+
+  def bulk_operation_status
+    # Get filtered image cores based on session filter params
+    if session[:bulk_operation].present?
+      # DEBUG: Log session contents
+      Rails.logger.info "[BULK DEBUG] session[:bulk_operation]: #{session[:bulk_operation].inspect}"
+
+      filter_params = session[:bulk_operation]["filter_params"]
+      started_at = session[:bulk_operation]["started_at"]
+      total_count = session[:bulk_operation]["total_count"]
+      image_ids = session[:bulk_operation]["image_ids"] || []
+
+      Rails.logger.info "[BULK DEBUG] total_count extracted: #{total_count.inspect}"
+      Rails.logger.info "[BULK DEBUG] started_at extracted: #{started_at.inspect}"
+      Rails.logger.info "[BULK DEBUG] image_ids extracted: #{image_ids.inspect}"
+
+      # Only count images that were part of this bulk operation
+      operation_images = ImageCore.where(id: image_ids)
+
+      Rails.logger.info "[BULK DEBUG] operation_images count: #{operation_images.count}"
+
+      # Count by status (only for images in this operation)
+      status_counts = {
+        not_started: operation_images.where(status: 0).count,
+        in_queue: operation_images.where(status: 1).count,
+        processing: operation_images.where(status: 2).count,
+        done: operation_images.where(status: 3).count,
+        failed: operation_images.where(status: 5).count
+      }
+
+      Rails.logger.info "[BULK DEBUG] status_counts: #{status_counts.inspect}"
+
+      # Check if operation is complete
+      active_count = status_counts[:in_queue] + status_counts[:processing]
+      is_complete = active_count == 0 && status_counts[:not_started] == 0
+
+      # Prepare response BEFORE clearing session
+      response_data = {
+        status_counts: status_counts,
+        total: total_count,
+        is_complete: is_complete,
+        started_at: started_at
+      }
+
+      # Clear session if complete
+      session.delete(:bulk_operation) if is_complete
+
+      render json: response_data
+    else
+      render json: { error: "No bulk operation in progress" }, status: :not_found
+    end
+  end
+
+  def bulk_operation_cancel
+    if session[:bulk_operation].present?
+      filter_params = session[:bulk_operation][:filter_params]
+      image_cores = get_filtered_image_cores(filter_params)
+
+      # Cancel all in_queue images
+      in_queue_images = image_cores.where(status: 1)
+      cancelled_count = 0
+
+      in_queue_images.each do |image_core|
+        begin
+          # Update status to removing
+          image_core.update(status: 4)
+
+          # Send remove request to Python service
+          uri = URI("http://image_to_text_generator:8000/remove_job/#{image_core.id}")
+          http = Net::HTTP.new(uri.host, uri.port)
+          request = Net::HTTP::Delete.new(uri.request_uri)
+          request["Content-Type"] = "application/json"
+          response = http.request(request)
+
+          if response.is_a?(Net::HTTPSuccess)
+            # Reset to not_started after successful removal
+            image_core.update(status: 0)
+            cancelled_count += 1
+          end
+        rescue => e
+          Rails.logger.error "Failed to cancel job for image #{image_core.id}: #{e.message}"
+        end
+      end
+
+      # Clear session
+      session.delete(:bulk_operation)
+
+      render json: { cancelled_count: cancelled_count }
+    else
+      render json: { error: "No bulk operation in progress" }, status: :not_found
+    end
+  end
+
   def search
   end
 
@@ -161,38 +325,19 @@ class ImageCoresController < ApplicationController
 
   # GET /image_cores
   def index
-    if !params[:selected_tag_names].present? && !params[:selected_path_names].present? && !params[:has_embeddings].present?
-      @image_cores = ImageCore.order(updated_at: :desc)
-      @pagy, @image_cores = pagy(@image_cores)
-    else
-      if params[:selected_tag_names].present?
-          if params[:selected_tag_names].length > 0
-            selected_tag_names = params[:selected_tag_names].split(",").map { |tag| tag.strip }
-            @image_cores = ImageCore.with_selected_tag_names(selected_tag_names).order(updated_at: :desc)
-          end
-      else
-        @image_cores = ImageCore.order(updated_at: :desc)
-      end
+    # Get filtered image cores
+    image_cores = get_filtered_image_cores
 
-      if params[:selected_path_names].present?
-        if params[:selected_path_names].length > 0
-          selected_path_names = params[:selected_path_names].split(",").map { |path| path.strip }
-          image_path_ids = selected_path_names.map { |name| ImagePath.where({ name: name }) }.map { |element| element[0].id }
-          keeper_ids = @image_cores.select { |item| image_path_ids.include?(item.image_path_id) }.map { |item| item.id }
-          @image_cores = ImageCore.where(id: keeper_ids).order(updated_at: :desc)
-        end
-      end
+    # Count images without descriptions
+    # Include: status = 0 (never generated) OR blank/null description (manually deleted)
+    # Count globally across all images, regardless of current filters
+    @images_without_descriptions_count = ImageCore.where(
+      "status = ? OR description IS NULL OR description = ?",
+      0, ""
+    ).count
 
-      if params[:has_embeddings].present?
-          keeper_ids = @image_cores.select { |item| item.image_embeddings.length > 0 }.map { |item| item.id }
-          @image_cores = ImageCore.where(id: keeper_ids).order(updated_at: :desc)
-      else
-          keeper_ids = @image_cores.select { |item| item.image_embeddings.length == 0 }.map { |item| item.id }
-          @image_cores = ImageCore.where(id: keeper_ids).order(updated_at: :desc)
-      end
-
-      @pagy, @image_cores = pagy(@image_cores)
-    end
+    # Paginate
+    @pagy, @image_cores = pagy(image_cores)
   end
 
   # GET /image_cores/1
@@ -266,6 +411,57 @@ class ImageCoresController < ApplicationController
   end
 
   private
+
+    def get_filtered_image_cores(filter_params = nil)
+      # Use provided filter params or fall back to request params
+      filter_params ||= params
+
+      # Start with all image cores
+      image_cores = ImageCore.order(updated_at: :desc)
+
+      # Filter by tags
+      if filter_params[:selected_tag_names].present?
+        selected_tag_names = filter_params[:selected_tag_names].is_a?(String) ?
+          filter_params[:selected_tag_names].split(",").map(&:strip) :
+          filter_params[:selected_tag_names]
+
+        if selected_tag_names.is_a?(Array) && selected_tag_names.length > 0
+          image_cores = image_cores.with_selected_tag_names(selected_tag_names)
+        end
+      end
+
+      # Filter by paths
+      if filter_params[:selected_path_names].present?
+        selected_path_names = filter_params[:selected_path_names].is_a?(String) ?
+          filter_params[:selected_path_names].split(",").map(&:strip) :
+          filter_params[:selected_path_names]
+
+        if selected_path_names.is_a?(Array) && selected_path_names.length > 0
+          image_path_ids = selected_path_names.map { |name| ImagePath.where({ name: name }) }.map { |element| element[0]&.id }.compact
+          keeper_ids = image_cores.select { |item| image_path_ids.include?(item.image_path_id) }.map { |item| item.id }
+          image_cores = ImageCore.where(id: keeper_ids).order(updated_at: :desc)
+        end
+      end
+
+      # Filter by embeddings (only if explicitly set)
+      # Note: has_embeddings checkbox defaults to checked (true) in the UI
+      # Empty string means "no filter applied" (bulk button passes params[:has_embeddings] which may be nil/empty)
+      # Only apply filter if value is "0" (unchecked) or "1" (checked)
+      if filter_params.key?(:has_embeddings) && filter_params[:has_embeddings].present?
+        if filter_params[:has_embeddings] == "1"
+          # Filter to only images WITH embeddings
+          keeper_ids = image_cores.select { |item| item.image_embeddings.length > 0 }.map { |item| item.id }
+          image_cores = ImageCore.where(id: keeper_ids).order(updated_at: :desc)
+        elsif filter_params[:has_embeddings] == "0"
+          # Filter to only images WITHOUT embeddings
+          keeper_ids = image_cores.select { |item| item.image_embeddings.length == 0 }.map { |item| item.id }
+          image_cores = ImageCore.where(id: keeper_ids).order(updated_at: :desc)
+        end
+        # If has_embeddings is empty string or any other value, don't filter (return all)
+      end
+
+      image_cores
+    end
 
     def vector_search(query)
       query_embedding = ImageEmbedding.new({ image_core_id: ImageCore.first.id, snippet: query })
