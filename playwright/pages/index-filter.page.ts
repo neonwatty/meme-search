@@ -59,7 +59,7 @@ export class IndexFilterPage {
 
     // Bulk Generation
     this.bulkCountDisplay = page.locator('text=/\\d+ images without descriptions/');
-    this.bulkGenerateButton = page.locator('button:has-text("Generate All Descriptions")');
+    this.bulkGenerateButton = page.locator('button:has-text("Generate All")');
   }
 
   /**
