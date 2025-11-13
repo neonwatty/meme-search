@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filter Panel - Before/After Comparison</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 min-h-screen p-8">
+
+  <div class="max-w-7xl mx-auto">
+
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-slate-800 dark:text-white mb-3">
+        Filter Panel: Before → After
+      </h1>
+      <p class="text-lg text-slate-600 dark:text-slate-400 mb-2">
+        <strong>Page:</strong> <code>/image_cores</code> (Gallery Index)
+      </p>
+      <p class="text-sm text-slate-500 dark:text-slate-500">
+        <strong>File:</strong> <code>app/views/image_cores/_filters.html.erb</code>
+      </p>
+    </div>
+
+    <!-- Side by Side Comparison -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+
+      <!-- BEFORE -->
+      <div>
+        <div class="bg-red-500/10 border-2 border-red-500 rounded-t-2xl px-6 py-3">
+          <h2 class="text-2xl font-bold text-red-700 dark:text-red-400">
+            ❌ BEFORE (Current)
+          </h2>
+        </div>
+
+        <div class="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl rounded-b-2xl shadow-2xl border-x-2 border-b-2 border-red-500 p-6">
+
+          <!-- Filter Panel Content -->
+          <div class="space-y-6">
+
+            <div>
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-1">Filters</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Refine your meme search</p>
+            </div>
+
+            <!-- Tags Filter -->
+            <div class="bg-gradient-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-900/20 dark:to-purple-900/20 border border-indigo-200/50 dark:border-indigo-700/50 rounded-2xl p-4 space-y-2">
+              <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 block mb-2">Tags</label>
+              <label class="flex items-center justify-between cursor-pointer">
+                <span class="text-sm text-gray-700 dark:text-gray-300">funny</span>
+                <input type="checkbox" checked class="w-5 h-5 rounded-lg">
+              </label>
+              <label class="flex items-center justify-between cursor-pointer">
+                <span class="text-sm text-gray-700 dark:text-gray-300">programming</span>
+                <input type="checkbox" class="w-5 h-5 rounded-lg">
+              </label>
+            </div>
+
+            <!-- Paths Filter -->
+            <div class="bg-gradient-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-900/20 dark:to-purple-900/20 border border-indigo-200/50 dark:border-indigo-700/50 rounded-2xl p-4 space-y-2">
+              <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 block mb-2">Paths</label>
+              <label class="flex items-center justify-between cursor-pointer">
+                <span class="text-sm text-gray-700 dark:text-gray-300">/memes/cats</span>
+                <input type="checkbox" checked class="w-5 h-5 rounded-lg">
+              </label>
+            </div>
+
+            <!-- Has Embeddings -->
+            <div class="bg-gradient-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-900/20 dark:to-purple-900/20 border border-indigo-200/50 dark:border-indigo-700/50 rounded-2xl p-4">
+              <div class="flex items-center justify-between">
+                <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Has embeddings</label>
+                <input type="checkbox" class="w-5 h-5 rounded-lg">
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="pt-4 space-y-3">
+              <button class="w-full px-6 py-3 text-white font-semibold bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl shadow-lg">
+                Apply Filters
+              </button>
+              <button class="w-full px-6 py-3 text-gray-700 dark:text-gray-300 font-semibold bg-gray-200/80 dark:bg-slate-700/80 rounded-2xl">
+                Close
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Notes -->
+        <div class="mt-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-4">
+          <p class="text-sm text-red-700 dark:text-red-300">
+            <strong>Current limitation:</strong> Users must click "generate description 🪄" button on each individual image card. No bulk option.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- AFTER -->
+      <div>
+        <div class="bg-emerald-500/10 border-2 border-emerald-500 rounded-t-2xl px-6 py-3">
+          <h2 class="text-2xl font-bold text-emerald-700 dark:text-emerald-400">
+            ✅ AFTER (With Bulk Generation)
+          </h2>
+        </div>
+
+        <div class="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl rounded-b-2xl shadow-2xl border-x-2 border-b-2 border-emerald-500 p-6">
+
+          <!-- Filter Panel Content -->
+          <div class="space-y-6">
+
+            <div>
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-1">Filters</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Refine your meme search</p>
+            </div>
+
+            <!-- Tags Filter (same as before) -->
+            <div class="bg-gradient-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-900/20 dark:to-purple-900/20 border border-indigo-200/50 dark:border-indigo-700/50 rounded-2xl p-4 space-y-2">
+              <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 block mb-2">Tags</label>
+              <label class="flex items-center justify-between cursor-pointer">
+                <span class="text-sm text-gray-700 dark:text-gray-300">funny</span>
+                <input type="checkbox" checked class="w-5 h-5 rounded-lg">
+              </label>
+              <label class="flex items-center justify-between cursor-pointer">
+                <span class="text-sm text-gray-700 dark:text-gray-300">programming</span>
+                <input type="checkbox" class="w-5 h-5 rounded-lg">
+              </label>
+            </div>
+
+            <!-- Paths Filter (same as before) -->
+            <div class="bg-gradient-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-900/20 dark:to-purple-900/20 border border-indigo-200/50 dark:border-indigo-700/50 rounded-2xl p-4 space-y-2">
+              <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 block mb-2">Paths</label>
+              <label class="flex items-center justify-between cursor-pointer">
+                <span class="text-sm text-gray-700 dark:text-gray-300">/memes/cats</span>
+                <input type="checkbox" checked class="w-5 h-5 rounded-lg">
+              </label>
+            </div>
+
+            <!-- Has Embeddings (same as before) -->
+            <div class="bg-gradient-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-900/20 dark:to-purple-900/20 border border-indigo-200/50 dark:border-indigo-700/50 rounded-2xl p-4">
+              <div class="flex items-center justify-between">
+                <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Has embeddings</label>
+                <input type="checkbox" class="w-5 h-5 rounded-lg">
+              </div>
+            </div>
+
+            <!-- 🆕 NEW: Bulk Generation Section -->
+            <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+
+              <!-- Count Display -->
+              <div class="bg-gradient-to-br from-emerald-50/50 to-teal-50/50 dark:from-emerald-900/20 dark:to-teal-900/20 border border-emerald-200 dark:border-emerald-700 rounded-2xl p-4 mb-3">
+                <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 text-center">
+                  23 images without descriptions
+                </p>
+              </div>
+
+              <!-- Bulk Generate Button -->
+              <button class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition duration-200">
+                Generate All Descriptions (23)
+              </button>
+
+            </div>
+
+            <!-- Standard Action Buttons -->
+            <div class="space-y-3">
+              <button class="w-full px-6 py-3 text-white font-semibold bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl shadow-lg">
+                Apply Filters
+              </button>
+              <button class="w-full px-6 py-3 text-gray-700 dark:text-gray-300 font-semibold bg-gray-200/80 dark:bg-slate-700/80 rounded-2xl">
+                Close
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Notes -->
+        <div class="mt-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 rounded-lg p-4">
+          <p class="text-sm text-emerald-700 dark:text-emerald-300 mb-2">
+            <strong>New feature:</strong> Bulk generation button appears above standard filter actions.
+          </p>
+          <ul class="text-xs text-emerald-600 dark:text-emerald-400 space-y-1 list-disc list-inside">
+            <li>Count shows images matching current filters WITHOUT descriptions</li>
+            <li>Button disabled if count = 0</li>
+            <li>Clicking opens confirmation dialog</li>
+            <li>Progress overlay appears after confirmation</li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- What Changes? -->
+    <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg rounded-2xl p-8 shadow-xl mb-8">
+      <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-6">
+        📝 What's Being Added?
+      </h2>
+
+      <div class="space-y-4">
+        <div class="flex items-start gap-4">
+          <span class="flex-shrink-0 w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">1</span>
+          <div>
+            <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-1">Count Display Box</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+              Shows "X images without descriptions" based on current filters. Updates when filters change.
+              Uses emerald/teal gradient background to match primary action styling.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <span class="flex-shrink-0 w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">2</span>
+          <div>
+            <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-1">Bulk Generate Button</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+              Primary action button with emerald-to-teal gradient. Shows count in label: "Generate All Descriptions (23)".
+              Disabled state when count = 0.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <span class="flex-shrink-0 w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">3</span>
+          <div>
+            <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-1">Section Divider</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+              Border-top separator between bulk generation section and standard filter actions.
+              Visually groups new feature while keeping existing UI intact.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Implementation Notes -->
+    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-6">
+      <h3 class="font-semibold text-blue-700 dark:text-blue-300 mb-3 flex items-center gap-2">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+        </svg>
+        Implementation Notes
+      </h3>
+      <ul class="space-y-2 text-sm text-blue-700 dark:text-blue-300">
+        <li>• <strong>Location:</strong> Add new section after "Has embeddings" filter, before footer buttons</li>
+        <li>• <strong>Count Calculation:</strong> Count images where <code>has_embeddings=false</code> AND match current filter params</li>
+        <li>• <strong>Button Action:</strong> POST to <code>/image_cores/bulk_generate_descriptions</code> with filter params</li>
+        <li>• <strong>Confirmation:</strong> Use Turbo <code>data-turbo-confirm</code> attribute for native browser dialog</li>
+        <li>• <strong>No Breaking Changes:</strong> All existing filter functionality remains unchanged</li>
+      </ul>
+    </div>
+
+  </div>
+
+</body>
+</html>

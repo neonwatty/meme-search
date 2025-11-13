@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress Overlay - Placement on Gallery Page</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    .pulse-slow {
+      animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 min-h-screen p-8">
+
+  <div class="max-w-7xl mx-auto">
+
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-slate-800 dark:text-white mb-3">
+        Progress Overlay: Where Does It Appear?
+      </h1>
+      <p class="text-lg text-slate-600 dark:text-slate-400 mb-2">
+        <strong>Page:</strong> <code>/image_cores</code> (Gallery Index) - After clicking "Generate All"
+      </p>
+      <p class="text-sm text-slate-500 dark:text-slate-500">
+        <strong>Component:</strong> Floating overlay (NEW) - Not modifying existing page structure
+      </p>
+    </div>
+
+    <!-- Simulated Gallery Page -->
+    <div class="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg rounded-2xl shadow-xl overflow-hidden" style="height: 800px;">
+
+      <!-- Top Bar (existing) -->
+      <div class="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <button class="px-6 py-3 text-white font-semibold bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl shadow-lg">
+            <span class="flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+              </svg>
+              Filters
+            </span>
+          </button>
+          <button class="px-6 py-3 text-white font-semibold bg-cyan-700 hover:bg-cyan-600 rounded-2xl shadow-lg">
+            Switch to Grid View
+          </button>
+        </div>
+        <div class="text-slate-600 dark:text-slate-400 text-sm">
+          Showing 24 of 245 memes
+        </div>
+      </div>
+
+      <!-- Active Filter Chips (existing) -->
+      <div class="px-6 py-3 border-b border-slate-200 dark:border-slate-700">
+        <div class="flex flex-wrap gap-2">
+          <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/20 border border-purple-300 dark:border-purple-700 text-purple-700 dark:text-purple-300">
+            <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+            funny
+            <button>×</button>
+          </span>
+          <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-gray-500/20 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300">
+            Has embeddings: false
+            <button>×</button>
+          </span>
+        </div>
+      </div>
+
+      <!-- Gallery Grid (existing - simplified) -->
+      <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Image Card 1 -->
+        <div class="bg-white dark:bg-slate-700 rounded-xl p-4 shadow-md opacity-50">
+          <div class="h-32 bg-slate-300 dark:bg-slate-600 rounded-lg mb-3"></div>
+          <p class="text-sm font-semibold text-slate-800 dark:text-white truncate mb-2">cat_meme_01.jpg</p>
+          <div class="bg-amber-500 text-white text-xs py-1 px-2 rounded text-center">in_queue ⏳</div>
+        </div>
+
+        <!-- Image Card 2 -->
+        <div class="bg-white dark:bg-slate-700 rounded-xl p-4 shadow-md opacity-50">
+          <div class="h-32 bg-slate-300 dark:bg-slate-600 rounded-lg mb-3"></div>
+          <p class="text-sm font-semibold text-slate-800 dark:text-white truncate mb-2">funny_dog.png</p>
+          <div class="bg-amber-500 text-white text-xs py-1 px-2 rounded text-center">in_queue ⏳</div>
+        </div>
+
+        <!-- Image Card 3 -->
+        <div class="bg-white dark:bg-slate-700 rounded-xl p-4 shadow-md opacity-50">
+          <div class="h-32 bg-slate-300 dark:bg-slate-600 rounded-lg mb-3"></div>
+          <p class="text-sm font-semibold text-slate-800 dark:text-white truncate mb-2">code_meme.jpg</p>
+          <div class="bg-emerald-500 text-white text-xs py-1 px-2 rounded text-center pulse-slow">processing 🔄</div>
+        </div>
+
+        <!-- More cards... -->
+        <div class="bg-white dark:bg-slate-700 rounded-xl p-4 shadow-md opacity-30">
+          <div class="h-32 bg-slate-300 dark:bg-slate-600 rounded-lg mb-3"></div>
+        </div>
+        <div class="bg-white dark:bg-slate-700 rounded-xl p-4 shadow-md opacity-30">
+          <div class="h-32 bg-slate-300 dark:bg-slate-600 rounded-lg mb-3"></div>
+        </div>
+        <div class="bg-white dark:bg-slate-700 rounded-xl p-4 shadow-md opacity-30">
+          <div class="h-32 bg-slate-300 dark:bg-slate-600 rounded-lg mb-3"></div>
+        </div>
+      </div>
+
+      <!-- 🆕 NEW: Progress Overlay (bottom-right corner) -->
+      <div class="fixed bottom-8 right-8 w-96 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 dark:border-white/10 p-6 z-50">
+
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <h3 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
+              <span class="pulse-slow">🪄</span> Generating Descriptions
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Using <span class="font-mono text-emerald-600 dark:text-emerald-400">Florence-2-base</span> model
+            </p>
+          </div>
+          <button class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition" title="Minimize">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M4 12a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1z"/>
+            </svg>
+          </button>
+        </div>
+
+        <p class="text-sm text-slate-600 dark:text-slate-300 mb-3">
+          Processing <span class="font-bold text-emerald-600 dark:text-emerald-400">3</span> of <span class="font-bold">23</span> images
+        </p>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3 mb-2 overflow-hidden">
+          <div class="bg-gradient-to-r from-emerald-500 to-teal-600 h-full rounded-full transition-all duration-500" style="width: 13%"></div>
+        </div>
+
+        <p class="text-2xl font-bold text-slate-800 dark:text-white text-center mb-4">
+          13%
+        </p>
+
+        <!-- Status Breakdown -->
+        <div class="grid grid-cols-4 gap-2 text-xs text-center mb-4">
+          <div>
+            <div class="font-bold text-emerald-600">2</div>
+            <div class="text-slate-500 dark:text-slate-400">Done</div>
+          </div>
+          <div>
+            <div class="font-bold text-blue-600">1</div>
+            <div class="text-slate-500 dark:text-slate-400">Active</div>
+          </div>
+          <div>
+            <div class="font-bold text-amber-600">20</div>
+            <div class="text-slate-500 dark:text-slate-400">Queue</div>
+          </div>
+          <div>
+            <div class="font-bold text-red-600">0</div>
+            <div class="text-slate-500 dark:text-slate-400">Failed</div>
+          </div>
+        </div>
+
+        <!-- Time Estimate -->
+        <div class="bg-slate-100 dark:bg-slate-800 rounded-lg p-3 mb-4">
+          <p class="text-xs text-slate-600 dark:text-slate-400 text-center">
+            Estimated time remaining: <span class="font-mono font-semibold text-slate-800 dark:text-white">~20 seconds</span>
+          </p>
+        </div>
+
+        <!-- Cancel Button -->
+        <button class="w-full px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition font-semibold shadow-md hover:shadow-lg">
+          Cancel
+        </button>
+
+      </div>
+
+      <!-- Position Indicator Arrow -->
+      <div class="absolute bottom-8 right-8 pointer-events-none">
+        <div class="absolute -top-16 -left-32 text-emerald-500 font-bold text-lg">
+          ← NEW COMPONENT
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Key Points -->
+    <div class="mt-8 bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg rounded-2xl p-8 shadow-xl">
+      <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-6">
+        📍 Key Placement Details
+      </h2>
+
+      <div class="space-y-4">
+        <div class="flex items-start gap-4">
+          <span class="flex-shrink-0 text-2xl">🎯</span>
+          <div>
+            <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-1">Fixed Position (Bottom-Right)</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+              CSS: <code class="bg-slate-200 dark:bg-slate-700 px-2 py-1 rounded text-xs">fixed bottom-8 right-8 z-50</code>
+              <br>
+              Floats above ALL page content. Doesn't push or move existing elements.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <span class="flex-shrink-0 text-2xl">🔄</span>
+          <div>
+            <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-1">Appears After Confirmation</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+              Sequence: User clicks "Generate All" → Confirmation dialog → User confirms → Progress overlay slides in from bottom
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <span class="flex-shrink-0 text-2xl">🧭</span>
+          <div>
+            <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-1">Persists Across Navigation</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+              Stays visible if user browses to other pages (using localStorage). Restores on page reload.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <span class="flex-shrink-0 text-2xl">📱</span>
+          <div>
+            <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-1">Responsive Behavior</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+              Desktop: <code>w-96</code> (384px width) in bottom-right
+              <br>
+              Mobile: Full width minus padding, bottom-0 (stretches across bottom)
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <span class="flex-shrink-0 text-2xl">👆</span>
+          <div>
+            <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-1">User Can Minimize</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+              Click "−" button → Collapses to small badge with percentage. Click badge to re-expand.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <span class="flex-shrink-0 text-2xl">✨</span>
+          <div>
+            <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-1">Auto-Dismiss (Success Only)</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">
+              If 100% complete with 0 failures: Auto-dismiss after 5 seconds
+              <br>
+              If any failures: Stays visible with retry button
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Implementation -->
+    <div class="mt-8 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-6">
+      <h3 class="font-semibold text-blue-700 dark:text-blue-300 mb-3 flex items-center gap-2">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+        </svg>
+        Implementation Notes
+      </h3>
+      <ul class="space-y-2 text-sm text-blue-700 dark:text-blue-300">
+        <li>• <strong>Partial:</strong> Create <code>app/views/image_cores/_bulk_progress.html.erb</code></li>
+        <li>• <strong>Stimulus Controller:</strong> <code>app/javascript/controllers/bulk_progress_controller.js</code></li>
+        <li>• <strong>Render After Redirect:</strong> Add partial to layout or conditionally to index view</li>
+        <li>• <strong>Show/Hide Logic:</strong> Controller checks <code>session[:bulk_operation_in_progress]</code> or localStorage</li>
+        <li>• <strong>No Page Reload Needed:</strong> Stimulus controller handles all updates via polling + ActionCable</li>
+      </ul>
+    </div>
+
+  </div>
+
+</body>
+</html>

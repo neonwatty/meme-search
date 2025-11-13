@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Bulk Generation User Flow - Mockup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Glassmorphism */
+    .glass-bg {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .dark .glass-bg {
+      background: rgba(30, 41, 59, 0.95);
+    }
+
+    /* Flow arrow */
+    .flow-arrow {
+      position: relative;
+    }
+
+    .flow-arrow::after {
+      content: '↓';
+      display: block;
+      text-align: center;
+      font-size: 2rem;
+      color: #10b981;
+      margin: 1rem 0;
+    }
+
+    /* Step numbering */
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10b981, #14b8a6);
+      color: white;
+      font-weight: bold;
+      margin-right: 0.75rem;
+    }
+
+    /* Highlight box */
+    .highlight-box {
+      animation: pulse-highlight 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-highlight {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+      }
+      50% {
+        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 min-h-screen p-8">
+
+  <div class="max-w-5xl mx-auto space-y-12">
+
+    <!-- Page Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-slate-800 dark:text-white mb-3">
+        Complete Bulk Generation User Flow
+      </h1>
+      <p class="text-lg text-slate-600 dark:text-slate-400">
+        Step-by-step walkthrough from filter selection to completion
+      </p>
+      <p class="text-sm text-slate-500 dark:text-slate-500 mt-2">
+        Total time estimate: ~30 seconds for 23 images with Florence-2-base model
+      </p>
+    </div>
+
+    <!-- Step 1: Apply Filters -->
+    <div class="glass-bg rounded-2xl p-8 shadow-xl">
+      <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-6 flex items-center">
+        <span class="step-number">1</span>
+        Apply Filters
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Filter Panel Preview -->
+        <div class="bg-slate-100 dark:bg-slate-800 rounded-xl p-4 border-2 border-indigo-300 dark:border-indigo-700">
+          <div class="text-sm text-slate-700 dark:text-slate-300 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="font-semibold">Tags:</span>
+              <div class="flex gap-2">
+                <span class="px-2 py-1 bg-purple-500/20 text-purple-700 dark:text-purple-300 rounded-lg text-xs">funny</span>
+                <span class="px-2 py-1 bg-blue-500/20 text-blue-700 dark:text-blue-300 rounded-lg text-xs">programming</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="font-semibold">Paths:</span>
+              <span class="px-2 py-1 bg-gray-500/20 text-gray-700 dark:text-gray-300 rounded-lg text-xs">/memes/cats</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="font-semibold">Has embeddings:</span>
+              <span class="px-2 py-1 bg-red-500/20 text-red-700 dark:text-red-300 rounded-lg text-xs">false</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result Count -->
+        <div class="flex items-center justify-center">
+          <div class="text-center">
+            <p class="text-6xl font-bold text-emerald-500 mb-2">23</p>
+            <p class="text-sm text-slate-600 dark:text-slate-400">images match your filters</p>
+            <p class="text-xs text-slate-500 dark:text-slate-500 mt-2">
+              (all without descriptions)
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+        <p class="text-sm text-blue-700 dark:text-blue-300">
+          <strong>User Action:</strong> User applies filters in filter panel to narrow down which images to process. Filter panel shows real-time count of images without descriptions.
+        </p>
+      </div>
+    </div>
+
+    <div class="flow-arrow"></div>
+
+    <!-- Step 2: Click Bulk Generate Button -->
+    <div class="glass-bg rounded-2xl p-8 shadow-xl">
+      <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-6 flex items-center">
+        <span class="step-number">2</span>
+        Click Bulk Generate Button
+      </h2>
+
+      <div class="space-y-4">
+        <!-- Button Highlight -->
+        <div class="flex justify-center">
+          <button class="px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold rounded-2xl shadow-lg text-lg highlight-box">
+            Generate All Descriptions (23)
+          </button>
+        </div>
+
+        <!-- Information Display -->
+        <div class="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 rounded-lg p-4">
+          <p class="text-sm text-emerald-700 dark:text-emerald-300 mb-2">
+            <strong>Model:</strong> <code class="bg-emerald-100 dark:bg-emerald-800 px-2 py-1 rounded">Florence-2-base</code>
+          </p>
+          <p class="text-sm text-emerald-700 dark:text-emerald-300">
+            <strong>Estimated time:</strong> ~23 seconds (1 second per image)
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+        <p class="text-sm text-blue-700 dark:text-blue-300">
+          <strong>User Action:</strong> User clicks the bulk generation button at the bottom of the filter panel. Button shows image count and is disabled if count is 0.
+        </p>
+      </div>
+    </div>
+
+    <div class="flow-arrow"></div>
+
+    <!-- Step 3: Confirmation Dialog -->
+    <div class="glass-bg rounded-2xl p-8 shadow-xl">
+      <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-6 flex items-center">
+        <span class="step-number">3</span>
+        Confirm Operation
+      </h2>
+
+      <div class="max-w-md mx-auto">
+        <!-- Native Dialog Simulation -->
+        <div class="bg-white dark:bg-slate-700 border-2 border-slate-300 dark:border-slate-600 rounded-lg shadow-2xl p-6">
+          <div class="flex items-start gap-4 mb-6">
+            <div class="text-4xl">❓</div>
+            <div>
+              <p class="font-semibold text-slate-800 dark:text-white mb-2">
+                Generate descriptions for 23 images?
+              </p>
+              <p class="text-sm text-slate-600 dark:text-slate-400 mb-1">
+                Model: <code class="bg-slate-200 dark:bg-slate-600 px-2 py-1 rounded text-xs">Florence-2-base</code>
+              </p>
+              <p class="text-sm text-slate-600 dark:text-slate-400">
+                Estimated time: ~23 seconds
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-3 justify-end">
+            <button class="px-6 py-2 bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500 text-slate-800 dark:text-white rounded-lg font-semibold transition">
+              Cancel
+            </button>
+            <button class="px-6 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg font-semibold transition">
+              Generate All
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+        <p class="text-sm text-blue-700 dark:text-blue-300">
+          <strong>System Action:</strong> Native browser <code>confirm()</code> dialog appears (via Turbo <code>data-turbo-confirm</code> attribute). User can review details before committing.
+        </p>
+      </div>
+    </div>
+
+    <div class="flow-arrow"></div>
+
+    <!-- Step 4: Backend Processing -->
+    <div class="glass-bg rounded-2xl p-8 shadow-xl">
+      <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-6 flex items-center">
+        <span class="step-number">4</span>
+        Backend Processes Request
+      </h2>
+
+      <div class="space-y-4">
+        <!-- System Flow -->
+        <div class="bg-slate-100 dark:bg-slate-800 rounded-xl p-6">
+          <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-4">Rails Backend Actions</h3>
+          <ol class="space-y-3 text-sm text-slate-600 dark:text-slate-400">
+            <li class="flex items-start gap-3">
+              <span class="flex-shrink-0 w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center text-xs font-bold">1</span>
+              <span>Validates Python service is online (health check on <code>http://image_to_text_generator:8000/health</code>)</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="flex-shrink-0 w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center text-xs font-bold">2</span>
+              <span>Filters images based on current filter params + has_embeddings=false</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="flex-shrink-0 w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center text-xs font-bold">3</span>
+              <span>Limits to max 100 images (safety limit)</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="flex-shrink-0 w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center text-xs font-bold">4</span>
+              <span>Updates all images to <code>status: in_queue</code></span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="flex-shrink-0 w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center text-xs font-bold">5</span>
+              <span>Sends POST request to Python service <code>/add_job</code> for each image</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="flex-shrink-0 w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center text-xs font-bold">6</span>
+              <span>Sets <code>session[:bulk_operation_in_progress] = true</code> and locks filters</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="flex-shrink-0 w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center text-xs font-bold">7</span>
+              <span>Redirects back to gallery with flash message: "Queued 23 images for description generation"</span>
+            </li>
+          </ol>
+        </div>
+
+        <!-- Python Service Actions -->
+        <div class="bg-slate-100 dark:bg-slate-800 rounded-xl p-6">
+          <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-4">Python Service Actions</h3>
+          <ol class="space-y-3 text-sm text-slate-600 dark:text-slate-400">
+            <li class="flex items-start gap-3">
+              <span class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">1</span>
+              <span>Receives 23 job requests, adds to SQLite queue</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">2</span>
+              <span>Background worker processes jobs sequentially (1 at a time)</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">3</span>
+              <span>For each job: Updates status to <code>processing</code> → Runs model → Sends result to Rails webhooks</span>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+        <p class="text-sm text-blue-700 dark:text-blue-300">
+          <strong>System Action:</strong> Rails controller processes bulk request, validates service health, queues all images, and locks filter panel. Takes ~500ms total.
+        </p>
+      </div>
+    </div>
+
+    <div class="flow-arrow"></div>
+
+    <!-- Step 5: Progress Overlay Appears -->
+    <div class="glass-bg rounded-2xl p-8 shadow-xl">
+      <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-6 flex items-center">
+        <span class="step-number">5</span>
+        Progress Overlay Appears
+      </h2>
+
+      <div class="relative">
+        <!-- Simulated Gallery (blurred background) -->
+        <div class="opacity-30 space-y-3 mb-6">
+          <div class="h-24 bg-slate-300 dark:bg-slate-700 rounded-xl"></div>
+          <div class="h-24 bg-slate-300 dark:bg-slate-700 rounded-xl"></div>
+          <div class="h-24 bg-slate-300 dark:bg-slate-700 rounded-xl"></div>
+        </div>
+
+        <!-- Progress Overlay (small version) -->
+        <div class="absolute bottom-0 right-0 w-80 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 dark:border-white/10 p-4">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <h3 class="text-sm font-bold text-slate-800 dark:text-white">🪄 Generating Descriptions</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Using Florence-2-base</p>
+            </div>
+            <button class="text-slate-400 text-xl leading-none">−</button>
+          </div>
+
+          <p class="text-xs text-slate-600 dark:text-slate-300 mb-2">
+            Processing <span class="font-bold text-emerald-600">3</span> of <span class="font-bold">23</span>
+          </p>
+
+          <!-- Progress Bar -->
+          <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mb-2">
+            <div class="bg-gradient-to-r from-emerald-500 to-teal-600 h-full rounded-full" style="width: 13%"></div>
+          </div>
+
+          <p class="text-lg font-bold text-slate-800 dark:text-white text-center mb-3">13%</p>
+
+          <!-- Status Counts (compact) -->
+          <div class="grid grid-cols-4 gap-2 text-xs text-center mb-3">
+            <div>
+              <div class="font-bold text-emerald-600">2</div>
+              <div class="text-slate-500">Done</div>
+            </div>
+            <div>
+              <div class="font-bold text-blue-600">1</div>
+              <div class="text-slate-500">Active</div>
+            </div>
+            <div>
+              <div class="font-bold text-amber-600">20</div>
+              <div class="text-slate-500">Queue</div>
+            </div>
+            <div>
+              <div class="font-bold text-red-600">0</div>
+              <div class="text-slate-500">Failed</div>
+            </div>
+          </div>
+
+          <button class="w-full px-3 py-2 bg-red-500 text-white rounded-lg text-xs font-semibold">
+            Cancel
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+        <p class="text-sm text-blue-700 dark:text-blue-300">
+          <strong>UI Update:</strong> Progress overlay slides in from bottom-right. Polls backend every 2 seconds for status counts. User can minimize, continue browsing, or cancel operation.
+        </p>
+      </div>
+    </div>
+
+    <div class="flow-arrow"></div>
+
+    <!-- Step 6: Real-time Updates -->
+    <div class="glass-bg rounded-2xl p-8 shadow-xl">
+      <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-6 flex items-center">
+        <span class="step-number">6</span>
+        Real-time Status & Description Updates
+      </h2>
+
+      <div class="space-y-4">
+        <!-- ActionCable Flow -->
+        <div class="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border border-emerald-200 dark:border-emerald-700 rounded-xl p-6">
+          <h3 class="font-semibold text-emerald-700 dark:text-emerald-300 mb-4 flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            ActionCable WebSocket Updates
+          </h3>
+
+          <div class="space-y-3 text-sm">
+            <div class="flex items-start gap-3">
+              <span class="flex-shrink-0 text-2xl">1️⃣</span>
+              <div class="flex-1">
+                <p class="font-semibold text-slate-800 dark:text-white mb-1">Python completes job</p>
+                <p class="text-slate-600 dark:text-slate-400 text-xs">
+                  Calls Rails webhook: <code>POST /image_cores/status_receiver</code> (status: processing → done)
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <span class="flex-shrink-0 text-2xl">2️⃣</span>
+              <div class="flex-1">
+                <p class="font-semibold text-slate-800 dark:text-white mb-1">Rails broadcasts update</p>
+                <p class="text-slate-600 dark:text-slate-400 text-xs">
+                  <code>ActionCable.server.broadcast("image_status_channel", {div_id: "...", status_html: "..."})</code>
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <span class="flex-shrink-0 text-2xl">3️⃣</span>
+              <div class="flex-1">
+                <p class="font-semibold text-slate-800 dark:text-white mb-1">Browser receives update</p>
+                <p class="text-slate-600 dark:text-slate-400 text-xs">
+                  JavaScript updates DOM: <code>document.getElementById(div_id).innerHTML = status_html</code>
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <span class="flex-shrink-0 text-2xl">4️⃣</span>
+              <div class="flex-1">
+                <p class="font-semibold text-slate-800 dark:text-white mb-1">Card updates instantly</p>
+                <p class="text-slate-600 dark:text-slate-400 text-xs">
+                  Status badge changes from "processing 🔄" to "generate description 🪄" (with green ring for 3s)
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <span class="flex-shrink-0 text-2xl">5️⃣</span>
+              <div class="flex-1">
+                <p class="font-semibold text-slate-800 dark:text-white mb-1">Description appears</p>
+                <p class="text-slate-600 dark:text-slate-400 text-xs">
+                  Webhook: <code>POST /image_cores/description_receiver</code> → Broadcasts to <code>image_description_channel</code> → Description div updates
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual Example -->
+        <div class="grid grid-cols-3 gap-4 text-xs">
+          <!-- Before -->
+          <div class="bg-slate-100 dark:bg-slate-800 rounded-lg p-3">
+            <div class="text-center font-semibold mb-2 text-slate-700 dark:text-slate-300">Before</div>
+            <div class="bg-amber-500 text-white py-1 px-2 rounded text-center text-xs mb-2">in_queue ⏳</div>
+            <div class="text-slate-500 dark:text-slate-400 italic text-xs">No description yet</div>
+          </div>
+
+          <!-- During -->
+          <div class="bg-slate-100 dark:bg-slate-800 rounded-lg p-3 ring-2 ring-blue-400">
+            <div class="text-center font-semibold mb-2 text-slate-700 dark:text-slate-300">Processing</div>
+            <div class="bg-emerald-500 text-white py-1 px-2 rounded text-center text-xs mb-2">processing 🔄</div>
+            <div class="text-slate-500 dark:text-slate-400 italic text-xs">Generating...</div>
+          </div>
+
+          <!-- After -->
+          <div class="bg-slate-100 dark:bg-slate-800 rounded-lg p-3 ring-2 ring-emerald-400">
+            <div class="text-center font-semibold mb-2 text-slate-700 dark:text-slate-300">Complete</div>
+            <div class="bg-blue-500 text-white py-1 px-2 rounded text-center text-xs mb-2">done ✓</div>
+            <div class="text-slate-600 dark:text-slate-300 text-xs">A humorous image...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+        <p class="text-sm text-blue-700 dark:text-blue-300">
+          <strong>Real-time Updates:</strong> Individual image cards update instantly (no polling needed!) via existing ActionCable channels. Progress overlay polls for aggregate counts every 2-10 seconds.
+        </p>
+      </div>
+    </div>
+
+    <div class="flow-arrow"></div>
+
+    <!-- Step 7: Completion -->
+    <div class="glass-bg rounded-2xl p-8 shadow-xl">
+      <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-6 flex items-center">
+        <span class="step-number">7</span>
+        Operation Completes
+      </h2>
+
+      <div class="space-y-6">
+        <!-- Success Case -->
+        <div class="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border-2 border-emerald-300 dark:border-emerald-700 rounded-xl p-6">
+          <h3 class="text-xl font-bold text-emerald-700 dark:text-emerald-300 mb-4 flex items-center gap-2">
+            <span class="text-3xl">✅</span>
+            All Images Processed Successfully
+          </h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="bg-white/50 dark:bg-slate-800/50 rounded-lg p-4">
+              <p class="text-sm text-slate-600 dark:text-slate-400 mb-1">Total Processed</p>
+              <p class="text-3xl font-bold text-emerald-600">23 / 23</p>
+            </div>
+            <div class="bg-white/50 dark:bg-slate-800/50 rounded-lg p-4">
+              <p class="text-sm text-slate-600 dark:text-slate-400 mb-1">Time Elapsed</p>
+              <p class="text-3xl font-bold text-slate-800 dark:text-white">24s</p>
+            </div>
+          </div>
+
+          <div class="bg-emerald-100 dark:bg-emerald-900/30 border border-emerald-300 dark:border-emerald-700 rounded-lg p-4">
+            <p class="text-sm text-emerald-700 dark:text-emerald-300 font-semibold">
+              🎉 Successfully generated 23 descriptions
+            </p>
+            <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-1">
+              Progress overlay will auto-dismiss in 5 seconds
+            </p>
+          </div>
+
+          <div class="mt-4 text-xs text-slate-600 dark:text-slate-400">
+            <strong>System Actions:</strong>
+            <ul class="list-disc list-inside mt-2 space-y-1">
+              <li>Session cleared: <code>session[:bulk_operation_in_progress] = false</code></li>
+              <li>Filters unlocked in filter panel</li>
+              <li>Progress overlay auto-dismisses after 5 seconds</li>
+              <li>localStorage cleared: <code>bulk_operation_in_progress</code></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Partial Success Case -->
+        <div class="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border-2 border-amber-300 dark:border-amber-700 rounded-xl p-6">
+          <h3 class="text-xl font-bold text-amber-700 dark:text-amber-300 mb-4 flex items-center gap-2">
+            <span class="text-3xl">⚠️</span>
+            Completed with Errors
+          </h3>
+
+          <div class="grid grid-cols-3 gap-3 mb-4">
+            <div class="bg-white/50 dark:bg-slate-800/50 rounded-lg p-3 text-center">
+              <p class="text-xs text-slate-600 dark:text-slate-400 mb-1">Success</p>
+              <p class="text-2xl font-bold text-emerald-600">21</p>
+            </div>
+            <div class="bg-white/50 dark:bg-slate-800/50 rounded-lg p-3 text-center">
+              <p class="text-xs text-slate-600 dark:text-slate-400 mb-1">Failed</p>
+              <p class="text-2xl font-bold text-red-600">2</p>
+            </div>
+            <div class="bg-white/50 dark:bg-slate-800/50 rounded-lg p-3 text-center">
+              <p class="text-xs text-slate-600 dark:text-slate-400 mb-1">Rate</p>
+              <p class="text-2xl font-bold text-slate-800 dark:text-white">91%</p>
+            </div>
+          </div>
+
+          <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-4 mb-4">
+            <p class="text-sm text-red-700 dark:text-red-300 font-semibold">
+              ❌ 2 images failed to process
+            </p>
+            <p class="text-xs text-red-600 dark:text-red-400 mt-1">
+              Common causes: service timeout, invalid file format, or model error
+            </p>
+          </div>
+
+          <button class="w-full px-4 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-semibold transition">
+            Retry 2 Failed Images
+          </button>
+
+          <div class="mt-4 text-xs text-slate-600 dark:text-slate-400">
+            <strong>System Actions:</strong>
+            <ul class="list-disc list-inside mt-2 space-y-1">
+              <li>Progress overlay stays visible (does NOT auto-dismiss when errors present)</li>
+              <li>Retry button appears, allows resubmitting failed images only</li>
+              <li>Failed images marked with red badge + error message in gallery</li>
+              <li>User can manually dismiss overlay or click retry</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+        <p class="text-sm text-blue-700 dark:text-blue-300">
+          <strong>Completion:</strong> Progress overlay shows final status. If 100% success, auto-dismisses after 5s. If errors, stays visible with retry option.
+        </p>
+      </div>
+    </div>
+
+    <!-- Summary Timeline -->
+    <div class="glass-bg rounded-2xl p-8 shadow-xl">
+      <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-6">
+        Complete Timeline Summary
+      </h2>
+
+      <div class="relative">
+        <!-- Timeline Line -->
+        <div class="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald-500 to-teal-600"></div>
+
+        <!-- Timeline Items -->
+        <div class="space-y-6 relative">
+          <div class="flex gap-4 items-start">
+            <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-sm z-10">
+              0s
+            </div>
+            <div class="flex-1 pt-3">
+              <p class="font-semibold text-slate-800 dark:text-white">User applies filters & clicks button</p>
+              <p class="text-sm text-slate-600 dark:text-slate-400">23 images selected</p>
+            </div>
+          </div>
+
+          <div class="flex gap-4 items-start">
+            <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-sm z-10">
+              0.5s
+            </div>
+            <div class="flex-1 pt-3">
+              <p class="font-semibold text-slate-800 dark:text-white">Backend validates & queues jobs</p>
+              <p class="text-sm text-slate-600 dark:text-slate-400">Rails POST to Python service (×23)</p>
+            </div>
+          </div>
+
+          <div class="flex gap-4 items-start">
+            <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-sm z-10">
+              1s
+            </div>
+            <div class="flex-1 pt-3">
+              <p class="font-semibold text-slate-800 dark:text-white">Progress overlay appears</p>
+              <p class="text-sm text-slate-600 dark:text-slate-400">Starts polling + listening to ActionCable</p>
+            </div>
+          </div>
+
+          <div class="flex gap-4 items-start">
+            <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-sm z-10">
+              1-24s
+            </div>
+            <div class="flex-1 pt-3">
+              <p class="font-semibold text-slate-800 dark:text-white">Python processes images</p>
+              <p class="text-sm text-slate-600 dark:text-slate-400">~1 second per image, real-time updates via ActionCable</p>
+            </div>
+          </div>
+
+          <div class="flex gap-4 items-start">
+            <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-sm z-10">
+              24s
+            </div>
+            <div class="flex-1 pt-3">
+              <p class="font-semibold text-slate-800 dark:text-white">Operation complete</p>
+              <p class="text-sm text-slate-600 dark:text-slate-400">Progress overlay shows 100%, auto-dismiss in 5s</p>
+            </div>
+          </div>
+
+          <div class="flex gap-4 items-start">
+            <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-sm z-10">
+              29s
+            </div>
+            <div class="flex-1 pt-3">
+              <p class="font-semibold text-slate-800 dark:text-white">Cleanup complete</p>
+              <p class="text-sm text-slate-600 dark:text-slate-400">Session cleared, filters unlocked, localStorage cleared</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Features -->
+    <div class="glass-bg rounded-2xl p-8 shadow-xl">
+      <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-6">
+        Key UX Features
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-slate-100 dark:bg-slate-800 rounded-xl p-4">
+          <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+            <span class="text-2xl">✨</span>
+            User-Friendly
+          </h3>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <li>• One-click bulk processing from existing filter workflow</li>
+            <li>• Clear count display before submitting</li>
+            <li>• Confirmation dialog with model & time estimate</li>
+            <li>• Real-time progress feedback (no guessing)</li>
+            <li>• Can continue browsing during processing</li>
+          </ul>
+        </div>
+
+        <div class="bg-slate-100 dark:bg-slate-800 rounded-xl p-4">
+          <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+            <span class="text-2xl">🛡️</span>
+            Safe & Robust
+          </h3>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <li>• Pre-flight health check (service must be online)</li>
+            <li>• 100-image safety limit per operation</li>
+            <li>• Filter locking prevents conflicting operations</li>
+            <li>• Graceful error handling with retry option</li>
+            <li>• Cancel mid-operation support</li>
+          </ul>
+        </div>
+
+        <div class="bg-slate-100 dark:bg-slate-800 rounded-xl p-4">
+          <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+            <span class="text-2xl">⚡</span>
+            Performant
+          </h3>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <li>• Instant status updates via ActionCable (no polling)</li>
+            <li>• Exponential backoff for progress polling</li>
+            <li>• LocalStorage persistence survives page reloads</li>
+            <li>• Minimal DOM updates (only changed elements)</li>
+            <li>• Backend rate limiting (1 op per 5 min per user)</li>
+          </ul>
+        </div>
+
+        <div class="bg-slate-100 dark:bg-slate-800 rounded-xl p-4">
+          <h3 class="font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+            <span class="text-2xl">♿</span>
+            Accessible
+          </h3>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <li>• ARIA live regions for screen readers</li>
+            <li>• Keyboard navigation (Escape to close overlay)</li>
+            <li>• High contrast colors in dark mode</li>
+            <li>• Clear status indicators with icons + text</li>
+            <li>• beforeunload warning prevents accidental close</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -32,6 +32,10 @@ export class IndexFilterPage {
   // Meme Cards
   readonly memeCards: Locator;
 
+  // Bulk Generation
+  readonly bulkCountDisplay: Locator;
+  readonly bulkGenerateButton: Locator;
+
   constructor(page: Page) {
     this.page = page;
 
@@ -52,6 +56,10 @@ export class IndexFilterPage {
 
     // Meme Cards
     this.memeCards = page.locator('div[id^="image_core_card_"]');
+
+    // Bulk Generation
+    this.bulkCountDisplay = page.locator('text=/\\d+ images without descriptions/');
+    this.bulkGenerateButton = page.locator('button:has-text("Generate All")');
   }
 
   /**
@@ -299,5 +307,48 @@ export class IndexFilterPage {
    */
   async isEmbeddingsChecked(): Promise<boolean> {
     return await this.embeddingsCheckbox.isChecked();
+  }
+
+  /**
+   * Get count of images without descriptions from bulk button
+   */
+  async getImagesWithoutDescriptionsCount(): Promise<number> {
+    const buttonText = await this.bulkGenerateButton.textContent();
+    const match = buttonText?.match(/Generate All \((\d+)\)/);
+    return match ? parseInt(match[1]) : 0;
+  }
+
+  /**
+   * Check if bulk generate button is visible and enabled
+   */
+  async isBulkGenerateButtonEnabled(): Promise<boolean> {
+    try {
+      return await this.bulkGenerateButton.isVisible();
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Click bulk generate button (with confirmation dialog)
+   * @param confirm - Whether to confirm the dialog (default: true)
+   */
+  async clickBulkGenerate(confirm = true): Promise<void> {
+    // Setup dialog handler BEFORE clicking
+    this.page.once('dialog', async dialog => {
+      console.log(`Dialog message: ${dialog.message()}`);
+      if (confirm) {
+        await dialog.accept();
+      } else {
+        await dialog.dismiss();
+      }
+    });
+
+    await this.bulkGenerateButton.click();
+
+    // Wait for form submission and Turbo Stream response
+    await this.page.waitForTimeout(500);
+    await this.page.waitForLoadState('networkidle');
+    console.log(`Bulk generate ${confirm ? 'confirmed' : 'cancelled'}`);
   }
 }

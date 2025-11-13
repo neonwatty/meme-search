@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filter Panel with Bulk Generation Button - Mockup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom styles for glassmorphism effect */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .dark .glass-panel {
+      background: rgba(30, 41, 59, 0.95);
+    }
+
+    /* Slide-in animation */
+    @keyframes slide-in-from-left {
+      from {
+        transform: translateX(-100%);
+      }
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    .slide-in {
+      animation: slide-in-from-left 300ms forwards ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 min-h-screen p-8">
+
+  <div class="max-w-6xl mx-auto space-y-8">
+
+    <!-- Page Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-slate-800 dark:text-white mb-2">
+        Bulk Generation Feature - Filter Panel Mockup
+      </h1>
+      <p class="text-slate-600 dark:text-slate-400">
+        Filter panel with bulk description generation button (Option 1 - Recommended)
+      </p>
+    </div>
+
+    <!-- Main Layout Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+      <!-- Filter Panel (Slideover Dialog) -->
+      <div class="lg:col-span-1">
+        <dialog open class="glass-panel h-auto max-h-[90vh] w-96 p-0 border-r border-white/20 dark:border-white/10 shadow-2xl rounded-2xl slide-in">
+          <form>
+            <div class="flex flex-col h-full">
+
+              <!-- Header -->
+              <div class="p-6 border-b border-gray-200/50 dark:border-gray-700/50">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Filters</h2>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Refine your meme search</p>
+              </div>
+
+              <!-- Filter Content -->
+              <div class="flex-1 overflow-y-auto p-6 space-y-6">
+
+                <!-- Tags Filter -->
+                <div class="flex flex-col space-y-3">
+                  <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Tags</label>
+                  <div class="bg-gradient-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-900/20 dark:to-purple-900/20 border border-indigo-200/50 dark:border-indigo-700/50 rounded-2xl p-4 space-y-2">
+                    <!-- Tag Checkboxes -->
+                    <label class="flex items-center justify-between cursor-pointer group">
+                      <span class="text-sm text-gray-700 dark:text-gray-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">funny</span>
+                      <input type="checkbox" checked class="w-5 h-5 text-indigo-600 bg-white dark:bg-slate-700 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-600 transition cursor-pointer">
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer group">
+                      <span class="text-sm text-gray-700 dark:text-gray-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">programming</span>
+                      <input type="checkbox" checked class="w-5 h-5 text-indigo-600 bg-white dark:bg-slate-700 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-600 transition cursor-pointer">
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer group">
+                      <span class="text-sm text-gray-700 dark:text-gray-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">work</span>
+                      <input type="checkbox" class="w-5 h-5 text-indigo-600 bg-white dark:bg-slate-700 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-600 transition cursor-pointer">
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Paths Filter -->
+                <div class="flex flex-col space-y-3">
+                  <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Paths</label>
+                  <div class="bg-gradient-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-900/20 dark:to-purple-900/20 border border-indigo-200/50 dark:border-indigo-700/50 rounded-2xl p-4 space-y-2">
+                    <label class="flex items-center justify-between cursor-pointer group">
+                      <span class="text-sm text-gray-700 dark:text-gray-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">/memes/cats</span>
+                      <input type="checkbox" checked class="w-5 h-5 text-indigo-600 bg-white dark:bg-slate-700 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-600 transition cursor-pointer">
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer group">
+                      <span class="text-sm text-gray-700 dark:text-gray-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">/memes/dogs</span>
+                      <input type="checkbox" class="w-5 h-5 text-indigo-600 bg-white dark:bg-slate-700 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-600 transition cursor-pointer">
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Has Embeddings Filter -->
+                <div class="bg-gradient-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-900/20 dark:to-purple-900/20 border border-indigo-200/50 dark:border-indigo-700/50 rounded-2xl p-4">
+                  <div class="flex items-center justify-between">
+                    <label class="text-sm font-semibold text-gray-700 dark:text-gray-300 cursor-pointer">Has embeddings</label>
+                    <input type="checkbox" class="w-5 h-5 text-indigo-600 bg-white dark:bg-slate-700 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-600 transition cursor-pointer">
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Footer Actions with Bulk Generation Section -->
+              <div class="border-t border-gray-200/50 dark:border-gray-700/50 bg-gray-50/50 dark:bg-slate-900/50">
+
+                <!-- Bulk Generation Section -->
+                <div class="p-6 border-b border-gray-200/50 dark:border-gray-700/50 space-y-4">
+
+                  <!-- Help Text (Collapsible) -->
+                  <details class="group">
+                    <summary class="text-xs text-gray-600 dark:text-gray-400 cursor-pointer hover:text-gray-800 dark:hover:text-gray-200 transition flex items-center gap-2">
+                      <svg class="w-4 h-4 transition-transform group-open:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
+                      About Bulk Generation
+                    </summary>
+                    <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 space-y-2 pl-6">
+                      <p>
+                        <strong class="text-gray-700 dark:text-gray-300">Bulk generation</strong> creates descriptions for multiple images at once.
+                      </p>
+                      <ul class="list-disc list-inside space-y-1">
+                        <li>Only images <em>without descriptions</em> will be processed</li>
+                        <li>Processing time: ~1 second per image</li>
+                        <li>You can continue browsing while processing</li>
+                        <li>Progress updates appear in bottom-right corner</li>
+                        <li>Maximum 100 images per batch</li>
+                      </ul>
+                      <p class="text-xs text-amber-600 dark:text-amber-400 mt-2">
+                        ⚠️ Large batches may take several minutes. Make sure your image-to-text service is running.
+                      </p>
+                    </div>
+                  </details>
+
+                  <!-- Count Display -->
+                  <div class="bg-gradient-to-br from-emerald-50/50 to-teal-50/50 dark:from-emerald-900/20 dark:to-teal-900/20 border border-emerald-200 dark:border-emerald-700 rounded-2xl p-4">
+                    <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 text-center">
+                      23 images without descriptions
+                    </p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">
+                      Using <span class="font-mono text-emerald-600 dark:text-emerald-400">Florence-2-base</span> model
+                    </p>
+                  </div>
+
+                  <!-- Bulk Generate Button -->
+                  <button type="button" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition duration-200">
+                    Generate All Descriptions (23)
+                  </button>
+
+                </div>
+
+                <!-- Standard Filter Actions -->
+                <div class="p-6 space-y-3">
+                  <button type="submit" class="w-full px-6 py-3 text-white font-semibold bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl shadow-lg hover:shadow-xl transition-all">
+                    Apply Filters
+                  </button>
+                  <button type="button" class="w-full px-6 py-3 text-gray-700 dark:text-gray-300 font-semibold bg-gray-200/80 dark:bg-slate-700/80 hover:bg-gray-300/80 dark:hover:bg-slate-600/80 rounded-2xl shadow-lg hover:shadow-xl transition-all">
+                    Close
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </dialog>
+      </div>
+
+      <!-- Preview Section -->
+      <div class="lg:col-span-2 space-y-6">
+
+        <!-- State Variations -->
+        <div class="space-y-6">
+
+          <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-lg">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-4">State: Empty (0 images match)</h3>
+            <div class="bg-gradient-to-br from-gray-50/50 to-gray-100/50 dark:from-gray-800/50 dark:to-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 text-center">
+              <p class="text-4xl mb-3">✨</p>
+              <p class="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                All images have descriptions
+              </p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                Try different filters to find images without descriptions
+              </p>
+            </div>
+            <button disabled class="w-full mt-4 bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 py-3 px-6 rounded-2xl cursor-not-allowed opacity-50 font-bold">
+              Generate All Descriptions (0)
+            </button>
+          </div>
+
+          <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-lg">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-4">State: Operation In Progress (Filters Locked)</h3>
+            <div class="bg-amber-500/20 border border-amber-500 rounded-2xl p-4 mb-4">
+              <p class="text-sm text-amber-700 dark:text-amber-300 font-semibold">
+                ⚠️ Bulk operation in progress
+              </p>
+              <p class="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                Filters are locked until processing completes
+              </p>
+            </div>
+            <button disabled class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold py-3 px-6 rounded-2xl opacity-50 cursor-not-allowed">
+              Generate All Descriptions (23)
+            </button>
+            <button disabled class="w-full mt-3 px-6 py-3 text-white font-semibold bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl opacity-50 cursor-not-allowed">
+              Apply Filters
+            </button>
+          </div>
+
+          <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-lg">
+            <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-4">State: Large Batch Warning (100+ images)</h3>
+            <div class="bg-gradient-to-br from-emerald-50/50 to-teal-50/50 dark:from-emerald-900/20 dark:to-teal-900/20 border border-emerald-200 dark:border-emerald-700 rounded-2xl p-4 mb-4">
+              <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 text-center">
+                156 images without descriptions
+              </p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 text-center mt-1">
+                Using <span class="font-mono text-emerald-600 dark:text-emerald-400">Florence-2-base</span> model
+              </p>
+            </div>
+            <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700 rounded-xl p-3 mb-4">
+              <p class="text-xs text-amber-700 dark:text-amber-300">
+                <strong>Large batch detected:</strong> Processing will be limited to 100 images per operation. Apply additional filters to reduce the set, or run multiple batches.
+              </p>
+            </div>
+            <button type="button" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition duration-200">
+              Generate Descriptions (100 max)
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Design Notes -->
+    <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg rounded-2xl p-6 shadow-lg mt-8">
+      <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-4">Design Notes</h3>
+      <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+        <li><strong>Location:</strong> Bottom of filter panel (Option 1 - Recommended)</li>
+        <li><strong>Count Logic:</strong> Calculated on FULL result set (before pagination), only images without embeddings</li>
+        <li><strong>Help Text:</strong> Collapsible details element, explains feature without cluttering UI</li>
+        <li><strong>Model Display:</strong> Shows current model name so user knows what will be used</li>
+        <li><strong>Empty State:</strong> Disabled button + friendly message when 0 images match</li>
+        <li><strong>Filter Lock:</strong> When bulk operation active, filters and bulk button disabled with warning banner</li>
+        <li><strong>Large Batch Warning:</strong> Shows alert when 100+ images selected, explains 100-image limit</li>
+        <li><strong>Confirmation:</strong> Native browser confirm() dialog on click (simple, accessible)</li>
+      </ul>
+    </div>
+
+  </div>
+
+</body>
+</html>
