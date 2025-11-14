@@ -9,3 +9,8 @@ einops>=0.7.0
 pyvips
 timm>=0.9.0
 # flash_attn
+
+# Quantization support for memory-constrained hardware
+bitsandbytes>=0.42.0
+accelerate>=1.11.0
+psutil>=7.1.0

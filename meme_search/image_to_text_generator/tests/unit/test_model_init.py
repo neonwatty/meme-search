@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent / "app"))
 from model_init import (
     TestImageToText,
     MoondreamImageToText,
+    MoondreamQuantizedImageToText,
     Florence2BaseImageToText,
     Florence2LargeImageToText,
     SmolVLM256ImageToText,
@@ -121,6 +122,93 @@ class TestMoondreamImageToText:
         # Assert - should strip whitespace
         assert result == "Caption with spaces"
         mock_image.assert_called_once_with("test.jpg")
+
+
+class TestMoondreamQuantizedImageToText:
+    """Test suite for MoondreamQuantizedImageToText model (INT8 quantized)"""
+
+    def test_init(self):
+        """Test quantized Moondream initialization"""
+        model = MoondreamQuantizedImageToText(model_id="vikhyatk/moondream2", revision="2025-01-09")
+
+        assert model.model_id == "vikhyatk/moondream2"
+        assert model.revision == "2025-01-09"
+        assert model.model is None
+        assert model.downloaded is False
+
+    @patch('transformers.BitsAndBytesConfig')
+    @patch('model_init.AutoModelForCausalLM.from_pretrained')
+    def test_download_with_quantization_config(self, mock_model, mock_config):
+        """Test download with INT8 quantization configuration"""
+        # Setup
+        mock_model_instance = MagicMock()
+        mock_model.return_value = mock_model_instance
+
+        model = MoondreamQuantizedImageToText(model_id="vikhyatk/moondream2", revision="2025-01-09")
+
+        # Execute
+        result = model.download()
+
+        # Assert
+        assert result is None
+        assert model.downloaded is True
+        mock_model.assert_called_once()
+
+        # Verify quantization config was passed
+        call_kwargs = mock_model.call_args[1]
+        assert "quantization_config" in call_kwargs
+        assert "device_map" in call_kwargs
+        assert call_kwargs["device_map"] == "auto"
+        assert call_kwargs["trust_remote_code"] is True
+        # Verify BitsAndBytesConfig was created
+        mock_config.assert_called_once_with(
+            load_in_8bit=True,
+            llm_int8_threshold=6.0,
+        )
+
+    @patch('model_init.Image.open')
+    @patch('transformers.BitsAndBytesConfig')
+    @patch('model_init.AutoModelForCausalLM.from_pretrained')
+    def test_extract_auto_downloads_if_needed(self, mock_model, mock_config, mock_image):
+        """Test extract downloads quantized model if not already downloaded"""
+        # Setup
+        mock_model_instance = MagicMock()
+        mock_model_instance.caption.return_value = {"caption": "Quantized test caption"}
+        mock_model.return_value = mock_model_instance
+
+        mock_pil_image = MagicMock()
+        mock_image.return_value = mock_pil_image
+
+        model = MoondreamQuantizedImageToText(model_id="vikhyatk/moondream2", revision="2025-01-09")
+
+        # Execute
+        result = model.extract("test.jpg")
+
+        # Assert
+        assert result == "Quantized test caption"
+        assert model.downloaded is True
+        mock_model_instance.caption.assert_called_once()
+
+    @patch('model_init.Image.open')
+    def test_extract_with_already_downloaded_model(self, mock_image):
+        """Test extract uses already downloaded quantized model"""
+        # Setup
+        mock_pil_image = MagicMock()
+        mock_image.return_value = mock_pil_image
+
+        mock_model_instance = MagicMock()
+        mock_model_instance.caption.return_value = {"caption": "Cached quantized caption"}
+
+        model = MoondreamQuantizedImageToText(model_id="vikhyatk/moondream2", revision="2025-01-09")
+        model.model = mock_model_instance
+        model.downloaded = True
+
+        # Execute
+        result = model.extract("test.jpg")
+
+        # Assert
+        assert result == "Cached quantized caption"
+        mock_model_instance.caption.assert_called_once_with(mock_pil_image, length="short")
 
 
 class TestFlorence2BaseImageToText:
@@ -423,6 +511,13 @@ class TestModelSelector:
         model = model_selector("moondream2")
         assert isinstance(model, MoondreamImageToText)
         assert model.model_id == "vikhyatk/moondream2"
+
+    def test_model_selector_moondream2_int8(self):
+        """Test model_selector returns MoondreamQuantizedImageToText for INT8 model"""
+        model = model_selector("moondream2-int8")
+        assert isinstance(model, MoondreamQuantizedImageToText)
+        assert model.model_id == "vikhyatk/moondream2"
+        assert model.revision == "2025-01-09"
 
     def test_model_selector_invalid_model_raises_value_error(self):
         """Test model_selector raises ValueError for invalid model name"""
