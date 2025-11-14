@@ -123,6 +123,15 @@ ImageToText.create!(
   updated_at: "2019-01-01 00:00:00"
 )
 
+ImageToText.create!(
+  name: "moondream2-int8",
+  resource: "vikhyatk/moondream2",
+  description: "INT8 quantized version of Moondream2 (2B params) for memory-constrained hardware. Reduces memory from ~5GB to ~1.5-2GB with minimal quality loss. Ideal for CPU-only machines.",
+  current: false,
+  created_at: "2019-01-01 00:00:00",
+  updated_at: "2019-01-01 00:00:00"
+)
+
 puts "Test database seeded successfully!"
 puts "  - #{ImagePath.count} image paths"
 puts "  - #{TagName.count} tags"
