@@ -11,10 +11,12 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 # Install system dependencies for pyvips (required by requirements.txt)
 # libvips42 provides libvips.so.42 shared library
 # libvips-dev provides development headers for building pyvips
+# build-essential provides gcc, g++, make for compiling Python C extensions
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
       libvips42 \
       libvips-dev \
+      build-essential \
     && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Copy only requirements first (optimize layer caching)
