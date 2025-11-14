@@ -52,6 +52,26 @@ A table of contents for the remainder of this README:
       <img align="center" src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-generate-example.gif" height="225">
       <figcaption>Generate</figcaption>
     </figure>
+    <figure>
+      <img align="center" src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-2.0-bulk.gif" height="225">
+      <figcaption>Bulk Generation</figcaption>
+    </figure>
+    <figure>
+      <img align="center" src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-2.0-dark-mode.gif" height="225">
+      <figcaption>Dark Mode</figcaption>
+    </figure>
+    <figure>
+      <img align="center" src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-2.0-rescan.png" height="225">
+      <figcaption>Rescan</figcaption>
+    </figure>
+    <figure>
+      <img align="center" src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-2.0-rescan-show.png" height="225">
+      <figcaption>Rescan Status</figcaption>
+    </figure>
+    <figure>
+      <img align="center" src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-2.0-rescan-options.png" height="225">
+      <figcaption>Rescan Options</figcaption>
+    </figure>
   </div>
 </p>
 
@@ -92,6 +112,18 @@ Features of Meme Search include:
 7. **New Organizational Tools**
 
    Filter by tags, directory paths, and description embeddings, plus toggle between keyword and vector search for more control.
+
+8. **Bulk Description Generation**
+
+   Generate descriptions for multiple memes at once for faster indexing.
+
+9. **Dark Mode**
+
+   Toggle between light and dark themes for comfortable viewing in any environment.
+
+10. **Directory Rescan**
+
+   Automatically detect and index new memes added to your directories.
 
 ### Requirements
 
