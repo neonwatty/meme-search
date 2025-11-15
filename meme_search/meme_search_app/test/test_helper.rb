@@ -23,6 +23,9 @@ require "webmock/minitest"
 # Allow real HTTP connections in tests (only stub specific requests)
 WebMock.disable_net_connect!(allow_localhost: true)
 
+# Set ActiveJob test adapter for job testing
+ActiveJob::Base.queue_adapter = :test
+
 module ActiveSupport
   class TestCase
     # Run tests in parallel with specified workers - 1 worker
@@ -30,6 +33,11 @@ module ActiveSupport
 
     # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
     fixtures :all
+
+    # Clear enqueued jobs before each test
+    setup do
+      clear_enqueued_jobs if respond_to?(:clear_enqueued_jobs)
+    end
 
     # Add more helper methods to be used by all tests here...
   end

@@ -157,7 +157,7 @@ npm run test:e2e:report   # View last report
 **Rails Channels**: `ImageDescriptionChannel`, `ImageStatusChannel` (WebSocket real-time updates)
 
 **Python FastAPI**: `app/app.py` (/add_job, /check_queue, /remove_job), `app/image_to_text_generator.py` (vision-language models), `app/jobs.py` (background worker), `app/job_queue.py` (SQLite queue), `app/senders.py` (Rails callbacks)
-**Python Models**: Florence-2-base (default, 250M), Florence-2-large (700M), SmolVLM-256/500, Moondream2 (1.9B)
+**Python Models**: Florence-2-base (default, 250M), Florence-2-large (700M), SmolVLM-256/500, Moondream2 (1.9B), Moondream2-INT8 (1.9B quantized, ~1.5-2GB memory)
 
 ## Testing Strategy
 
