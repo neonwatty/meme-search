@@ -486,16 +486,20 @@ module Settings
       image_path = create_test_path("test_valid_directory", expected_cores: 1)
       orphaned = create_orphaned_core(image_path)
 
-      # WHEN: HTTP DELETE fails (simulate Python service error)
+      # WHEN: HTTP DELETE raises StandardError (not SocketError/ECONNREFUSED)
+      # The before_destroy callback only rescues SocketError and ECONNREFUSED
       stub_request(:delete, /\/remove_job\/#{orphaned.id}/)
         .to_raise(StandardError.new("Network error"))
 
-      # THEN: Request raises error (destroy fails)
-      assert_raises(StandardError) do
-        post rescan_settings_image_path_path(image_path)
-      end
+      # THEN: Request completes (controller rescues error and sets flash[:alert])
+      post rescan_settings_image_path_path(image_path)
 
-      # THEN: Database unchanged (transaction rolled back)
+      # THEN: Flash alert shows error message
+      assert_not_nil flash[:alert], "Expected flash alert to be set"
+      assert_match(/Scan failed:.*Network error/i, flash[:alert],
+                   "Flash alert should contain error message")
+
+      # THEN: Database unchanged (transaction rolled back, destroy was prevented)
       image_path.reload
       assert_equal 2, image_path.image_cores.count,
                    "Transaction rollback should preserve orphaned record"
@@ -600,23 +604,26 @@ module Settings
       image_path = create_test_path("test_valid_directory", expected_cores: 1)
       orphaned = create_orphaned_core(image_path)
 
-      # WHEN: HTTP DELETE times out
+      # WHEN: HTTP DELETE times out (raises timeout exception)
+      # The before_destroy callback only rescues SocketError and ECONNREFUSED
       stub_request(:delete, /\/remove_job\/#{orphaned.id}/)
         .to_timeout
 
-      # THEN: Destroy may raise depending on before_destroy callback implementation
-      # Check if the callback handles timeouts or re-raises
-      begin
-        post rescan_settings_image_path_path(image_path)
-      rescue Net::OpenTimeout, Errno::ETIMEDOUT
-        # Timeout raised - verify database unchanged
-        assert_not_nil ImageCore.find_by(id: orphaned.id),
-                       "Record should remain if HTTP times out"
-      else
-        # Timeout swallowed - verify record removed
-        assert_nil ImageCore.find_by(id: orphaned.id),
-                   "Record removed despite timeout"
-      end
+      # THEN: Request completes (controller rescues timeout and sets flash[:alert])
+      post rescan_settings_image_path_path(image_path)
+
+      # THEN: Flash alert shows error message
+      assert_not_nil flash[:alert], "Expected flash alert to be set"
+      assert_match(/Scan failed:/i, flash[:alert],
+                   "Flash alert should indicate scan failure")
+
+      # THEN: Record is NOT removed from database (destroy was prevented by timeout)
+      assert_not_nil ImageCore.find_by(id: orphaned.id),
+                     "Orphaned record should remain when HTTP times out"
+
+      image_path.reload
+      assert_equal 2, image_path.image_cores.count,
+                   "Both records should remain after timeout"
     end
 
     test "rescan continues removing other orphans if one HTTP DELETE fails" do

@@ -208,7 +208,7 @@ def test_quantized_moondream():
     try:
         print(f"INT8 (BitsAndBytes): {memory_int8:.2f} MB, {inference_time_int8:.2f}s")
         print(f"Memory savings: {memory_fp - memory_int8:.2f} MB ({((memory_fp - memory_int8) / memory_fp * 100):.1f}%)")
-    except:
+    except NameError:
         print("INT8 (BitsAndBytes): Not tested")
     print("=" * 80)
 

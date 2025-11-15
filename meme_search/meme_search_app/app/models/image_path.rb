@@ -85,10 +85,12 @@ class ImagePath < ApplicationRecord
   private
 
     def valid_dir
+      return if self.name.blank?
+
       base_dir = Dir.getwd
       full_path = base_dir + "/public/memes/" + self.name
       puts full_path
-      unless self.name.length > 0 && File.directory?(full_path)
+      unless File.directory?(full_path)
         self.errors.add :name, message: "The input path - #{self.name} - is not a valid subdirectory in /public/memes"
       end
     end

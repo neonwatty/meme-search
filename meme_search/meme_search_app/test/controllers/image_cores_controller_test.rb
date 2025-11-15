@@ -390,4 +390,233 @@ class ImageCoresControllerTest < ActionDispatch::IntegrationTest
     get image_cores_url, params: { selected_path_names: "#{path1.name}, #{path2.name}" }
     assert_response :success
   end
+
+  # ========================================
+  # WEBHOOK ENDPOINTS
+  # ========================================
+  # Tests for description_receiver and status_receiver
+  # Called by Python image-to-text service
+
+  # PHASE 1: description_receiver success cases
+
+  test "description_receiver should update description with valid data" do
+    image_core = image_cores(:one)
+    original_description = image_core.description
+    new_description = "A cat sitting on a laptop with funny text"
+
+    post description_receiver_image_cores_url, params: {
+      data: {
+        image_core_id: image_core.id,
+        description: new_description
+      }
+    }, as: :json
+
+    image_core.reload
+    assert_equal new_description, image_core.description
+    assert_not_equal original_description, image_core.description
+  end
+
+  test "description_receiver should broadcast to image_description_channel" do
+    image_core = image_cores(:one)
+    description = "AI generated description"
+
+    assert_broadcasts "image_description_channel", 1 do
+      post description_receiver_image_cores_url, params: {
+        data: {
+          image_core_id: image_core.id,
+          description: description
+        }
+      }, as: :json
+    end
+  end
+
+  test "description_receiver should refresh description embeddings" do
+    image_core = image_cores(:one)
+
+    # Create initial embedding
+    original_embedding = ImageEmbedding.create!(
+      snippet: "old snippet",
+      image_core: image_core,
+      embedding: Array.new(384, 0.5)
+    )
+
+    original_embedding_id = original_embedding.id
+
+    # Mock $embedding_model - description gets chunked into multiple snippets
+    original_model = $embedding_model
+    mock_model = Minitest::Mock.new
+
+    # Expect multiple calls for multiple chunks (description is split into ~500 char chunks)
+    # The description will create multiple embeddings
+    10.times do
+      mock_model.expect :call, Array.new(384, 0.3), [ String ]
+    end
+
+    $embedding_model = mock_model
+
+    long_description = "A cat sitting on a laptop with funny text overlay showing a meme about programming"
+
+    post description_receiver_image_cores_url, params: {
+      data: {
+        image_core_id: image_core.id,
+        description: long_description
+      }
+    }, as: :json
+
+    # Old embedding should be destroyed
+    assert_nil ImageEmbedding.find_by(id: original_embedding_id)
+
+    # New embeddings should be created
+    new_embeddings = ImageEmbedding.where(image_core_id: image_core.id)
+    assert new_embeddings.count > 0
+
+    $embedding_model = original_model
+  end
+
+  test "description_receiver should skip CSRF token verification" do
+    image_core = image_cores(:one)
+
+    # Post without CSRF token (would normally fail)
+    assert_nothing_raised do
+      post description_receiver_image_cores_url, params: {
+        data: {
+          image_core_id: image_core.id,
+          description: "Test description"
+        }
+      }, as: :json
+    end
+
+    # Verify it actually updated (didn't just skip due to error)
+    image_core.reload
+    assert_equal "Test description", image_core.description
+  end
+
+  # PHASE 2: description_receiver error cases
+
+  test "description_receiver should handle missing image_core_id" do
+    # Current behavior: params[:data][:image_core_id] is nil
+    # .to_i on nil returns 0, then find(0) raises RecordNotFound
+    # Rails rescues and returns 404 Not Found
+    # Future improvement: Add parameter validation and return 400 Bad Request
+
+    post description_receiver_image_cores_url, params: {
+      data: {
+        description: "Test description"
+        # Missing image_core_id
+      }
+    }, as: :json
+
+    # Rails catches RecordNotFound and returns 404
+    assert_response :not_found
+  end
+
+  test "description_receiver should handle invalid image_core_id" do
+    invalid_id = 999999
+
+    # Current behavior: find(999999) raises RecordNotFound
+    # Rails rescues and returns 404 Not Found
+    # This is actually correct behavior
+
+    post description_receiver_image_cores_url, params: {
+      data: {
+        image_core_id: invalid_id,
+        description: "Test description"
+      }
+    }, as: :json
+
+    # Rails catches RecordNotFound and returns 404
+    assert_response :not_found
+  end
+
+  # PHASE 3: status_receiver success cases
+
+  test "status_receiver should update status with valid data" do
+    image_core = image_cores(:one)
+    original_status = image_core.status
+    new_status = 2  # processing
+
+    post status_receiver_image_cores_url, params: {
+      data: {
+        image_core_id: image_core.id,
+        status: new_status
+      }
+    }, as: :json
+
+    image_core.reload
+    assert_equal "processing", image_core.status
+    assert_not_equal original_status, image_core.status
+  end
+
+  test "status_receiver should broadcast to image_status_channel" do
+    image_core = image_cores(:one)
+    new_status = 3  # done
+
+    assert_broadcasts "image_status_channel", 1 do
+      post status_receiver_image_cores_url, params: {
+        data: {
+          image_core_id: image_core.id,
+          status: new_status
+        }
+      }, as: :json
+    end
+
+    # Verify status was updated in database
+    image_core.reload
+    assert_equal "done", image_core.status
+  end
+
+  test "status_receiver should skip CSRF token verification" do
+    image_core = image_cores(:one)
+
+    # Post without CSRF token (would normally fail)
+    assert_nothing_raised do
+      post status_receiver_image_cores_url, params: {
+        data: {
+          image_core_id: image_core.id,
+          status: 2  # processing
+        }
+      }, as: :json
+    end
+
+    # Verify it actually updated
+    image_core.reload
+    assert_equal "processing", image_core.status
+  end
+
+  # PHASE 4: status_receiver error cases
+
+  test "status_receiver should handle missing image_core_id" do
+    # Current behavior: params[:data][:image_core_id] is nil
+    # .to_i on nil returns 0, then find(0) raises RecordNotFound
+    # Rails rescues and returns 404 Not Found
+    # Future improvement: Add parameter validation and return 400 Bad Request
+
+    post status_receiver_image_cores_url, params: {
+      data: {
+        status: 2
+        # Missing image_core_id
+      }
+    }, as: :json
+
+    # Rails catches RecordNotFound and returns 404
+    assert_response :not_found
+  end
+
+  test "status_receiver should handle invalid image_core_id" do
+    invalid_id = 999999
+
+    # Current behavior: find(999999) raises RecordNotFound
+    # Rails rescues and returns 404 Not Found
+    # This is actually correct behavior
+
+    post status_receiver_image_cores_url, params: {
+      data: {
+        image_core_id: invalid_id,
+        status: 2
+      }
+    }, as: :json
+
+    # Rails catches RecordNotFound and returns 404
+    assert_response :not_found
+  end
 end

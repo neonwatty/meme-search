@@ -21,8 +21,7 @@ class ImageCore < ApplicationRecord
   scope :with_selected_tag_names, ->(selected_tag_names) {
     joins(image_tags: :tag_name)
       .where(tag_names: { name: selected_tag_names })
-      .distinct
-      .order(created_at: :desc)
+      .select("DISTINCT image_cores.*")
   }
 
   # embedding association + lookup scope
