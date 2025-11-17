@@ -91,9 +91,9 @@ second_meme = current_imgs[1]
 third_meme = current_imgs[2]
 fourth_meme = current_imgs[3]
 
-first_meme.update({ image_tags_attributes: [ { tag_name: tag_one } ] })
-second_meme.update({ image_tags_attributes: [ { tag_name: tag_one }, { tag_name: tag_two } ] })
-third_meme.update({ image_tags_attributes: [ { tag_name: tag_two } ] })
+first_meme&.update({ image_tags_attributes: [ { tag_name: tag_one } ] })
+second_meme&.update({ image_tags_attributes: [ { tag_name: tag_one }, { tag_name: tag_two } ] })
+third_meme&.update({ image_tags_attributes: [ { tag_name: tag_two } ] })
 
 
 # instantiate current image_to_text models
