@@ -108,6 +108,9 @@ descriptions = [
   'INT8 quantized version of Moondream2 (2B params) for memory-constrained hardware. Reduces memory from ~5GB to ~1.5-2GB with minimal quality loss. Ideal for CPU-only machines.' ]
 
 available_models.each_with_index do |model_name, index|
-  model = ImageToText.new({ name: model_name, resource: resources[index], description: descriptions[index], current: index != 0 ? false : true })
-  model.save!
+  ImageToText.find_or_create_by!(name: model_name) do |model|
+    model.resource = resources[index]
+    model.description = descriptions[index]
+    model.current = (index == 0)
+  end
 end
