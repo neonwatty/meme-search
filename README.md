@@ -72,6 +72,10 @@ A table of contents for the remainder of this README:
       <img align="center" src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-2.0-rescan-options.png" height="225">
       <figcaption>Rescan Options</figcaption>
     </figure>
+    <figure>
+      <img align="center" src="https://github.com/neonwatty/readme_gifs/blob/main/uploads-trimmed.gif" height="225">
+      <figcaption>Drag-and-Drop Upload</figcaption>
+    </figure>
   </div>
 </p>
 
@@ -125,6 +129,10 @@ Features of Meme Search include:
 10. **Directory Rescan**
 
    Automatically detect and index new memes added to your directories.
+
+11. **Drag-and-Drop Upload**
+
+   Upload memes directly through the web interface with drag-and-drop support. Files are stored in the `direct-uploads` directory (configurable via Docker volume mount) and automatically scanned for indexing. Supports JPG, PNG, and WEBP formats with bulk upload (up to 50 files), real-time progress tracking, and automatic duplicate filename handling.
 
 ### Requirements
 
