@@ -87,9 +87,10 @@
   <div class="mt-8 max-w-4xl w-full bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
     <h3 class="text-sm font-semibold text-blue-900 dark:text-blue-300 mb-2">How it works:</h3>
     <ul class="text-sm text-blue-800 dark:text-blue-400 space-y-1 list-disc list-inside">
-      <li>Upload images to the "direct-uploads" directory</li>
-      <li>Images are automatically added to your collection</li>
-      <li>Generate AI descriptions manually from the Settings > Directory Paths page</li>
+      <li>Images are stored in the 'direct-uploads' directory mounted via your docker-compose.yml file</li>
+      <li>Default location: ./meme_search/direct-uploads/ (on your host machine)</li>
+      <li>After uploading, find your images at the path configured in your docker-compose volume mount</li>
+      <li>Images are automatically scanned and added to your collection (descriptions generated manually)</li>
       <li>Supported formats: JPG, PNG, WEBP (max 10MB per file)</li>
     </ul>
   </div>

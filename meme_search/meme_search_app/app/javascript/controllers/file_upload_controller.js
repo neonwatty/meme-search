@@ -71,6 +71,24 @@ export default class extends Controller {
       return;
     }
 
+    // Check for bulk upload limit (50 files max)
+    const MAX_FILES = 50;
+    const totalFiles = this.files.length + imageFiles.length;
+    if (totalFiles > MAX_FILES) {
+      this.showError(`Maximum ${MAX_FILES} files per upload. Please upload in batches.`);
+      return;
+    }
+
+    // Check file size limit (10MB per file)
+    const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+    const oversized = imageFiles.filter((f) => f.size > MAX_SIZE);
+    if (oversized.length > 0) {
+      this.showError(
+        `${oversized.length} file(s) exceed 10MB limit. Please select smaller files.`
+      );
+      return;
+    }
+
     this.files = [...this.files, ...imageFiles];
     this.renderPreview();
     this.uploadButtonTarget.disabled = false;
@@ -125,7 +143,7 @@ export default class extends Controller {
   }
 
   // Upload files
-  async upload() {
+  upload() {
     if (this.files.length === 0) return;
 
     this.uploadButtonTarget.disabled = true;
@@ -137,40 +155,74 @@ export default class extends Controller {
       formData.append("files[]", file);
     });
 
-    try {
-      const csrfToken = document.querySelector("[name='csrf-token']");
-      const headers = {};
-      if (csrfToken) {
-        headers["X-CSRF-Token"] = csrfToken.content;
+    const xhr = new XMLHttpRequest();
+
+    // Track upload progress
+    xhr.upload.addEventListener("progress", (e) => {
+      console.log("Upload progress event:", e.loaded, "/", e.total);
+      if (e.lengthComputable) {
+        const percent = (e.loaded / e.total) * 100;
+        this.progressBarTarget.style.width = `${percent}%`;
+        this.progressTextTarget.textContent = `Uploading... ${Math.round(
+          percent
+        )}%`;
       }
+    });
 
-      const response = await fetch("/image_uploads", {
-        method: "POST",
-        headers: headers,
-        body: formData,
-      });
+    // Handle completion
+    xhr.addEventListener("load", () => {
+      console.log("Upload completed, status:", xhr.status);
+      console.log("Response:", xhr.responseText);
+      try {
+        const data = JSON.parse(xhr.responseText);
 
-      const data = await response.json();
+        if (xhr.status === 200) {
+          this.showSuccess(
+            `Successfully uploaded ${data.success.length} file(s)! Redirecting...`
+          );
+          this.files = [];
+          this.renderPreview();
+          this.fileInputTarget.value = "";
 
-      if (response.ok) {
-        this.showSuccess(
-          `Successfully uploaded ${data.success.length} file(s)!`
-        );
-        this.files = [];
-        this.renderPreview();
-        this.fileInputTarget.value = "";
-      } else {
-        const errorMessages = data.errors
-          .map((err) => `${err.filename}: ${err.error}`)
-          .join(", ");
-        this.showError(`Upload failed: ${errorMessages}`);
+          // Redirect to home page to see uploaded images
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 2000);
+        } else {
+          const errorMessages = data.errors
+            .map((err) => `${err.filename}: ${err.error}`)
+            .join(", ");
+          this.showError(`Upload failed: ${errorMessages}`);
+          this.progressContainerTarget.classList.add("hidden");
+          this.uploadButtonTarget.disabled = this.files.length === 0;
+        }
+      } catch (error) {
+        console.error("Error parsing response:", error);
+        this.showError(`Upload failed: ${error.message}`);
+        this.progressContainerTarget.classList.add("hidden");
+        this.uploadButtonTarget.disabled = this.files.length === 0;
       }
-    } catch (error) {
-      this.showError(`Upload failed: ${error.message}`);
-    } finally {
+    });
+
+    // Handle errors
+    xhr.addEventListener("error", (e) => {
+      console.error("XHR error event:", e);
+      this.showError("Upload failed: Network error");
       this.progressContainerTarget.classList.add("hidden");
       this.uploadButtonTarget.disabled = this.files.length === 0;
+    });
+
+    // Open connection and set headers
+    xhr.open("POST", "/image_uploads");
+
+    // CSRF token must be set after open() but before send()
+    const csrfToken = document.querySelector("[name='csrf-token']");
+    if (csrfToken) {
+      xhr.setRequestHeader("X-CSRF-Token", csrfToken.content);
     }
+
+    console.log("Starting upload with", this.files.length, "file(s)");
+    xhr.send(formData);
   }
 
   // Format file size
