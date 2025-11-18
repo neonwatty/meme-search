@@ -32,7 +32,7 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install application gems with BuildKit cache mounts
-COPY Gemfile Gemfile.lock ./
+COPY meme_search/meme_search_app/Gemfile meme_search/meme_search_app/Gemfile.lock ./
 RUN --mount=type=cache,target=/usr/local/bundle/cache \
     --mount=type=cache,target=/root/.bundle \
     bundle config set --local jobs 4 && \
@@ -40,8 +40,11 @@ RUN --mount=type=cache,target=/usr/local/bundle/cache \
     rm -rf "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
 
+# Copy VERSION file from repository root
+COPY VERSION ./
+
 # Copy application code
-COPY . .
+COPY meme_search/meme_search_app/ .
 
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/

@@ -1,8 +1,8 @@
 services:
   meme_search:
     build:
-      context: ./meme_search/meme_search_app
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./meme_search/meme_search_app/Dockerfile
     container_name: meme_search
     environment:
       DATABASE_URL: "postgres://postgres:postgres@meme-search-db:${DB_PORT:-5432}/meme_search"

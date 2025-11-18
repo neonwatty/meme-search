@@ -141,6 +141,7 @@ build_service() {
   local service_name=$1
   local context_path=$2
   local image_name=$3
+  local dockerfile_flag=$4
 
   echo -e "${BLUE}Building ${service_name} (${PLATFORM_NAME})...${NC}"
 
@@ -149,6 +150,7 @@ build_service() {
   docker buildx build --platform "$PLATFORM" \
     -t "ghcr.io/${GITHUB_USER}/${image_name}:latest" \
     $PUSH_FLAG \
+    $dockerfile_flag \
     "$context_path"
 
   END_TIME=$(date +%s)
@@ -160,7 +162,7 @@ build_service() {
 
 # Build services
 if [ "$SERVICE" = "app" ] || [ "$SERVICE" = "all" ]; then
-  build_service "Rails App" "./meme_search/meme_search_app" "meme_search"
+  build_service "Rails App" "." "meme_search" "-f ./meme_search/meme_search_app/Dockerfile"
 fi
 
 if [ "$SERVICE" = "python" ] || [ "$SERVICE" = "all" ]; then
