@@ -153,8 +153,9 @@ npm run test:e2e:report   # View last report
 ## Architecture Quick Reference
 
 **Rails Models**: `ImageCore` (main meme entity), `ImageEmbedding` (384-dim vectors), `ImagePath`, `TagName`, `ImageTag`, `ImageToText`
-**Rails Controllers**: `ImageCoresController` (CRUD/search/webhooks), `Settings::{ImagePaths,TagNames,ImageToTexts}Controller`
+**Rails Controllers**: `ImageCoresController` (CRUD/search/webhooks), `ImageUploadsController` (drag-and-drop uploads), `Settings::{ImagePaths,TagNames,ImageToTexts}Controller`
 **Rails Channels**: `ImageDescriptionChannel`, `ImageStatusChannel` (WebSocket real-time updates)
+**Stimulus Controllers**: `file_upload_controller.js` (drag-and-drop upload UI with preview/validation)
 
 **Python FastAPI**: `app/app.py` (/add_job, /check_queue, /remove_job), `app/image_to_text_generator.py` (vision-language models), `app/jobs.py` (background worker), `app/job_queue.py` (SQLite queue), `app/senders.py` (Rails callbacks)
 **Python Models**: Florence-2-base (default, 250M), Florence-2-large (700M), SmolVLM-256/500, Moondream2 (1.9B), Moondream2-INT8 (1.9B quantized, ~1.5-2GB memory)
@@ -181,7 +182,9 @@ npm run test:e2e:report   # View last report
 
 ## Common Workflows
 
-**Image Processing**: User adds path → `ImagePath` creates `ImageCore` → Rails calls Python `/add_job` → Python processes → Calls Rails webhooks (`description_receiver`, `status_receiver`) → Rails updates DB + broadcasts WebSocket → `ImageEmbedding` created for vector search
+**Image Processing (Directory Scan)**: User adds path → `ImagePath` creates `ImageCore` → Rails calls Python `/add_job` → Python processes → Calls Rails webhooks (`description_receiver`, `status_receiver`) → Rails updates DB + broadcasts WebSocket → `ImageEmbedding` created for vector search
+
+**Image Upload (Drag-and-Drop)**: User drags images to `/image_uploads/new` → Browser validates (JPG/PNG/WEBP, <10MB) → POST to `ImageUploadsController#create` → Files saved to `/public/memes/direct-uploads/` → Auto-creates "direct-uploads" `ImagePath` → Triggers scan → Creates `ImageCore` records → User manually generates descriptions
 
 **Search**: Keyword (PgSearch `search_any_word`), Vector (embedding → cosine similarity via neighbor gem), Filtering (tags, paths, embeddings)
 
@@ -193,4 +196,30 @@ npm run test:e2e:report   # View last report
 - PostgreSQL with pgvector required
 - First model download slow, cached in `models/`
 - Meme dirs mounted in both services (`/rails/public/memes`, `/app/public/memes`)
+- **REQUIRED**: `/direct-uploads` mount for drag-and-drop uploads (`./meme_search/direct-uploads/:/rails/public/memes/direct-uploads` and `/app/public/memes/direct-uploads`)
 - Custom ports via `.env` (APP_PORT, GEN_PORT)
+
+## Image Upload Feature
+
+**Location**: `/image_uploads/new` (accessible via "Upload" navigation link)
+
+**Features**:
+- Drag-and-drop interface with file preview
+- Multiple file upload support
+- Client-side validation (JPG/PNG/WEBP, max 10MB per file)
+- Filename sanitization (removes path traversal attempts)
+- Auto-creates "direct-uploads" ImagePath on first upload
+- Triggers automatic scan to create ImageCore records
+- Manual description generation (consistent with existing workflow)
+
+**File Storage**:
+- Host: `./meme_search/direct-uploads/`
+- Container: `/rails/public/memes/direct-uploads/` and `/app/public/memes/direct-uploads/`
+- Uses original filenames (sanitized for safety)
+- Same filename overwrites previous file
+- Files kept indefinitely (user deletes via standard ImageCore UI)
+
+**Testing**:
+- Rails controller tests: `test/controllers/image_uploads_controller_test.rb` (8 tests)
+- Playwright E2E: `playwright/tests/image-uploads.spec.ts` (7 tests)
+- Page Object: `playwright/pages/image-uploads.page.ts`

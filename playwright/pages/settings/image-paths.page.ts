@@ -73,6 +73,25 @@ export class ImagePathsPage {
   }
 
   /**
+   * Get all path names from the index page
+   */
+  async getAllPathNames(): Promise<string[]> {
+    const pathDivs = this.page.locator('div[id^="image_path_"]');
+    const count = await pathDivs.count();
+    const names: string[] = [];
+
+    for (let i = 0; i < count; i++) {
+      const pathDiv = pathDivs.nth(i);
+      const nameText = await pathDiv.textContent();
+      if (nameText) {
+        names.push(nameText);
+      }
+    }
+
+    return names;
+  }
+
+  /**
    * Get count of meme cards on the root page (divs with id starting with "image_core_card_")
    * Note: Only counts visible cards since the page has both list and grid views in the DOM
    */

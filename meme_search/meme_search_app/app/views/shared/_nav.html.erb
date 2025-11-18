@@ -20,6 +20,13 @@
               "text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30" %>
         </li>
         <li>
+          <%= link_to 'Upload', new_image_upload_path,
+            id: "upload_images",
+            class: current_page?(new_image_upload_path) ?
+              "text-black bg-fuchsia-300 px-3 py-2 rounded-xl transition" :
+              "text-slate-800 dark:text-white hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition px-3 py-2 rounded-lg hover:bg-white/30" %>
+        </li>
+        <li>
           <%= link_to 'Settings', settings_tag_names_path,
             id: "settings",
             class: request.path.start_with?('/settings') ?

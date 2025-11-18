@@ -11,6 +11,7 @@ services:
         condition: service_healthy
     volumes: # <-- any additional meme directory must be mounted here - and placed in the /rails/public/memes directory in the container (see example below)
       - ./meme_search/memes/:/rails/public/memes # <-- example meme directory from the repository
+      - ./meme_search/direct-uploads/:/rails/public/memes/direct-uploads # <-- REQUIRED: directory for drag-and-drop uploads
       # -  /route/to/my/personal/additional_memes/:/rails/public/memes/additional_memes # <-- personal meme collection - must be placed inside /rails/public/memes in the container
 
 
@@ -24,6 +25,7 @@ services:
       - "8000"
     volumes: # <-- any additional meme directory must be mounted here - and placed in the /app/public/memes directory in the container (see example below)
       - ./meme_search/memes/:/app/public/memes # <-- example meme directory from the repository
+      - ./meme_search/direct-uploads/:/app/public/memes/direct-uploads # <-- REQUIRED: directory for drag-and-drop uploads
       # -  /route/to/my/personal/additional_memes/:/app/public/memes/additional_memes # <-- personal meme collection - must be placed inside /app/public/memes in the container
       - ./meme_search/db_data/image_to_text_generator:/app/db
       - ./meme_search/models:/root/.cache/huggingface

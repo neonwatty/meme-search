@@ -26,6 +26,24 @@ class ImagePath < ApplicationRecord
   validate :valid_dir
   after_save :list_files_in_directory
 
+  # Ensure the direct-uploads ImagePath exists
+  def self.ensure_direct_uploads_path!
+    direct_uploads_path = find_or_initialize_by(name: "direct-uploads")
+
+    if direct_uploads_path.new_record?
+      # Create the directory if it doesn't exist
+      base_dir = Dir.getwd
+      full_path = File.join(base_dir, "public", "memes", "direct-uploads")
+      FileUtils.mkdir_p(full_path) unless File.directory?(full_path)
+
+      # Save with manual scan only (no auto-scan)
+      direct_uploads_path.scan_frequency_minutes = nil
+      direct_uploads_path.save!
+    end
+
+    direct_uploads_path
+  end
+
   # Auto-scan feature methods
   def auto_scan_enabled?
     scan_frequency_minutes.present?
