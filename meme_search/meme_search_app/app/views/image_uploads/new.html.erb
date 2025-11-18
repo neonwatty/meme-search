@@ -1,0 +1,97 @@
+<div class="flex flex-col items-center justify-center px-4 py-8" data-controller="file-upload">
+  <!-- Page Header -->
+  <div class="text-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Upload Images</h1>
+    <p class="text-gray-600 dark:text-gray-400 mt-2">Drag and drop images or click to browse</p>
+  </div>
+
+  <!-- Glassmorphic Card Wrapper -->
+  <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-3xl p-8 shadow-2xl max-w-4xl w-full">
+
+    <!-- Success Message -->
+    <div data-file-upload-target="successMessage" class="hidden mb-4 p-4 bg-green-100 dark:bg-green-900/30 border border-green-400 dark:border-green-700 rounded-lg">
+      <p class="text-green-700 dark:text-green-300 text-sm"></p>
+    </div>
+
+    <!-- Error Message -->
+    <div data-file-upload-target="errorMessage" class="hidden mb-4 p-4 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-700 rounded-lg">
+      <p class="text-red-700 dark:text-red-300 text-sm"></p>
+    </div>
+
+    <!-- Dropzone -->
+    <div
+      data-file-upload-target="dropzone"
+      data-action="dragover->file-upload#handleDragOver dragleave->file-upload#handleDragLeave drop->file-upload#handleDrop"
+      class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-12 text-center transition-all duration-200 hover:border-blue-400 dark:hover:border-blue-500 cursor-pointer"
+    >
+      <div class="mb-4">
+        <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+          <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+
+      <label for="file-input" class="cursor-pointer">
+        <span class="text-blue-600 dark:text-blue-400 font-medium hover:underline">Click to upload</span>
+        <span class="text-gray-600 dark:text-gray-400"> or drag and drop</span>
+      </label>
+
+      <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+        JPG, PNG, WEBP up to 10MB
+      </p>
+
+      <input
+        id="file-input"
+        type="file"
+        multiple
+        accept="image/jpeg,image/jpg,image/png,image/webp"
+        data-file-upload-target="fileInput"
+        data-action="change->file-upload#handleFileSelect"
+        class="hidden"
+      />
+    </div>
+
+    <!-- File Preview -->
+    <div data-file-upload-target="preview" class="mt-6 space-y-3">
+      <!-- Preview items will be inserted here -->
+    </div>
+
+    <!-- Progress Bar -->
+    <div data-file-upload-target="progressContainer" class="hidden mt-6">
+      <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+        <div data-file-upload-target="progressBar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+      </div>
+      <p data-file-upload-target="progressText" class="text-sm text-gray-600 dark:text-gray-400 mt-2 text-center">Uploading...</p>
+    </div>
+
+    <!-- Upload Button -->
+    <div class="mt-6 flex justify-center">
+      <button
+        type="button"
+        data-file-upload-target="uploadButton"
+        data-action="click->file-upload#upload"
+        disabled
+        class="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg"
+      >
+        Upload Images
+      </button>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="mt-6 flex space-x-4">
+    <%= link_to "Back to Images", root_path, class: "px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg transition-colors duration-200" %>
+    <%= link_to "View Uploaded Images", settings_image_paths_path, class: "px-4 py-2 bg-blue-100 dark:bg-blue-900/30 hover:bg-blue-200 dark:hover:bg-blue-900/50 text-blue-800 dark:text-blue-300 rounded-lg transition-colors duration-200" %>
+  </div>
+
+  <!-- Info Box -->
+  <div class="mt-8 max-w-4xl w-full bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+    <h3 class="text-sm font-semibold text-blue-900 dark:text-blue-300 mb-2">How it works:</h3>
+    <ul class="text-sm text-blue-800 dark:text-blue-400 space-y-1 list-disc list-inside">
+      <li>Images are stored in the 'direct-uploads' directory mounted via your docker-compose.yml file</li>
+      <li>Default location: ./meme_search/direct-uploads/ (on your host machine)</li>
+      <li>After uploading, find your images at the path configured in your docker-compose volume mount</li>
+      <li>Images are automatically scanned and added to your collection (descriptions generated manually)</li>
+      <li>Supported formats: JPG, PNG, WEBP (max 10MB per file)</li>
+    </ul>
+  </div>
+</div>

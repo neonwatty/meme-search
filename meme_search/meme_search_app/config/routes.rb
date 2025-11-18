@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resources :image_to_texts
   resources :image_embeddings
   resources :image_tags
+  resources :image_uploads, only: [ :new, :create ]
 
   # Redirect /settings to /settings/tag_names (default settings page)
   get "/settings", to: redirect("/settings/tag_names")
