@@ -19,19 +19,25 @@ test.describe('About Page', () => {
   });
 
   test('displays all navigation links', async ({ page }) => {
-    // Check for GitHub link
+    // Check for GitHub link (now text link at bottom)
     const githubLink = page.locator('a[href="https://github.com/neonwatty/meme-search"]');
     await expect(githubLink).toBeVisible();
-    await expect(githubLink).toHaveText(/View on GitHub/);
+    await expect(githubLink).toHaveText(/See on GitHub/);
 
-    // Check for neonwatty link
+    // Check for neonwatty link (now text link at bottom)
     const neonwattyLink = page.locator('a[href="https://neonwatty.com/"]');
     await expect(neonwattyLink).toBeVisible();
-    await expect(neonwattyLink).toHaveText(/Built by @neonwatty/);
+    await expect(neonwattyLink).toHaveText(/@neonwatty/);
 
-    // Check for issues link
+    // Check for issues link in Feedback section
     const issuesLink = page.locator('a[href="https://github.com/neonwatty/meme-search/issues"]');
     await expect(issuesLink).toBeVisible();
+    await expect(issuesLink).toHaveText(/Submit an issue on GitHub/);
+
+    // Check for Discord link in Feedback section
+    const feedbackDiscordLink = page.locator('section:has-text("Feedback") a[href="https://discord.gg/8EUxqR93"]');
+    await expect(feedbackDiscordLink).toBeVisible();
+    await expect(feedbackDiscordLink).toHaveText(/Discord community/);
   });
 
   test('displays Discord community button', async ({ page }) => {
@@ -73,21 +79,21 @@ test.describe('About Page', () => {
     await expect(discordButton).toHaveAttribute('href', 'https://discord.gg/8EUxqR93');
   });
 
-  test('Discord button includes chat icon', async ({ page }) => {
+  test('Discord button includes Discord logo icon', async ({ page }) => {
     // Check for SVG icon inside the Discord button
     const discordButton = page.locator('a[href="https://discord.gg/8EUxqR93"]');
     const icon = discordButton.locator('svg');
 
     await expect(icon).toBeVisible();
 
-    // Check that it's the chat icon by checking for the path element
+    // Check that it's the Discord logo by checking for the path element
     const iconPath = icon.locator('path');
     await expect(iconPath).toBeVisible();
   });
 
   test('displays Discord subtext', async ({ page }) => {
     // Check for the descriptive text below the button
-    const subtext = page.locator('text=Connect with other users and get support');
+    const subtext = page.locator('text=Discuss new feature ideas and troubleshooting tips');
     await expect(subtext).toBeVisible();
   });
 
