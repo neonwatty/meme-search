@@ -41,15 +41,15 @@ test.describe('About Page', () => {
   });
 
   test('displays Discord community button', async ({ page }) => {
-    // Check for Discord community button
-    const discordButton = page.locator('a[href="https://discord.gg/8EUxqR93"]');
+    // Check for Discord community button (the large button, not the text link in Feedback)
+    const discordButton = page.locator('a[href="https://discord.gg/8EUxqR93"].inline-flex.px-6.py-3');
     await expect(discordButton).toBeVisible();
     await expect(discordButton).toHaveText(/Join our Discord community/);
   });
 
   test('Discord community button has correct styling', async ({ page }) => {
-    // Locate the Discord button
-    const discordButton = page.locator('a[href="https://discord.gg/8EUxqR93"]');
+    // Locate the Discord button (the large button, not the text link)
+    const discordButton = page.locator('a[href="https://discord.gg/8EUxqR93"].inline-flex.px-6.py-3');
 
     // Check that button is visible
     await expect(discordButton).toBeVisible();
@@ -67,7 +67,8 @@ test.describe('About Page', () => {
   });
 
   test('Discord community button has correct attributes', async ({ page }) => {
-    const discordButton = page.locator('a[href="https://discord.gg/8EUxqR93"]');
+    // Target the large Discord button specifically
+    const discordButton = page.locator('a[href="https://discord.gg/8EUxqR93"].inline-flex.px-6.py-3');
 
     // Check target="_blank" for opening in new tab
     await expect(discordButton).toHaveAttribute('target', '_blank');
@@ -80,8 +81,8 @@ test.describe('About Page', () => {
   });
 
   test('Discord button includes Discord logo icon', async ({ page }) => {
-    // Check for SVG icon inside the Discord button
-    const discordButton = page.locator('a[href="https://discord.gg/8EUxqR93"]');
+    // Check for SVG icon inside the Discord button (the large button)
+    const discordButton = page.locator('a[href="https://discord.gg/8EUxqR93"].inline-flex.px-6.py-3');
     const icon = discordButton.locator('svg');
 
     await expect(icon).toBeVisible();
@@ -98,7 +99,8 @@ test.describe('About Page', () => {
   });
 
   test('Discord button hover state works', async ({ page }) => {
-    const discordButton = page.locator('a[href="https://discord.gg/8EUxqR93"]');
+    // Target the large Discord button specifically
+    const discordButton = page.locator('a[href="https://discord.gg/8EUxqR93"].inline-flex.px-6.py-3');
 
     // Get initial bounding box
     const initialBox = await discordButton.boundingBox();
