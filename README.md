@@ -1,4 +1,6 @@
-# A Meme Search Engine built to self-host in Python, Ruby, and Docker
+# A Meme Search Engine built to self-host in Python, Ruby, and Docker 
+
+[![Discord](https://img.shields.io/badge/Discord-Join%20Server-7289da?style=flat&logo=discord&logoColor=white)](https://discord.com/invite/8EUxqR93)
 
 Use AI to index your memes by their content and text, making them easily retrievable for your meme warfare pleasures.
 
@@ -25,7 +27,7 @@ A table of contents for the remainder of this README:
   - [Custom app port](#custom-app-port)
   - [Building the app locally with Docker](#building-the-app-locally-with-docker)
   - [Running tests](#running-tests)
-
+- [Discord server](#discord-server)
 - [Changelog](#changelog)
 - [Feature requests and contributing](#feature-requests-and-contributing)
 
@@ -323,6 +325,11 @@ npm run test:e2e:docker:ui
 - Embedding generation
 
 See `playwright-docker/README.md` for comprehensive documentation.
+
+## Discord server
+
+Join our Discord server [![Discord](https://img.shields.io/badge/Discord-Join%20Server-7289da?style=flat&logo=discord&logoColor=white)](https://discord.com/invite/8EUxqR93)
+ to discuss new features, bug fixes, and setup troubleshooting.
 
 ## Changelog
 
