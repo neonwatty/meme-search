@@ -328,8 +328,7 @@ See `playwright-docker/README.md` for comprehensive documentation.
 
 ## Discord server
 
-Join our Discord server [![Discord](https://img.shields.io/badge/Discord-Join%20Server-7289da?style=flat&logo=discord&logoColor=white)](https://discord.com/invite/8EUxqR93)
- to discuss new features, bug fixes, and setup troubleshooting.
+Join our Discord server [![Discord](https://img.shields.io/badge/Discord-Join%20Server-7289da?style=flat&logo=discord&logoColor=white)](https://discord.com/invite/8EUxqR93) to discuss new features, bug fixes, and other open source projects (like [ytgify](https://chromewebstore.google.com/detail/ytgify/dnljofakogbecppbkmnoffppkfdmpfje) - a browser extension for clipping GIFs from YouTube right from the YT Player!).
 
 ## Changelog
 
