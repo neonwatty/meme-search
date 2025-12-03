@@ -1,6 +1,6 @@
-# A Meme Search Engine built to self-host in Python, Ruby, and Docker 
+# A Meme Search Engine built to self-host in Python, Ruby, and Docker
 
-[![Discord](https://img.shields.io/badge/Discord-Join%20Server-7289da?style=flat&logo=discord&logoColor=white)](https://discord.com/invite/8EUxqR93)
+[![Discord](https://img.shields.io/badge/Discord-Join%20Server-7289da?style=flat&logo=discord&logoColor=white)](https://discord.gg/damGu7aEHH)
 
 Use AI to index your memes by their content and text, making them easily retrievable for your meme warfare pleasures.
 
@@ -326,7 +326,7 @@ See `playwright-docker/README.md` for comprehensive documentation.
 
 ## Discord server
 
-Join our Discord server [![Discord](https://img.shields.io/badge/Discord-Join%20Server-7289da?style=flat&logo=discord&logoColor=white)](https://discord.com/invite/8EUxqR93) to discuss new features, bug fixes, and other open source projects (like [ytgify](https://chromewebstore.google.com/detail/ytgify/dnljofakogbecppbkmnoffppkfdmpfje) - a browser extension for clipping GIFs from YouTube right from the YT Player!).
+Join our Discord server [![Discord](https://img.shields.io/badge/Discord-Join%20Server-7289da?style=flat&logo=discord&logoColor=white)](https://discord.gg/damGu7aEHH) to discuss new features, bug fixes, and other open source projects (like [ytgify](https://chromewebstore.google.com/detail/ytgify/dnljofakogbecppbkmnoffppkfdmpfje) - a browser extension for clipping GIFs from YouTube right from the YT Player!).
 
 ## Changelog
 

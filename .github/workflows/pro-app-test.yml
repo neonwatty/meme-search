@@ -7,6 +7,8 @@ on:
     paths:
       - "meme_search/meme_search_app/**"
       - ".github/workflows/pro-app-test.yml"
+      - "README.md"
+      - "scripts/validate_discord_link.sh"
       - "!meme_search/meme_search_app/**/*.md"
       - "!meme_search/meme_search_app/**/LICENSE"
   push:
@@ -14,10 +16,22 @@ on:
     paths:
       - "meme_search/meme_search_app/**"
       - ".github/workflows/pro-app-test.yml"
+      - "README.md"
+      - "scripts/validate_discord_link.sh"
       - "!meme_search/meme_search_app/**/*.md"
       - "!meme_search/meme_search_app/**/LICENSE"
 
 jobs:
+  validate_discord_link:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate Discord link in README.md
+        run: bash scripts/validate_discord_link.sh
+
   pro_app_ruby_check:
     runs-on: ubuntu-latest
 
