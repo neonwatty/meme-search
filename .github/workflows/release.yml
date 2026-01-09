@@ -1,5 +1,5 @@
 # Release workflow - triggers on version tags
-# Creates GitHub release and builds Docker images
+# Creates GitHub release (Docker images are built locally due to CI timeout issues)
 name: "Release"
 
 on:
@@ -13,8 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    outputs:
-      version: ${{ steps.get_version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -42,135 +40,21 @@ jobs:
           generate_release_notes: true
           draft: false
           prerelease: ${{ contains(github.ref, '-alpha') || contains(github.ref, '-beta') || contains(github.ref, '-rc') }}
+          body: |
+            ## Docker Images
+
+            Build and push Docker images locally (CI builds timeout):
+
+            ```bash
+            # Login to GitHub Container Registry
+            docker login ghcr.io -u USERNAME
+
+            # Build and push all images
+            ./scripts/build_and_push.sh --platform multi
+
+            # Tag with version
+            docker buildx imagetools create ghcr.io/neonwatty/meme_search:latest --tag ghcr.io/neonwatty/meme_search:v${{ steps.get_version.outputs.version }}
+            docker buildx imagetools create ghcr.io/neonwatty/image_to_text_generator:latest --tag ghcr.io/neonwatty/image_to_text_generator:v${{ steps.get_version.outputs.version }}
+            ```
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # Build Rails Docker image
-  build-rails:
-    needs: create-release
-    runs-on: ubuntu-22.04
-    timeout-minutes: 90
-    permissions:
-      contents: read
-      packages: write
-    strategy:
-      matrix:
-        platform: [linux/amd64, linux/arm64]
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Free Disk Space
-        run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/local/lib/android
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /usr/local/share/boost
-          sudo apt-get clean
-          docker system prune -af --volumes
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          working-directory: ./meme_search/meme_search_app
-          bundler-cache: true
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: ${{ matrix.platform }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          driver-opts: image=moby/buildkit:buildx-stable-1
-
-      - name: Build and Push Rails image
-        uses: docker/build-push-action@v6
-        timeout-minutes: 120
-        with:
-          context: ./meme_search/meme_search_app
-          platforms: ${{ matrix.platform }}
-          push: true
-          tags: |
-            ghcr.io/neonwatty/meme_search:latest
-            ghcr.io/neonwatty/meme_search:v${{ needs.create-release.outputs.version }}
-          cache-from: type=gha,scope=build-rails-${{ matrix.platform }}
-          cache-to: type=gha,mode=max,scope=build-rails-${{ matrix.platform }}
-          build-args: |
-            BUILDKIT_INLINE_CACHE=1
-
-  # Build Python image-to-text Docker image
-  build-image-to-text:
-    needs: create-release
-    runs-on: ubuntu-22.04
-    timeout-minutes: 90
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Free Disk Space
-        run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/local/lib/android
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /usr/local/share/boost
-          sudo apt-get clean
-          docker system prune -af --volumes
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: 'pip'
-          cache-dependency-path: 'meme_search/image_to_text_generator/requirements.txt'
-
-      - name: Install dependencies
-        working-directory: ./meme_search/image_to_text_generator
-        run: |
-          pip install --timeout=300 --retries 5 --upgrade pip
-          for i in {1..3}; do
-            pip install --timeout=300 --retries 5 -r requirements.txt && break || sleep 10
-          done
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          driver-opts: image=moby/buildkit:buildx-stable-1
-
-      - name: Build and Push image-to-text image
-        uses: docker/build-push-action@v6
-        timeout-minutes: 120
-        with:
-          context: ./meme_search/image_to_text_generator
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: |
-            ghcr.io/neonwatty/image_to_text_generator:latest
-            ghcr.io/neonwatty/image_to_text_generator:v${{ needs.create-release.outputs.version }}
-          cache-from: type=gha,scope=build-image-to-text
-          cache-to: type=gha,mode=max,scope=build-image-to-text
-          build-args: |
-            BUILDKIT_INLINE_CACHE=1
