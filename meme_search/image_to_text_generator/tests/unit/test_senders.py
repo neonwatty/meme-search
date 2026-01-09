@@ -6,7 +6,7 @@ from pathlib import Path
 # Add app directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "app"))
 
-from senders import description_sender, status_sender
+from senders import description_sender, status_sender, failure_sender
 
 
 class TestDescriptionSender:
@@ -246,3 +246,89 @@ class TestStatusSender:
 
             # Assert
             mock_post.assert_called_once()
+
+
+class TestFailureSender:
+    """Test suite for failure_sender function"""
+
+    @patch('senders.requests.post')
+    @patch('senders.status_sender')
+    def test_failure_sender_sends_status_5(self, mock_status_sender, mock_post):
+        """Test failure_sender sends status=5 (failed)"""
+        # Setup
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_post.return_value = mock_response
+
+        # Execute
+        failure_sender(42, "Image file not found", "http://localhost:3000/")
+
+        # Assert - status_sender called with status=5
+        mock_status_sender.assert_called_once_with(
+            {"image_core_id": 42, "status": 5},
+            "http://localhost:3000/"
+        )
+
+    @patch('senders.requests.post')
+    @patch('senders.status_sender')
+    def test_failure_sender_sends_error_description(self, mock_status_sender, mock_post):
+        """Test failure_sender sends error message to description_receiver"""
+        # Setup
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_post.return_value = mock_response
+
+        # Execute
+        failure_sender(42, "Image file not found", "http://localhost:3000/")
+
+        # Assert - description sent with error prefix
+        mock_post.assert_called_once_with(
+            "http://localhost:3000/description_receiver",
+            json={"data": {"image_core_id": 42, "description": "Error: Image file not found"}},
+            timeout=30
+        )
+
+    @patch('senders.requests.post')
+    @patch('senders.status_sender')
+    def test_failure_sender_handles_network_error(self, mock_status_sender, mock_post):
+        """Test failure_sender handles network errors gracefully"""
+        # Setup
+        mock_post.side_effect = Exception("Network error")
+
+        # Execute - should not raise exception
+        failure_sender(42, "Test error", "http://localhost:3000/")
+
+        # Assert - status still attempted
+        mock_status_sender.assert_called_once()
+
+    @patch('senders.requests.post')
+    @patch('senders.status_sender')
+    def test_failure_sender_with_different_error_messages(self, mock_status_sender, mock_post):
+        """Test failure_sender with various error messages"""
+        # Setup
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_post.return_value = mock_response
+
+        error_messages = [
+            "Image file not found: /path/to/missing.jpg",
+            "Image file too large: 15.2MB exceeds 10MB limit",
+            "Invalid or corrupt image file: /path/to/corrupt.jpg",
+            "Max retries (3) exceeded. Last error: Model download failed"
+        ]
+
+        for error_msg in error_messages:
+            mock_post.reset_mock()
+            mock_status_sender.reset_mock()
+
+            # Execute
+            failure_sender(99, error_msg, "http://localhost:3000/")
+
+            # Assert
+            mock_status_sender.assert_called_once_with(
+                {"image_core_id": 99, "status": 5},
+                "http://localhost:3000/"
+            )
+            # Check error message is prefixed with "Error: "
+            call_args = mock_post.call_args[1]["json"]["data"]
+            assert call_args["description"] == f"Error: {error_msg}"

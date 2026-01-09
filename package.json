@@ -1,6 +1,6 @@
 {
   "name": "meme-search",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "Use AI to index your memes by their content and text, making them easily retrievable for your meme warfare pleasures.",
   "main": "index.js",
   "scripts": {
