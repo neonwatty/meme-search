@@ -9,7 +9,8 @@ from unittest.mock import Mock, patch, MagicMock, call
 # Add app directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "app"))
 
-from jobs import proccess_job, process_jobs
+from jobs import proccess_job, process_jobs, handle_job_failure, increment_retry_count
+from errors import PermanentError, TransientError, MAX_RETRY_ATTEMPTS
 
 
 class TestProcessJob:
@@ -91,9 +92,9 @@ class TestProcessJobs:
         mock_conn = Mock()
         mock_cursor = Mock()
 
-        # First call returns a job, second and third calls return None (empty queue)
+        # First call returns a job (with retry_count=0), second and third calls return None (empty queue)
         mock_cursor.fetchone.side_effect = [
-            (1, 42, "test.jpg", "test"),  # First iteration: job found
+            (1, 42, "test.jpg", "test", 0),  # First iteration: job found (id, image_core_id, path, model, retry_count)
             None,  # Second iteration: no job
             None   # Third iteration: error recovery loop
         ]
@@ -141,10 +142,10 @@ class TestProcessJobs:
         mock_conn = Mock()
         mock_cursor = Mock()
 
-        # Three calls: two jobs, then empty
+        # Three calls: two jobs, then empty (with retry_count=0)
         mock_cursor.fetchone.side_effect = [
-            (1, 10, "image1.jpg", "test"),
-            (2, 20, "image2.jpg", "test"),
+            (1, 10, "image1.jpg", "test", 0),
+            (2, 20, "image2.jpg", "test", 0),
             None  # Empty queue
         ]
 
@@ -235,7 +236,7 @@ class TestProcessJobs:
         # Setup
         mock_conn = Mock()
         mock_cursor = Mock()
-        mock_cursor.fetchone.side_effect = [(1, 42, "test.jpg", "test"), None, None]
+        mock_cursor.fetchone.side_effect = [(1, 42, "test.jpg", "test", 0), None, None]
         mock_conn.cursor.return_value = mock_cursor
         mock_connect.return_value = mock_conn
 
@@ -271,7 +272,7 @@ class TestProcessJobs:
         # Setup
         mock_conn = Mock()
         mock_cursor = Mock()
-        mock_cursor.fetchone.side_effect = [(1, 42, "test.jpg", "test"), None]
+        mock_cursor.fetchone.side_effect = [(1, 42, "test.jpg", "test", 0), None]
         mock_conn.cursor.return_value = mock_cursor
         mock_connect.return_value = mock_conn
 
@@ -300,7 +301,7 @@ class TestProcessJobs:
         # Setup
         mock_conn = Mock()
         mock_cursor = Mock()
-        mock_cursor.fetchone.side_effect = [(1, 42, "test.jpg", "test"), None]
+        mock_cursor.fetchone.side_effect = [(1, 42, "test.jpg", "test", 0), None]
         mock_conn.cursor.return_value = mock_cursor
         mock_connect.return_value = mock_conn
 
@@ -333,7 +334,7 @@ class TestProcessJobs:
         mock_conn = Mock()
         mock_cursor = Mock()
         job_id = 99
-        mock_cursor.fetchone.side_effect = [(job_id, 42, "test.jpg", "test"), None]
+        mock_cursor.fetchone.side_effect = [(job_id, 42, "test.jpg", "test", 0), None]
         mock_conn.cursor.return_value = mock_cursor
         mock_connect.return_value = mock_conn
 
@@ -365,11 +366,12 @@ class TestProcessJobs:
         mock_conn = Mock()
         mock_cursor = Mock()
 
-        # First job raises exception, second job succeeds, then empty
+        # First job raises exception, second job succeeds, then empty (with retry_count)
         mock_cursor.fetchone.side_effect = [
-            (1, 10, "bad.jpg", "test"),      # First job (will fail)
-            (2, 20, "good.jpg", "test"),     # Second job (succeeds)
-            None                              # Empty queue
+            (1, 10, "bad.jpg", "test", 0),      # First job (will fail)
+            (1,),                               # retry_count query returns 1
+            (2, 20, "good.jpg", "test", 0),     # Second job (succeeds)
+            None                                # Empty queue
         ]
 
         mock_conn.cursor.return_value = mock_cursor
@@ -406,7 +408,7 @@ class TestProcessJobs:
         # Setup
         mock_conn = Mock()
         mock_cursor = Mock()
-        mock_cursor.fetchone.side_effect = [(1, 42, "memes/test.jpg", "test"), None]
+        mock_cursor.fetchone.side_effect = [(1, 42, "memes/test.jpg", "test", 0), None]
         mock_conn.cursor.return_value = mock_cursor
         mock_connect.return_value = mock_conn
 
@@ -435,7 +437,7 @@ class TestProcessJobs:
         # Setup
         mock_conn = Mock()
         mock_cursor = Mock()
-        mock_cursor.fetchone.side_effect = [(1, 42, "/full/path/test.jpg", "test"), None]
+        mock_cursor.fetchone.side_effect = [(1, 42, "/full/path/test.jpg", "test", 0), None]
         mock_conn.cursor.return_value = mock_cursor
         mock_connect.return_value = mock_conn
 
@@ -451,3 +453,178 @@ class TestProcessJobs:
         # Assert - image_path should NOT be prefixed (use as-is)
         call_args = mock_proccess_job.call_args[0][0]
         assert call_args["image_path"] == "/full/path/test.jpg"
+
+
+class TestErrorHandling:
+    """Test suite for error handling and retry logic"""
+
+    @patch('jobs.sqlite3.connect')
+    @patch('jobs.proccess_job')
+    @patch('jobs.failure_sender')
+    @patch('jobs.status_sender')
+    @patch('jobs.time.sleep')
+    def test_permanent_error_removes_job_immediately(
+        self, mock_sleep, mock_status_sender, mock_failure_sender, mock_proccess_job, mock_connect
+    ):
+        """Test that PermanentError removes job immediately without retrying"""
+        # Setup
+        mock_conn = Mock()
+        mock_cursor = Mock()
+        mock_cursor.fetchone.side_effect = [
+            (1, 42, "missing.jpg", "test", 0),  # Job with retry_count=0
+            None  # Empty queue after
+        ]
+        mock_conn.cursor.return_value = mock_cursor
+        mock_connect.return_value = mock_conn
+
+        # Process job raises PermanentError
+        mock_proccess_job.side_effect = PermanentError("Image file not found: missing.jpg")
+        mock_sleep.side_effect = [KeyboardInterrupt()]
+
+        # Execute
+        try:
+            process_jobs("test.db", "http://localhost:3000/")
+        except KeyboardInterrupt:
+            pass
+
+        # Assert - failure_sender should be called with status=5 and error message
+        mock_failure_sender.assert_called_once_with(42, "Image file not found: missing.jpg", "http://localhost:3000/")
+        # Job should be deleted immediately
+        mock_cursor.execute.assert_any_call("DELETE FROM jobs WHERE id = ?", (1,))
+
+    @patch('jobs.sqlite3.connect')
+    @patch('jobs.proccess_job')
+    @patch('jobs.failure_sender')
+    @patch('jobs.status_sender')
+    @patch('jobs.time.sleep')
+    def test_transient_error_increments_retry_count(
+        self, mock_sleep, mock_status_sender, mock_failure_sender, mock_proccess_job, mock_connect
+    ):
+        """Test that TransientError increments retry count and schedules retry"""
+        # Setup
+        mock_conn = Mock()
+        mock_cursor = Mock()
+        mock_cursor.fetchone.side_effect = [
+            (1, 42, "test.jpg", "test", 0),  # Job with retry_count=0
+            (1,),  # retry_count query returns 1 after increment
+            None  # Break loop
+        ]
+        mock_conn.cursor.return_value = mock_cursor
+        mock_connect.return_value = mock_conn
+
+        # Process job raises TransientError
+        mock_proccess_job.side_effect = [TransientError("Model download failed"), KeyboardInterrupt()]
+        mock_sleep.side_effect = [None, KeyboardInterrupt()]
+
+        # Execute
+        try:
+            process_jobs("test.db", "http://localhost:3000/")
+        except KeyboardInterrupt:
+            pass
+
+        # Assert - retry count should be incremented
+        mock_cursor.execute.assert_any_call("UPDATE jobs SET retry_count = retry_count + 1 WHERE id = ?", (1,))
+        # failure_sender should NOT be called yet (still has retries left)
+        mock_failure_sender.assert_not_called()
+
+    @patch('jobs.sqlite3.connect')
+    @patch('jobs.proccess_job')
+    @patch('jobs.failure_sender')
+    @patch('jobs.status_sender')
+    @patch('jobs.time.sleep')
+    def test_max_retries_exceeded_triggers_failure(
+        self, mock_sleep, mock_status_sender, mock_failure_sender, mock_proccess_job, mock_connect
+    ):
+        """Test that exceeding max retries sends failure notification"""
+        # Setup
+        mock_conn = Mock()
+        mock_cursor = Mock()
+        mock_cursor.fetchone.side_effect = [
+            (1, 42, "test.jpg", "test", 2),  # Job already at retry_count=2 (one more = max)
+            (3,),  # retry_count query returns 3 after increment (>= MAX_RETRY_ATTEMPTS)
+            None  # Empty queue
+        ]
+        mock_conn.cursor.return_value = mock_cursor
+        mock_connect.return_value = mock_conn
+
+        # Process job raises TransientError
+        mock_proccess_job.side_effect = TransientError("Model download failed")
+        mock_sleep.side_effect = [KeyboardInterrupt()]
+
+        # Execute
+        try:
+            process_jobs("test.db", "http://localhost:3000/")
+        except KeyboardInterrupt:
+            pass
+
+        # Assert - failure_sender should be called because max retries exceeded
+        assert mock_failure_sender.called
+        # Job should be deleted
+        mock_cursor.execute.assert_any_call("DELETE FROM jobs WHERE id = ?", (1,))
+
+    @patch('jobs.sqlite3.connect')
+    @patch('jobs.proccess_job')
+    @patch('jobs.description_sender')
+    @patch('jobs.status_sender')
+    @patch('jobs.time.sleep')
+    def test_successful_job_does_not_trigger_failure(
+        self, mock_sleep, mock_status_sender, mock_desc_sender, mock_proccess_job, mock_connect
+    ):
+        """Test that successful job processing does not send failure notification"""
+        # Setup
+        mock_conn = Mock()
+        mock_cursor = Mock()
+        mock_cursor.fetchone.side_effect = [
+            (1, 42, "test.jpg", "test", 0),
+            None
+        ]
+        mock_conn.cursor.return_value = mock_cursor
+        mock_connect.return_value = mock_conn
+
+        mock_proccess_job.return_value = {"image_core_id": 42, "description": "Success!"}
+        mock_sleep.side_effect = [KeyboardInterrupt()]
+
+        # Execute
+        with patch('jobs.failure_sender') as mock_failure_sender:
+            try:
+                process_jobs("test.db", "http://localhost:3000/")
+            except KeyboardInterrupt:
+                pass
+
+            # Assert - failure_sender should NOT be called
+            mock_failure_sender.assert_not_called()
+            # description_sender should be called with success
+            mock_desc_sender.assert_called_once()
+            # status=3 (done) should be sent
+            assert any(call[0][0]["status"] == 3 for call in mock_status_sender.call_args_list)
+
+
+class TestHelperFunctions:
+    """Test suite for helper functions"""
+
+    def test_handle_job_failure_sends_notification_and_deletes(self):
+        """Test handle_job_failure sends failure notification and removes job"""
+        mock_cursor = Mock()
+        mock_conn = Mock()
+
+        with patch('jobs.failure_sender') as mock_failure_sender:
+            handle_job_failure(mock_cursor, mock_conn, 1, 42, "Test error", "http://localhost:3000/")
+
+            # Assert
+            mock_failure_sender.assert_called_once_with(42, "Test error", "http://localhost:3000/")
+            mock_cursor.execute.assert_called_with("DELETE FROM jobs WHERE id = ?", (1,))
+            mock_conn.commit.assert_called_once()
+
+    def test_increment_retry_count_updates_and_returns_new_count(self):
+        """Test increment_retry_count updates database and returns new count"""
+        mock_cursor = Mock()
+        mock_conn = Mock()
+        mock_cursor.fetchone.return_value = (3,)  # New retry count
+
+        result = increment_retry_count(mock_cursor, mock_conn, 1)
+
+        # Assert
+        assert result == 3
+        mock_cursor.execute.assert_any_call("UPDATE jobs SET retry_count = retry_count + 1 WHERE id = ?", (1,))
+        mock_cursor.execute.assert_any_call("SELECT retry_count FROM jobs WHERE id = ?", (1,))
+        mock_conn.commit.assert_called_once()

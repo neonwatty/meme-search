@@ -145,6 +145,138 @@ def test_process_image():
 # The 'test' model above provides sufficient integration test coverage
 
 
+def test_missing_image_sends_failure_and_removes_job():
+    """Test that a missing image file triggers failure notification and removes job from queue.
+
+    This test proves the fix for GitHub issue #144: the service no longer retries forever
+    on missing images - it sends status=5 (failed) and removes the job.
+    """
+    app_process = subprocess.Popen(APP_START_CMD, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    dummy_process = subprocess.Popen(DUMMY_START_CMD, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+    os.set_blocking(app_process.stdout.fileno(), False)
+    os.set_blocking(app_process.stderr.fileno(), False)
+    os.set_blocking(dummy_process.stdout.fileno(), False)
+    os.set_blocking(dummy_process.stderr.fileno(), False)
+
+    try:
+        # Start servers
+        assert wait_for_server(SERVER_URL, timeout=30), "Image to text server did not start in time"
+        assert wait_for_server(DUMMY_URL), "Dummy server did not start in time"
+
+        # Submit job with a path to a file that doesn't exist
+        response = requests.post(
+            SERVER_URL + "/add_job",
+            json={"image_core_id": 999, "image_path": "./nonexistent/missing_image.jpg", "model": "test"}
+        )
+        assert response.status_code == 200
+        assert response.json() == {"status": "Job added to queue"}
+
+        # Verify job is in queue
+        response = requests.get(SERVER_URL + "/check_queue")
+        assert response.status_code == 200
+        assert response.json() == {"queue_length": 1}
+
+        # Wait for worker to wake up (5s sleep cycle) and process the job
+        # Permanent errors should fail immediately once processed
+        time.sleep(8)
+
+        # Collect app logs to verify failure was handled
+        app_logs = ""
+        for _ in range(100):
+            line = app_process.stderr.readline()
+            if line:
+                app_logs += line
+
+        # Verify failure notification was sent (check for key log messages)
+        assert "permanently failed" in app_logs or "Image file not found" in app_logs, \
+            f"Expected failure notification in logs. Got: {app_logs}"
+
+        # Verify job was removed from queue (not stuck in infinite retry)
+        response = requests.get(SERVER_URL + "/check_queue")
+        assert response.status_code == 200
+        assert response.json() == {"queue_length": 0}, "Job should be removed from queue after failure"
+
+        # Check dummy server received status=5 (failed)
+        dummy_logs = ""
+        for _ in range(30):
+            line = dummy_process.stderr.readline()
+            if line:
+                dummy_logs += line
+
+        assert "STATUS RECEIVER" in dummy_logs, "Status receiver should have been called"
+        # The dummy logs should show status: 5 was sent
+        assert "'status': 5" in dummy_logs or '"status": 5' in dummy_logs, \
+            f"Expected status=5 (failed) in dummy logs. Got: {dummy_logs}"
+
+    finally:
+        app_process.terminate()
+        app_process.wait()
+        dummy_process.terminate()
+        dummy_process.wait()
+
+
+def test_corrupt_image_sends_failure_and_removes_job():
+    """Test that a corrupt image file triggers failure notification and removes job from queue.
+
+    This test proves the fix for GitHub issue #144: the service correctly handles
+    corrupt images by sending status=5 (failed) and removing the job.
+    """
+    import tempfile
+
+    app_process = subprocess.Popen(APP_START_CMD, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    dummy_process = subprocess.Popen(DUMMY_START_CMD, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+    os.set_blocking(app_process.stdout.fileno(), False)
+    os.set_blocking(app_process.stderr.fileno(), False)
+    os.set_blocking(dummy_process.stdout.fileno(), False)
+    os.set_blocking(dummy_process.stderr.fileno(), False)
+
+    # Create a corrupt image file
+    corrupt_file = tempfile.NamedTemporaryFile(delete=False, suffix=".jpg")
+    corrupt_file.write(b"this is not a valid image file - just random bytes")
+    corrupt_file.close()
+
+    try:
+        # Start servers
+        assert wait_for_server(SERVER_URL, timeout=30), "Image to text server did not start in time"
+        assert wait_for_server(DUMMY_URL), "Dummy server did not start in time"
+
+        # Submit job with corrupt image
+        response = requests.post(
+            SERVER_URL + "/add_job",
+            json={"image_core_id": 888, "image_path": corrupt_file.name, "model": "test"}
+        )
+        assert response.status_code == 200
+
+        # Wait for worker to wake up (5s sleep cycle) and process the job
+        time.sleep(8)
+
+        # Collect app logs
+        app_logs = ""
+        for _ in range(100):
+            line = app_process.stderr.readline()
+            if line:
+                app_logs += line
+
+        # Verify failure was handled (check for key log messages)
+        assert "permanently failed" in app_logs or "Invalid or corrupt" in app_logs, \
+            f"Expected failure handling in logs. Got: {app_logs}"
+
+        # Verify job was removed from queue
+        response = requests.get(SERVER_URL + "/check_queue")
+        assert response.status_code == 200
+        assert response.json() == {"queue_length": 0}, "Job should be removed from queue after failure"
+
+    finally:
+        app_process.terminate()
+        app_process.wait()
+        dummy_process.terminate()
+        dummy_process.wait()
+        # Clean up temp file
+        os.unlink(corrupt_file.name)
+
+
 # def test_processing_smolvlm_256():
 #     """Test processing with 'SmolVLM-256M-Instruct' model."""
 #     app_process = subprocess.Popen(APP_START_CMD, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
