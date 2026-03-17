@@ -198,23 +198,32 @@ To properly mount this subdirectory to the `meme_search` service adjust the `vol
 ```yaml
 volumes:
   - ./meme_search/memes/:/app/public/memes # <-- example meme directory from the repository
-  -  /route/to/my/personal/additional_memes/:/rails/public/memes/additional_memes # <-- personal meme collection - must be placed inside /rails/public/memes in the container
+  - /local/path/to/my/memes/new_memes/:/rails/public/memes/new_memes # <-- personal meme collection - must be placed inside /rails/public/memes in the container
 ```
 
-Note: your `additional_memes` directory must be mounted internally in the `/rails/public/memes` directory, as shown above.
+Note: your `new_memes` directory must be mounted internally in the `/rails/public/memes` directory, as shown above.
 
 To properly mount this same subdirectory to the `image_to_text_generator` service adjust the `volumes` portion of its configuration to the following:
 
 ```yaml
 volumes:
   - ./meme_search/memes/:/app/public/memes # <-- example meme directory from the repository
-  -  /route/to/my/personal/additional_memes/:/app/public/memes/additional_memes # <-- personal meme collection - must be placed inside /app/public/memes in the container
+  - /local/path/to/my/memes/new_memes/:/app/public/memes/new_memes # <-- personal meme collection - must be placed inside /app/public/memes in the container
 ...
 ```
 
-Note: your `additional_memes` directory must be mounted internally in the `/app/public/memes` directory, as shown above.
+Note: your `new_memes` directory must be mounted internally in the `/app/public/memes` directory, as shown above.
 
-Now restart the app, and register the `additional_memes` via the UX by traversing to the `settings -> paths -> create new` as illustrated below.  Type in `additional_memes` in the field provided and press `enter`.
+If you are concerned about the application altering your existing meme library, as a precaution you can make the mount read only by adding "ro" to the volume line as follows:
+
+```yaml
+volumes:
+  - ./meme_search/memes/:/app/public/memes # <-- example meme directory from the repository
+  - /local/path/to/my/memes/new_memes/:/app/public/memes/new_memes:ro
+...
+```
+
+Now restart the app, and register the `new_memes` via the UX by traversing to the `settings -> paths -> create new` as illustrated below.  Type in `new_memes` in the field provided and press `enter`.
 
 <img align="center" src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-add-new-memes.webp" height="225">
 
