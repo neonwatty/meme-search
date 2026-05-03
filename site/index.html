@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Open source meme search engine. Use AI to index your memes by content and text, then find them instantly with semantic search. Self-host with Docker.">
+  <link rel="canonical" href="https://neonwatty.github.io/meme-search/">
+  <meta property="og:title" content="Meme Search - AI-powered meme search engine you can self-host">
+  <meta property="og:description" content="Index your memes by content and text using local AI models. Semantic search, tags, filters, dark mode, and drag-and-drop upload. Free and open source.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://neonwatty.github.io/meme-search/">
+  <meta property="og:image" content="https://github.com/user-attachments/assets/0529764f-a009-4e17-8947-63c7c96075a5">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Meme Search - AI-powered meme search engine you can self-host">
+  <meta name="twitter:description" content="Index your memes by content and text using local AI models. Free, open source, runs entirely on your machine.">
+  <meta name="twitter:image" content="https://github.com/user-attachments/assets/0529764f-a009-4e17-8947-63c7c96075a5">
+  <title>Meme Search - AI-powered meme search engine you can self-host</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="#main" aria-label="Meme Search home">
+      <span class="brand-mark">M</span>
+      <span>Meme Search</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#models">Models</a>
+      <a href="#install">Install</a>
+      <a href="https://discord.gg/7xsxU4ZG6A">Discord</a>
+      <a href="https://github.com/neonwatty/meme-search">GitHub</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Open source meme search engine</p>
+        <h1>Find any meme by what's in it.</h1>
+        <p class="lede">
+          Meme Search uses AI to index your memes by their content and text, making them instantly retrievable with semantic search. All processing runs locally on your machine.
+        </p>
+        <div class="actions" aria-label="Primary actions">
+          <a class="button primary" href="https://github.com/neonwatty/meme-search#installation-instructions">Get started</a>
+          <a class="button secondary" href="https://github.com/neonwatty/meme-search">View on GitHub</a>
+        </div>
+        <div class="badge-row">
+          <img src="https://img.shields.io/github/stars/neonwatty/meme-search?style=flat" alt="GitHub stars">
+          <img src="https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white" alt="Docker ready">
+          <img src="https://img.shields.io/badge/100%25-local_AI-7c3aed" alt="100% local AI">
+          <img src="https://img.shields.io/badge/Discord-Join%20Server-7289da?logo=discord&logoColor=white" alt="Discord">
+        </div>
+      </div>
+
+      <div class="hero-demo" aria-label="Meme Search demo">
+        <img src="https://github.com/user-attachments/assets/0529764f-a009-4e17-8947-63c7c96075a5" alt="Meme Search demo showing semantic search in action" loading="eager">
+      </div>
+    </section>
+
+    <section class="section intro">
+      <p>
+        Your memes deserve better than scrolling through folders. Index them once with local AI, then search by meaning &mdash; not just filenames.
+      </p>
+    </section>
+
+    <section id="features" class="section">
+      <div class="section-heading">
+        <p class="eyebrow">Features</p>
+        <h2>Everything you need to organize and retrieve your memes.</h2>
+      </div>
+      <div class="feature-grid">
+        <article>
+          <span class="feature-icon">&#x1F50D;</span>
+          <h3>Semantic search</h3>
+          <p>Search by meaning, not keywords. Powered by Postgres and pgvector for fast vector and keyword search.</p>
+        </article>
+        <article>
+          <span class="feature-icon">&#x1F916;</span>
+          <h3>Auto-generate descriptions</h3>
+          <p>AI models describe your memes automatically. Target specific memes or bulk-generate descriptions for your entire collection.</p>
+        </article>
+        <article>
+          <span class="feature-icon">&#x1F3F7;</span>
+          <h3>Tags and filters</h3>
+          <p>Create, edit, and assign tags. Filter by tags, directory paths, and description embeddings for precise control.</p>
+        </article>
+        <article>
+          <span class="feature-icon">&#x270F;</span>
+          <h3>Manual editing</h3>
+          <p>Edit or add descriptions manually for better search results. No need to wait for auto-generation.</p>
+        </article>
+        <article>
+          <span class="feature-icon">&#x1F4C1;</span>
+          <h3>Directory paths</h3>
+          <p>Organize memes across multiple subdirectories. Rescan to automatically detect and index new additions.</p>
+        </article>
+        <article>
+          <span class="feature-icon">&#x1F4E4;</span>
+          <h3>Drag-and-drop upload</h3>
+          <p>Upload memes directly through the web interface. Supports JPG, PNG, WEBP with bulk upload up to 50 files.</p>
+        </article>
+        <article>
+          <span class="feature-icon">&#x1F30C;</span>
+          <h3>Dark mode</h3>
+          <p>Toggle between light and dark themes for comfortable viewing in any environment.</p>
+        </article>
+        <article>
+          <span class="feature-icon">&#x26A1;</span>
+          <h3>Bulk generation</h3>
+          <p>Generate descriptions for multiple memes at once for faster indexing of large collections.</p>
+        </article>
+        <article>
+          <span class="feature-icon">&#x1F433;</span>
+          <h3>Docker ready</h3>
+          <p>One command to start. <code>docker compose up</code> pulls and runs the app, database, and AI generator.</p>
+        </article>
+      </div>
+
+      <div class="demo-grid">
+        <figure class="demo-card">
+          <img src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-pro-search-example.gif?raw=true" alt="Search demo" loading="lazy">
+          <figcaption>Semantic Search</figcaption>
+        </figure>
+        <figure class="demo-card">
+          <img src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-pro-edit-example.gif?raw=true" alt="Edit demo" loading="lazy">
+          <figcaption>Edit Descriptions</figcaption>
+        </figure>
+        <figure class="demo-card">
+          <img src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-pro-filters-example.gif?raw=true" alt="Filter demo" loading="lazy">
+          <figcaption>Tags and Filters</figcaption>
+        </figure>
+        <figure class="demo-card">
+          <img src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-generate-example.gif?raw=true" alt="Generate demo" loading="lazy">
+          <figcaption>Auto-Generate</figcaption>
+        </figure>
+        <figure class="demo-card">
+          <img src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-2.0-bulk.gif?raw=true" alt="Bulk generation demo" loading="lazy">
+          <figcaption>Bulk Generation</figcaption>
+        </figure>
+        <figure class="demo-card">
+          <img src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-2.0-dark-mode.gif?raw=true" alt="Dark mode demo" loading="lazy">
+          <figcaption>Dark Mode</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="how" class="section">
+      <div class="section-heading">
+        <p class="eyebrow">How it works</p>
+        <h2>Three services, one command, all local.</h2>
+      </div>
+      <div class="steps">
+        <article>
+          <span class="step-number">1</span>
+          <h3>Point at your memes</h3>
+          <p>Mount your meme directories via Docker volumes. The app detects and registers subdirectories through the settings UI.</p>
+        </article>
+        <article>
+          <span class="step-number">2</span>
+          <h3>AI describes them</h3>
+          <p>A local vision-language model reads each meme and generates a text description. Choose from 6 models depending on your hardware.</p>
+        </article>
+        <article>
+          <span class="step-number">3</span>
+          <h3>Search by meaning</h3>
+          <p>Descriptions are embedded as vectors in Postgres with pgvector. Search returns memes ranked by semantic similarity to your query.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="models" class="section split">
+      <div class="section-heading">
+        <p class="eyebrow">AI Models</p>
+        <h2>Choose the right model for your hardware.</h2>
+        <p>All models run locally. Smaller models work on constrained hardware; larger ones produce richer descriptions.</p>
+      </div>
+      <div class="model-grid">
+        <article class="model-card">
+          <span class="model-size">250M params</span>
+          <span class="model-name">Florence-2-base <span class="default-badge">Default</span></span>
+          <p>Microsoft's compact vision-language model. Best balance of speed and quality for most setups.</p>
+        </article>
+        <article class="model-card">
+          <span class="model-size">700M params</span>
+          <span class="model-name">Florence-2-large</span>
+          <p>Larger Florence variant for richer descriptions when you have the RAM to spare.</p>
+        </article>
+        <article class="model-card">
+          <span class="model-size">256M params</span>
+          <span class="model-name">SmolVLM-256</span>
+          <p>Hugging Face's lightweight model. Fast inference on minimal hardware.</p>
+        </article>
+        <article class="model-card">
+          <span class="model-size">500M params</span>
+          <span class="model-name">SmolVLM-500</span>
+          <p>Mid-range SmolVLM variant. Better descriptions than 256M with moderate resource use.</p>
+        </article>
+        <article class="model-card">
+          <span class="model-size">2B params</span>
+          <span class="model-name">Moondream2</span>
+          <p>Full-size vision-language model. Best description quality, needs ~5GB memory.</p>
+        </article>
+        <article class="model-card">
+          <span class="model-size">2B INT8</span>
+          <span class="model-name">Moondream2-INT8</span>
+          <p>Quantized Moondream2. Cuts memory to ~1.5-2GB with minimal quality loss. Ideal for CPU-only machines.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="install" class="section install">
+      <div>
+        <p class="eyebrow">Install</p>
+        <h2>One command to start searching your memes.</h2>
+        <p>
+          Requires Docker and Docker Compose. The app runs on port 3000 by default, customizable via <code>.env</code> file.
+        </p>
+      </div>
+      <div class="code-card">
+        <pre><code>git clone https://github.com/neonwatty/meme-search.git
+cd meme-search
+
+docker compose up
+
+# Open http://localhost:3000</code></pre>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <p class="eyebrow">Tech stack</p>
+        <h2>Built with Rails, Python, Postgres, and pgvector.</h2>
+      </div>
+      <div class="steps">
+        <article>
+          <h3>Rails 8 + Ruby 3.4</h3>
+          <p>The web application, search interface, and meme management UI. Serves the frontend and orchestrates the pipeline.</p>
+        </article>
+        <article>
+          <h3>Python 3.12</h3>
+          <p>Runs the image-to-text models. Receives memes via API, returns generated descriptions back to Rails.</p>
+        </article>
+        <article>
+          <h3>PostgreSQL 17 + pgvector</h3>
+          <p>Stores meme metadata, descriptions, tags, and vector embeddings. Powers both keyword and semantic search.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>Meme Search is MIT licensed.</span>
+    <a href="https://discord.gg/7xsxU4ZG6A">Discord</a>
+    <a href="https://github.com/neonwatty/meme-search/blob/main/CHANGELOG.md">Changelog</a>
+    <a href="https://github.com/neonwatty/meme-search">GitHub</a>
+  </footer>
+</body>
+</html>
