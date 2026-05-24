@@ -1,0 +1,82 @@
+name: OpenAI live smoke test
+
+on:
+  workflow_dispatch:
+    inputs:
+      openai_vision_model:
+        description: "OpenAI-compatible vision model to smoke test"
+        required: false
+        default: "gpt-4o-mini"
+      openai_api_base_url:
+        description: "OpenAI-compatible API base URL"
+        required: false
+        default: "https://api.openai.com/v1"
+
+jobs:
+  openai_live_smoke:
+    name: OpenAI live description smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      meme-search-db:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_DB: meme_search
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install packages
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y libvips postgresql-client
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: false
+          working-directory: ./meme_search/meme_search_app
+
+      - name: Install Ruby dependencies
+        run: gem install bundler && bundle install
+        working-directory: ./meme_search/meme_search_app
+
+      - name: Prepare test database
+        working-directory: ./meme_search/meme_search_app
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+        run: bin/rails db:test:prepare
+
+      - name: Seed test database
+        working-directory: ./meme_search/meme_search_app
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+        run: bin/rails db:test:seed
+
+      - name: Run OpenAI live smoke test
+        working-directory: ./meme_search/meme_search_app
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_BASE_URL: ${{ inputs.openai_api_base_url }}
+          OPENAI_VISION_MODEL: ${{ inputs.openai_vision_model }}
+        run: |
+          test -n "$OPENAI_API_KEY" || {
+            echo "OPENAI_API_KEY repository secret is required for this manual smoke test."
+            exit 1
+          }
+
+          bin/smoke_openai_description
