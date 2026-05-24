@@ -7,7 +7,7 @@ class DescriptionProviderSetting < ApplicationRecord
   DEFAULT_OPENAI_BASE_URL = "https://api.openai.com/v1"
   DEFAULT_OPENAI_MODEL = "gpt-4o-mini"
 
-  validates :singleton_key, presence: true, uniqueness: true, inclusion: { in: [SINGLETON_KEY] }
+  validates :singleton_key, presence: true, uniqueness: true, inclusion: { in: [ SINGLETON_KEY ] }
   validates :provider, inclusion: { in: PROVIDERS }
   validates :openai_base_url, presence: true
   validates :openai_model, inclusion: { in: OPENAI_MODELS }

@@ -81,7 +81,7 @@ GEM
     bindex (0.8.1)
     bootsnap (1.18.4)
       msgpack (~> 1.2)
-    brakeman (7.1.1)
+    brakeman (8.0.4)
       racc
     builder (3.3.0)
     concurrent-ruby (1.3.5)
@@ -373,7 +373,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap
-  brakeman (= 7.1.1)
+  brakeman (= 8.0.4)
   debug
   image_processing (~> 1.2)
   importmap-rails
