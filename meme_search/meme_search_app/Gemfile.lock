@@ -77,15 +77,15 @@ GEM
     ast (2.4.3)
     base64 (0.3.0)
     benchmark (0.5.0)
-    bigdecimal (3.3.1)
+    bigdecimal (4.1.2)
     bindex (0.8.1)
     bootsnap (1.18.4)
       msgpack (~> 1.2)
     brakeman (8.0.5)
       racc
     builder (3.3.0)
-    concurrent-ruby (1.3.5)
-    connection_pool (2.5.4)
+    concurrent-ruby (1.3.7)
+    connection_pool (3.0.2)
     crack (1.0.1)
       bigdecimal
       rexml
@@ -112,7 +112,7 @@ GEM
     globalid (1.2.1)
       activesupport (>= 6.1)
     hashdiff (1.2.1)
-    i18n (1.14.7)
+    i18n (1.15.2)
       concurrent-ruby (~> 1.0)
     image_processing (1.14.0)
       mini_magick (>= 4.9.5, < 6)
@@ -149,10 +149,12 @@ GEM
       benchmark
       logger
     mini_mime (1.1.5)
-    minitest (5.26.0)
+    minitest (6.0.6)
+      drb (~> 2.0)
+      prism (~> 1.5)
     msgpack (1.8.0)
-    neighbor (0.5.2)
-      activerecord (>= 7)
+    neighbor (1.2.0)
+      activerecord (>= 7.2)
     net-imap (0.5.6)
       date
       net-protocol
@@ -197,7 +199,7 @@ GEM
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
-    prism (1.4.0)
+    prism (1.9.0)
     psych (5.2.6)
       date
       stringio
@@ -328,7 +330,7 @@ GEM
     tailwindcss-ruby (3.4.17-x86_64-darwin)
     tailwindcss-ruby (3.4.17-x86_64-linux)
     thor (1.4.0)
-    timeout (0.4.3)
+    timeout (0.6.1)
     tokenizers (0.6.1-aarch64-linux)
     tokenizers (0.6.1-aarch64-linux-musl)
     tokenizers (0.6.1-arm64-darwin)
