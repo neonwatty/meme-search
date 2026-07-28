@@ -328,6 +328,7 @@ h3 {
 }
 
 .model-name {
+  margin: 0;
   font-weight: 700;
   color: var(--text);
 }

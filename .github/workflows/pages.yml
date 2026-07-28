@@ -6,10 +6,14 @@ on:
       - main
     paths:
       - "site/**"
+      - "scripts/validate_site.mjs"
+      - "package.json"
       - ".github/workflows/pages.yml"
   pull_request:
     paths:
       - "site/**"
+      - "scripts/validate_site.mjs"
+      - "package.json"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -26,7 +30,17 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+      - run: npm run test:site
+
   deploy:
+    needs: validate
     if: github.event_name != 'pull_request'
     environment:
       name: github-pages

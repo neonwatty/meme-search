@@ -6,6 +6,8 @@ Use AI to index your memes by their content and text, making them easily retriev
 
 By default, processing from image-to-text extraction, to vector embedding, to search is performed locally. You can also use an OpenAI-compatible vision API for description generation while keeping embeddings and search local.
 
+Visit the [Meme Search project site](https://neonwatty.github.io/meme-search/) for a visual feature overview, or continue below for installation and configuration details.
+
   <p align="center">
     <img src="https://github.com/user-attachments/assets/0529764f-a009-4e17-8947-63c7c96075a5"
   alt="meme-search-2.0-demo">

@@ -3,32 +3,125 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Open source meme search engine. Use AI to index your memes by content and text, then find them instantly with semantic search. Self-host with Docker.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="description" content="Open source meme search engine that uses local AI to index images by content and text for semantic search. Self-host with Docker.">
   <link rel="canonical" href="https://neonwatty.github.io/meme-search/">
   <meta property="og:title" content="Meme Search - AI-powered meme search engine you can self-host">
-  <meta property="og:description" content="Index your memes by content and text using local AI models. Semantic search, tags, filters, dark mode, and drag-and-drop upload. Free and open source.">
+  <meta property="og:description" content="Open source meme search engine that uses local AI to index images by content and text for semantic search. Self-host with Docker.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://neonwatty.github.io/meme-search/">
+  <meta property="og:site_name" content="Meme Search">
+  <meta property="og:locale" content="en_US">
   <meta property="og:image" content="https://github.com/user-attachments/assets/0529764f-a009-4e17-8947-63c7c96075a5">
+  <meta property="og:image:width" content="480">
+  <meta property="og:image:height" content="520">
+  <meta property="og:image:type" content="image/webp">
+  <meta property="og:image:alt" content="Meme Search interface showing semantic meme search results">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Meme Search - AI-powered meme search engine you can self-host">
-  <meta name="twitter:description" content="Index your memes by content and text using local AI by default, with optional OpenAI-compatible vision providers.">
+  <meta name="twitter:description" content="Open source meme search engine that uses local AI to index images by content and text for semantic search. Self-host with Docker.">
   <meta name="twitter:image" content="https://github.com/user-attachments/assets/0529764f-a009-4e17-8947-63c7c96075a5">
+  <meta name="twitter:image:alt" content="Meme Search interface showing semantic meme search results">
   <title>Meme Search - AI-powered meme search engine you can self-host</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/meme-search/styles.css">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://neonwatty.github.io/meme-search/#website",
+          "url": "https://neonwatty.github.io/meme-search/",
+          "name": "Meme Search",
+          "description": "Open source meme search engine that uses local AI to index images by content and text for semantic search. Self-host with Docker.",
+          "inLanguage": "en",
+          "publisher": {
+            "@id": "https://neonwatty.github.io/meme-search/#author"
+          },
+          "mainEntity": {
+            "@id": "https://neonwatty.github.io/meme-search/#software"
+          }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://neonwatty.github.io/meme-search/#software",
+          "name": "Meme Search",
+          "url": "https://neonwatty.github.io/meme-search/",
+          "description": "Open source meme search engine that uses local AI to index images by content and text for semantic search. Self-host with Docker.",
+          "applicationCategory": "UtilitiesApplication",
+          "applicationSubCategory": "Media management and semantic search",
+          "operatingSystem": [
+            "Linux",
+            "macOS",
+            "Windows"
+          ],
+          "isAccessibleForFree": true,
+          "license": "https://www.apache.org/licenses/LICENSE-2.0",
+          "image": "https://github.com/user-attachments/assets/0529764f-a009-4e17-8947-63c7c96075a5",
+          "screenshot": "https://github.com/user-attachments/assets/0529764f-a009-4e17-8947-63c7c96075a5",
+          "featureList": [
+            "Semantic image search",
+            "Local AI-generated image descriptions",
+            "Keyword search",
+            "Tags and directory filters",
+            "Bulk description generation",
+            "Drag-and-drop uploads"
+          ],
+          "softwareRequirements": "Docker with Docker Compose",
+          "downloadUrl": "https://github.com/neonwatty/meme-search/releases/latest",
+          "sameAs": "https://github.com/neonwatty/meme-search",
+          "author": {
+            "@id": "https://neonwatty.github.io/meme-search/#author"
+          }
+        },
+        {
+          "@type": "SoftwareSourceCode",
+          "@id": "https://neonwatty.github.io/meme-search/#source",
+          "name": "Meme Search source code",
+          "url": "https://github.com/neonwatty/meme-search",
+          "description": "Apache-2.0 licensed source code for the Meme Search self-hosted web application and local AI image-description service.",
+          "codeRepository": "https://github.com/neonwatty/meme-search",
+          "license": "https://www.apache.org/licenses/LICENSE-2.0",
+          "programmingLanguage": [
+            "Ruby",
+            "Python",
+            "JavaScript"
+          ],
+          "runtimePlatform": [
+            "Docker",
+            "Ruby on Rails",
+            "Python",
+            "PostgreSQL"
+          ],
+          "targetProduct": {
+            "@id": "https://neonwatty.github.io/meme-search/#software"
+          },
+          "author": {
+            "@id": "https://neonwatty.github.io/meme-search/#author"
+          }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://neonwatty.github.io/meme-search/#author",
+          "name": "Jeremy Watt",
+          "url": "https://neonwatty.com/"
+        }
+      ]
+    }
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
-    <a class="brand" href="#main" aria-label="Meme Search home">
+    <a class="brand" href="/meme-search/" aria-label="Meme Search home">
       <span class="brand-mark">M</span>
       <span>Meme Search</span>
     </a>
     <nav aria-label="Primary navigation">
-      <a href="#features">Features</a>
-      <a href="#how">How it works</a>
-      <a href="#models">Models</a>
-      <a href="#install">Install</a>
+      <a href="/meme-search/#features">Features</a>
+      <a href="/meme-search/#how">How it works</a>
+      <a href="/meme-search/#models">Models</a>
+      <a href="/meme-search/#install">Install</a>
       <a href="https://discord.gg/7xsxU4ZG6A">Discord</a>
       <a href="https://github.com/neonwatty/meme-search">GitHub</a>
     </nav>
@@ -42,7 +135,7 @@
         <p class="lede">
           Meme Search uses AI to index your memes by their content and text, making them instantly retrievable with semantic search. Processing is local by default, with an optional OpenAI-compatible vision provider.
         </p>
-        <div class="actions" aria-label="Primary actions">
+        <div class="actions" role="group" aria-label="Primary actions">
           <a class="button primary" href="https://github.com/neonwatty/meme-search#installation-instructions">Get started</a>
           <a class="button secondary" href="https://github.com/neonwatty/meme-search">View on GitHub</a>
         </div>
@@ -54,16 +147,16 @@
         </div>
       </div>
 
-      <div class="hero-demo" aria-label="Meme Search demo">
-        <img src="https://github.com/user-attachments/assets/0529764f-a009-4e17-8947-63c7c96075a5" alt="Meme Search demo showing semantic search in action" loading="eager">
+      <div class="hero-demo">
+        <img src="https://github.com/user-attachments/assets/0529764f-a009-4e17-8947-63c7c96075a5" alt="Meme Search interface showing semantic meme search results" width="480" height="520" loading="eager" fetchpriority="high">
       </div>
     </section>
 
-    <section class="section intro">
+    <div class="section intro">
       <p>
         Your memes deserve better than scrolling through folders. Index them once with local AI, then search by meaning &mdash; not just filenames.
       </p>
-    </section>
+    </div>
 
     <section id="features" class="section">
       <div class="section-heading">
@@ -120,27 +213,27 @@
 
       <div class="demo-grid">
         <figure class="demo-card">
-          <img src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-pro-search-example.gif?raw=true" alt="Search demo" loading="lazy">
+          <img src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-pro-search-example.gif?raw=true" alt="Meme Search results for a natural-language query" width="1132" height="846" loading="lazy">
           <figcaption>Semantic Search</figcaption>
         </figure>
         <figure class="demo-card">
-          <img src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-pro-edit-example.gif?raw=true" alt="Edit demo" loading="lazy">
+          <img src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-pro-edit-example.gif?raw=true" alt="Editing an indexed meme description in Meme Search" width="1140" height="834" loading="lazy">
           <figcaption>Edit Descriptions</figcaption>
         </figure>
         <figure class="demo-card">
-          <img src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-pro-filters-example.gif?raw=true" alt="Filter demo" loading="lazy">
+          <img src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-pro-filters-example.gif?raw=true" alt="Filtering Meme Search results by tags and directories" width="1140" height="834" loading="lazy">
           <figcaption>Tags and Filters</figcaption>
         </figure>
         <figure class="demo-card">
-          <img src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-generate-example.gif?raw=true" alt="Generate demo" loading="lazy">
+          <img src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-generate-example.gif?raw=true" alt="Generating an AI description for a meme" width="1140" height="834" loading="lazy">
           <figcaption>Auto-Generate</figcaption>
         </figure>
         <figure class="demo-card">
-          <img src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-2.0-bulk.gif?raw=true" alt="Bulk generation demo" loading="lazy">
+          <img src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-2.0-bulk.gif?raw=true" alt="Selecting multiple memes for bulk AI description generation" width="452" height="476" loading="lazy">
           <figcaption>Bulk Generation</figcaption>
         </figure>
         <figure class="demo-card">
-          <img src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-2.0-dark-mode.gif?raw=true" alt="Dark mode demo" loading="lazy">
+          <img src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-2.0-dark-mode.gif?raw=true" alt="Switching the Meme Search interface to dark mode" width="672" height="720" loading="lazy">
           <figcaption>Dark Mode</figcaption>
         </figure>
       </div>
@@ -179,32 +272,32 @@
       <div class="model-grid">
         <article class="model-card">
           <span class="model-size">250M params</span>
-          <span class="model-name">Florence-2-base <span class="default-badge">Default</span></span>
+          <h3 class="model-name">Florence-2-base <span class="default-badge">Default</span></h3>
           <p>Microsoft's compact vision-language model. Best balance of speed and quality for most setups.</p>
         </article>
         <article class="model-card">
           <span class="model-size">700M params</span>
-          <span class="model-name">Florence-2-large</span>
+          <h3 class="model-name">Florence-2-large</h3>
           <p>Larger Florence variant for richer descriptions when you have the RAM to spare.</p>
         </article>
         <article class="model-card">
           <span class="model-size">256M params</span>
-          <span class="model-name">SmolVLM-256</span>
+          <h3 class="model-name">SmolVLM-256</h3>
           <p>Hugging Face's lightweight model. Fast inference on minimal hardware.</p>
         </article>
         <article class="model-card">
           <span class="model-size">500M params</span>
-          <span class="model-name">SmolVLM-500</span>
+          <h3 class="model-name">SmolVLM-500</h3>
           <p>Mid-range SmolVLM variant. Better descriptions than 256M with moderate resource use.</p>
         </article>
         <article class="model-card">
           <span class="model-size">2B params</span>
-          <span class="model-name">Moondream2</span>
+          <h3 class="model-name">Moondream2</h3>
           <p>Full-size vision-language model. Best description quality, needs ~5GB memory.</p>
         </article>
         <article class="model-card">
           <span class="model-size">2B INT8</span>
-          <span class="model-name">Moondream2-INT8</span>
+          <h3 class="model-name">Moondream2-INT8</h3>
           <p>Quantized Moondream2. Cuts memory to ~1.5-2GB with minimal quality loss. Ideal for CPU-only machines.</p>
         </article>
       </div>
