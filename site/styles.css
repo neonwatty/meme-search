@@ -228,6 +228,42 @@ h3 {
   color: var(--text);
 }
 
+.api-launch {
+  margin-top: 48px;
+  padding: 36px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 36px;
+  align-items: center;
+  border: 1px solid #c4b5fd;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--surface), var(--accent-light));
+}
+
+.api-launch h2 {
+  max-width: 760px;
+}
+
+.api-launch p {
+  max-width: 760px;
+}
+
+.api-launch .actions {
+  max-width: 250px;
+  margin-top: 0;
+}
+
+.api-launch .button {
+  width: 100%;
+}
+
+.api-launch .security-note {
+  margin-bottom: 0;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 650;
+}
+
 .section-heading {
   max-width: 760px;
   min-width: 0;
@@ -423,8 +459,13 @@ pre {
 
   .hero,
   .split,
-  .install {
+  .install,
+  .api-launch {
     grid-template-columns: 1fr;
+  }
+
+  .api-launch .actions {
+    max-width: none;
   }
 
   .hero {
