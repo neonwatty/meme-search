@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Meme Search settings</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="options">
+    <main class="settings-panel">
+      <p class="eyebrow">Meme Search Local</p>
+      <h1>Extension settings</h1>
+      <p class="settings-intro">Connect to the Meme Search instance running on this computer. The extension does not support remote hosts.</p>
+
+      <form id="settings-form">
+        <label for="base-url">Server URL</label>
+        <input id="base-url" name="baseUrl" type="url" inputmode="url" placeholder="http://127.0.0.1:3000" required>
+        <p class="field-help">Allowed: <code>http://127.0.0.1</code> or <code>http://localhost</code>, with an optional port.</p>
+
+        <label for="token">Read-only API token</label>
+        <input id="token" name="token" type="password" autocomplete="off" spellcheck="false" required>
+        <p class="field-help">Use a token scoped only to <code>search:read</code> and <code>media:read</code>. It is stored in this browser profile.</p>
+
+        <button class="primary-button" type="submit">Save connection</button>
+      </form>
+      <p id="settings-status" class="status" role="status" aria-live="polite"></p>
+    </main>
+
+    <script type="module" src="options.js"></script>
+  </body>
+</html>

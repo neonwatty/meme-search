@@ -1,0 +1,9 @@
+{
+  "name": "meme-search-browser-extension",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check popup.js && node --check options.js && node --check lib/api-client.js && node --check lib/clipboard.js && node --check lib/filename.js && node --check lib/image-conversion.js && node --check lib/media-work-session.js && node --check lib/settings.js && node --check lib/url.js"
+  }
+}
