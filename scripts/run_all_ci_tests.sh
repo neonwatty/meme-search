@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Unified CI Test Runner
-# Mirrors GitHub Actions workflows for local testing
-# Run from project root: bash run_all_ci_tests.sh
+# Runs the required GitHub Actions suite families locally.
+# Run from the project root: bash scripts/run_all_ci_tests.sh
 
-set -e  # Exit on first error
+set -uo pipefail
 
 # Color codes for output
 RED='\033[0;31m'
@@ -18,6 +18,7 @@ FAILED_TESTS=()
 
 # Track processes for cleanup
 RAILS_SERVER_PID=""
+RUNNER_DB_CONTAINER=""
 
 # Helper function to print section headers
 print_header() {
@@ -31,6 +32,18 @@ print_header() {
 # Helper function to track failures
 track_failure() {
     FAILED_TESTS+=("$1")
+}
+
+run_tracked() {
+    local label="$1"
+    shift
+    print_header "$label"
+    if "$@"; then
+        echo -e "${GREEN}✓ ${label} passed${NC}"
+    else
+        echo -e "${RED}❌ ${label} failed${NC}"
+        track_failure "$label"
+    fi
 }
 
 # Function to check Docker daemon status
@@ -77,53 +90,74 @@ cleanup() {
         wait $RAILS_SERVER_PID 2>/dev/null || true
     fi
 
-    # Kill any stray Rails servers on port 3000
-    if lsof -ti:3000 >/dev/null 2>&1; then
-        echo "Stopping Rails servers on port 3000..."
-        lsof -ti:3000 | xargs kill -9 2>/dev/null || true
-    fi
-
-    # Optional: Stop Docker containers if CLEANUP_DOCKER is set
-    if [ "${CLEANUP_DOCKER:-false}" = "true" ]; then
-        echo "Stopping Docker containers..."
-        docker compose down 2>/dev/null || true
+    # Remove only the ephemeral database created by this runner. Never stop the
+    # application's Compose stack or a caller-managed database.
+    if [ -n "$RUNNER_DB_CONTAINER" ]; then
+        echo "Stopping runner-owned PostgreSQL container ($RUNNER_DB_CONTAINER)..."
+        docker rm -f "$RUNNER_DB_CONTAINER" >/dev/null 2>&1 || true
+        RUNNER_DB_CONTAINER=""
     fi
 
     echo -e "${GREEN}✓ Cleanup complete${NC}"
 }
 
-# Register cleanup trap (runs on exit, interrupt, or termination)
-trap cleanup EXIT INT TERM
+# Register cleanup on every exit. Signal handlers terminate with a useful code;
+# the EXIT handler then performs the same owned-resource cleanup.
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
 
-# Check prerequisites
-print_header "Checking Prerequisites"
+setup_rails_database() {
+    if [ -n "${DATABASE_URL:-}" ]; then
+        echo -e "${GREEN}✓ Using caller-supplied DATABASE_URL${NC}"
+        return 0
+    fi
 
-# Check if mise is available
-if ! command -v mise &> /dev/null; then
-    echo -e "${RED}❌ mise not found. Please install mise first.${NC}"
-    exit 1
-fi
-echo -e "${GREEN}✓ mise found${NC}"
+    check_docker
 
-# Check Docker daemon before proceeding
-check_docker
+    RUNNER_DB_CONTAINER="meme-search-ci-db-$$-$(date +%s)"
+    echo -e "${YELLOW}⚠️  DATABASE_URL is unset; starting an ephemeral pgvector database...${NC}"
 
-# Check if PostgreSQL is running
-if ! docker ps | grep -q pgvector; then
-    echo -e "${YELLOW}⚠️  PostgreSQL with pgvector not running. Starting with docker compose...${NC}"
-    docker compose up -d
-    sleep 5
-fi
-echo -e "${GREEN}✓ PostgreSQL running${NC}"
+    if ! docker run -d --rm \
+        --name "$RUNNER_DB_CONTAINER" \
+        -e POSTGRES_USER=postgres \
+        -e POSTGRES_PASSWORD=postgres \
+        -e POSTGRES_DB=postgres \
+        -p 127.0.0.1::5432 \
+        pgvector/pgvector:pg17 >/dev/null; then
+        echo -e "${RED}❌ Failed to start the runner-owned PostgreSQL container${NC}"
+        return 1
+    fi
 
-# Check if in correct directory
-if [ ! -f "package.json" ] || [ ! -d "meme_search" ]; then
-    echo -e "${RED}❌ Must run from project root directory${NC}"
-    exit 1
-fi
-echo -e "${GREEN}✓ Running from project root${NC}"
+    local ready=false
+    for _ in {1..30}; do
+        if docker exec "$RUNNER_DB_CONTAINER" pg_isready -U postgres -d postgres >/dev/null 2>&1; then
+            ready=true
+            break
+        fi
+        sleep 1
+    done
 
-# Parse command line arguments
+    if [ "$ready" != "true" ]; then
+        echo -e "${RED}❌ Runner-owned PostgreSQL did not become ready${NC}"
+        return 1
+    fi
+
+    local runner_db_port
+    runner_db_port="$(docker inspect \
+        --format '{{(index (index .NetworkSettings.Ports "5432/tcp") 0).HostPort}}' \
+        "$RUNNER_DB_CONTAINER")"
+    if ! [[ "$runner_db_port" =~ ^[0-9]+$ ]]; then
+        echo -e "${RED}❌ Could not resolve the runner-owned PostgreSQL port${NC}"
+        return 1
+    fi
+
+    export DATABASE_URL="postgres://postgres:postgres@127.0.0.1:${runner_db_port}/meme_test"
+    echo -e "${GREEN}✓ Runner-owned PostgreSQL ready on 127.0.0.1:${runner_db_port}${NC}"
+}
+
+# Parse options before prerequisite checks so focused non-Rails commands do not
+# require Docker or a database they never use.
 SKIP_E2E=false
 SKIP_RAILS=false
 SKIP_PYTHON=false
@@ -148,7 +182,7 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --help)
-            echo "Usage: bash run_all_ci_tests.sh [options]"
+            echo "Usage: bash scripts/run_all_ci_tests.sh [options]"
             echo ""
             echo "Options:"
             echo "  --skip-e2e      Skip Playwright E2E tests"
@@ -156,11 +190,6 @@ while [[ $# -gt 0 ]]; do
             echo "  --skip-python   Skip all Python tests"
             echo "  --verbose       Show detailed output"
             echo "  --help          Show this help message"
-            echo ""
-            echo "Examples:"
-            echo "  bash run_all_ci_tests.sh                    # Run all tests"
-            echo "  bash run_all_ci_tests.sh --skip-e2e         # Skip E2E tests (faster)"
-            echo "  bash run_all_ci_tests.sh --skip-rails       # Only run Python tests"
             exit 0
             ;;
         *)
@@ -170,6 +199,29 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+# Check prerequisites
+print_header "Checking Prerequisites"
+
+# Check if mise is available
+if ! command -v mise &> /dev/null; then
+    echo -e "${RED}❌ mise not found. Please install mise first.${NC}"
+    exit 1
+fi
+echo -e "${GREEN}✓ mise found${NC}"
+
+if [ "$SKIP_RAILS" = false ]; then
+    if ! setup_rails_database; then
+        exit 1
+    fi
+fi
+
+# Check if in correct directory
+if [ ! -f "package.json" ] || [ ! -d "meme_search" ]; then
+    echo -e "${RED}❌ Must run from project root directory${NC}"
+    exit 1
+fi
+echo -e "${GREEN}✓ Running from project root${NC}"
 
 # =============================================================================
 # RAILS APP TESTS
@@ -212,7 +264,21 @@ if [ "$SKIP_RAILS" = false ]; then
         echo -e "${GREEN}✓ Test database prepared${NC}"
     else
         echo -e "${RED}❌ Failed to prepare test database${NC}"
+        if [ -n "${DATABASE_URL:-}" ]; then
+            echo "Check that DATABASE_URL points to a reachable PostgreSQL server with pgvector support."
+        fi
         track_failure "Rails: DB Prepare"
+        cd ../..
+        exit 1
+    fi
+
+    # Match the workflow's fresh-checkout setup before view-rendering suites.
+    print_header "Rails: Precompiling Test Assets"
+    if mise exec -- bundle exec rake assets:precompile; then
+        echo -e "${GREEN}✓ Test assets precompiled${NC}"
+    else
+        echo -e "${RED}❌ Failed to precompile test assets${NC}"
+        track_failure "Rails: Asset Precompile"
         cd ../..
         exit 1
     fi
@@ -230,7 +296,7 @@ if [ "$SKIP_RAILS" = false ]; then
         [ "$VERBOSE" = false ] && tail -5 /tmp/rails_model_tests.log
     else
         echo -e "${RED}❌ Model tests failed${NC}"
-        cat /tmp/rails_model_tests.log
+        [ -f /tmp/rails_model_tests.log ] && cat /tmp/rails_model_tests.log
         track_failure "Rails: Model Tests"
     fi
 
@@ -247,7 +313,7 @@ if [ "$SKIP_RAILS" = false ]; then
         [ "$VERBOSE" = false ] && tail -5 /tmp/rails_controller_tests.log
     else
         echo -e "${RED}❌ Controller tests failed${NC}"
-        cat /tmp/rails_controller_tests.log
+        [ -f /tmp/rails_controller_tests.log ] && cat /tmp/rails_controller_tests.log
         track_failure "Rails: Controller Tests"
     fi
 
@@ -264,9 +330,15 @@ if [ "$SKIP_RAILS" = false ]; then
         [ "$VERBOSE" = false ] && tail -5 /tmp/rails_channel_tests.log
     else
         echo -e "${RED}❌ Channel tests failed${NC}"
-        cat /tmp/rails_channel_tests.log
+        [ -f /tmp/rails_channel_tests.log ] && cat /tmp/rails_channel_tests.log
         track_failure "Rails: Channel Tests"
     fi
+
+    # Required Rails suites that have dedicated CI steps.
+    run_tracked "Rails: Service Tests" mise exec -- bin/rails test test/services
+    run_tracked "Rails: API Contract Tests" mise exec -- bin/rails test test/contracts
+    run_tracked "Rails: Database and Migration Tests" mise exec -- bin/rails test test/db
+    run_tracked "Rails: Rake Task Tests" mise exec -- bin/rails test test/tasks
 
     cd ../..
 fi
@@ -300,7 +372,7 @@ if [ "$SKIP_PYTHON" = false ]; then
         [ "$VERBOSE" = false ] && tail -10 /tmp/python_integration_tests.log
     else
         echo -e "${RED}❌ Integration tests failed${NC}"
-        cat /tmp/python_integration_tests.log
+        [ -f /tmp/python_integration_tests.log ] && cat /tmp/python_integration_tests.log
         track_failure "Python: Integration Tests"
     fi
 
@@ -317,11 +389,29 @@ if [ "$SKIP_PYTHON" = false ]; then
         [ "$VERBOSE" = false ] && tail -15 /tmp/python_unit_tests.log
     else
         echo -e "${RED}❌ Unit tests with coverage failed${NC}"
-        cat /tmp/python_unit_tests.log
+        [ -f /tmp/python_unit_tests.log ] && cat /tmp/python_unit_tests.log
         track_failure "Python: Unit Tests"
     fi
 
     cd ../..
+fi
+
+# =============================================================================
+# ROOT CONTRACT AND LOCAL INTEGRATION CLIENTS
+# =============================================================================
+
+# The focused test:rails and test:python aliases intentionally remain focused.
+# The default/test:ci entrypoint runs the complete cross-project CI surface.
+if [ "$SKIP_RAILS" = false ] && [ "$SKIP_PYTHON" = false ]; then
+    run_tracked "Repository: OpenAPI 3.1 Contract" npm run contract:openapi
+    run_tracked "Repository: Node Dependency Audit" npm audit --audit-level=high
+    run_tracked "Repository: TypeScript Check" npx tsc --noEmit
+    run_tracked "Repository: Discord Link Check" bash scripts/validate_discord_link.sh
+
+    run_tracked "Local CLI: Tests" \
+        bash -c "cd integrations/cli && python3 -m unittest discover -v && python3 -m py_compile meme_search_cli.py meme-search"
+    run_tracked "Browser Extension: Tests and Static Checks" \
+        bash -c "cd integrations/browser-extension && npm test && npm run check && node -e 'JSON.parse(require(\"fs\").readFileSync(\"manifest.json\", \"utf8\"))' && ! rg 'innerHTML|outerHTML|insertAdjacentHTML' . --glob '*.js' && ! rg --pcre2 'https?://(?!127\\.0\\.0\\.1|localhost)' . --glob '*.js' --glob '!test/**'"
 fi
 
 # =============================================================================
@@ -371,7 +461,7 @@ if [ "$SKIP_E2E" = false ] && [ "$SKIP_RAILS" = false ]; then
         [ "$VERBOSE" = false ] && tail -10 /tmp/playwright_tests.log
     else
         echo -e "${RED}❌ Playwright E2E tests failed${NC}"
-        cat /tmp/playwright_tests.log
+        [ -f /tmp/playwright_tests.log ] && cat /tmp/playwright_tests.log
         track_failure "Playwright: E2E Tests"
     fi
 

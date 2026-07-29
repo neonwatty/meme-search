@@ -1,0 +1,25 @@
+version: 2
+template_only: true
+
+# REPLACE-ME TEMPLATE ONLY — this is not a canonical dataset, a quality claim,
+# or a CI/release gate. Copy this file outside the repository, set
+# template_only: false, and replace every example with private stable IDs or
+# normalized paths relative to public/memes. Bare filenames are rejected
+# because two registered directories can contain the same name. Never commit
+# private identifiers, images, descriptions, or embeddings.
+#
+# The evaluator compares expected stable IDs or normalized library-relative
+# paths with ranked search results and never needs controllers, Turbo,
+# templates, or browser state.
+cases:
+  - query: "production incident"
+    mode: keyword
+    expected:
+      - path: "example-folder/example-incident-reaction.gif"
+
+  - query: "surprised reaction"
+    mode: vector
+    tags:
+      - "reaction"
+    expected:
+      - id: 123

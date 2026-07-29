@@ -25,7 +25,13 @@ docker compose up
 
 Open <http://localhost:3000>, then drag, drop, or paste images on the upload page. The first local description generation downloads the selected model, so it takes longer than later generations.
 
-The web UI binds to `127.0.0.1` by default because Meme Search does not currently include authentication. To access it from another device on a trusted network, copy `.env.example` to `.env` and set `APP_BIND_ADDRESS=0.0.0.0`. Do not expose an unauthenticated instance directly to the internet; use an authenticated reverse proxy or VPN.
+The web UI binds to `127.0.0.1` by default because it does not include user
+authentication. Official support is loopback-only for API v1 and the included
+clients. API bearer tokens protect only the versioned integration
+endpoints; they do not protect the web UI or settings. Direct public exposure
+is unsupported. Proxy/VPN operation is advanced and unsupported; its
+authentication, TLS, and network controls are entirely the operator's
+responsibility.
 
 A table of contents for the remainder of this README:
 
@@ -36,6 +42,7 @@ A table of contents for the remainder of this README:
   - [Installation instructions](#installation-instructions)
   - [Time to first generation / downloading models](#time-to-first-generation--downloading-models)
   - [Index your memes](#index-your-memes)
+  - [Search API and local integrations](#search-api-and-local-integrations)
   - [Custom bind address and app port](#custom-bind-address-and-app-port)
   - [Building the app locally with Docker](#building-the-app-locally-with-docker)
   - [Running tests](#running-tests)
@@ -308,6 +315,42 @@ Now restart the app, and register the `new_memes` via the UX by traversing to th
 
 Once registered in the app, your memes are ready for indexing / tagging / etc.,!
 
+### Search API and local integrations
+
+Meme Search provides a token-authenticated, read-only `/api/v1` for search,
+metadata, and authorized media streaming. The repository also includes a local
+CLI, a small unpacked browser-extension popup, and a UI-independent relevance
+evaluator.
+
+Create and revoke scoped client credentials under **Settings → API tokens**.
+The raw value is shown once with a copy control and manual-selection fallback;
+refresh and back navigation do not redisplay it. Optional browser-local expiry
+times are converted to exact timezone-aware instants before submission.
+Rails tasks remain available for Docker, native automation, and recovery.
+API v1 is stable and additive, permanently read-only, and reserves breaking
+changes for `/api/v2`.
+
+See [Search API and local integrations](docs/search-api.md) for token setup,
+upgrade/migration steps, endpoint examples, compatibility and security
+boundaries, included clients, troubleshooting, and guidance for community-built
+integrations. Optional relevance datasets use explicit stable IDs or normalized
+library-relative paths; ambiguous filename-only v1 fixtures are rejected.
+
+For the complete local equivalent of the required test workflow, install the
+repository dependencies, make sure Docker is available, and run `npm test`.
+When `DATABASE_URL` is unset, the runner creates a temporary pgvector container
+on a Docker-assigned port bound only to `127.0.0.1`; native Rails is pointed at
+that exact test database, and only that runner-owned container is removed on
+exit or interruption. To use an existing PostgreSQL 17 + pgvector server
+instead, supply `DATABASE_URL`; the runner never replaces or stops it.
+
+The runner includes Rails model/controller/service/contract/database/channel/
+task tests, security and static checks, the Python service,
+OpenAPI validation, both local clients, dependency/type checks, and Playwright.
+Focused `test:rails` and `test:python` aliases intentionally run only their
+named component. The production Compose database remains internal-only and is
+not published for native tests.
+
 ### Model downloads
 
 The image-to-text models used to auto generate descriptions for your memes are all open source, and vary in size.
@@ -319,11 +362,23 @@ Easily customize the app's port to more easily use the it with tools like [Unrai
 To customize the bind address or main app port, copy `.env.example` to `.env` in the repository root and adjust:
 
 ```sh
-APP_BIND_ADDRESS=127.0.0.1 # use 0.0.0.0 only on a trusted network
+APP_BIND_ADDRESS=127.0.0.1
 APP_PORT=3000
 ```
 
 This value is automatically detected and loaded into each service via the Compose files. The Postgres service is only exposed on Docker's internal network, so app containers always talk to it at `meme-search-db:5432`.
+
+Changing `APP_BIND_ADDRESS` away from loopback is advanced and unsupported. A
+trusted LAN is not an authentication boundary, and API tokens do not protect
+the web UI or settings. If an operator chooses to use a private VPN or
+authenticated TLS reverse proxy, that operator owns the full configuration and
+security review. Direct public exposure remains unsupported.
+
+Rails rejects unrecognized `Host` headers to prevent DNS rebinding. Advanced
+reverse proxies must opt an exact hostname into the comma-separated
+`MEME_SEARCH_ALLOWED_HOSTS` setting. Wildcards, URLs, ports, and CIDR ranges are
+rejected. Allowing a host does not authenticate the web UI or make non-loopback
+exposure supported.
 
 ### Building the app locally with Docker
 
@@ -359,7 +414,10 @@ Tests can then be run as
 bash run_tests.sh
 ```
 
-When doing this ensure you have an available Postgres instance running locally on port `5432`.
+When invoking this app-local script directly, ensure PostgreSQL with pgvector
+is available through the Rails database configuration. The root `npm test`
+runner instead provisions an isolated loopback-only test database unless
+`DATABASE_URL` is supplied.
 
 Run linting tests on the `/app` subdirectory as
 
