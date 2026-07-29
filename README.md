@@ -8,6 +8,13 @@ By default, processing from image-to-text extraction, to vector embedding, to se
 
 Visit the [Meme Search project site](https://neonwatty.github.io/meme-search/) for a visual feature overview, or continue below for installation and configuration details.
 
+> **Search beyond the web app.** Meme Search now includes a documented,
+> token-authenticated [Search API v1](docs/search-api.md), a
+> [dependency-free local CLI](integrations/cli/README.md), and an
+> [experimental unpacked Chromium popup](integrations/browser-extension/README.md).
+> The API is read-only and officially supported on loopback; it also gives
+> community integrations a stable boundary that does not expose your database.
+
   <p align="center">
     <img src="https://github.com/user-attachments/assets/0529764f-a009-4e17-8947-63c7c96075a5"
   alt="meme-search-2.0-demo">
@@ -317,39 +324,24 @@ Once registered in the app, your memes are ready for indexing / tagging / etc.,!
 
 ### Search API and local integrations
 
-Meme Search provides a token-authenticated, read-only `/api/v1` for search,
-metadata, and authorized media streaming. The repository also includes a local
-CLI, a small unpacked browser-extension popup, and a UI-independent relevance
-evaluator.
+Search, inspect metadata, and fetch authorized media through the stable,
+read-only `/api/v1` contract—without giving clients PostgreSQL credentials,
+Docker-network access, schema knowledge, or filesystem paths.
 
-Create and revoke scoped client credentials under **Settings → API tokens**.
-The raw value is shown once with a copy control and manual-selection fallback;
-refresh and back navigation do not redisplay it. Optional browser-local expiry
-times are converted to exact timezone-aware instants before submission.
-Rails tasks remain available for Docker, native automation, and recovery.
-API v1 is stable and additive, permanently read-only, and reserves breaking
-changes for `/api/v2`.
+- Follow the [Search API guide](docs/search-api.md) for scoped-token setup,
+  endpoint examples, the OpenAPI contract, upgrade steps, security boundaries,
+  demos, and troubleshooting.
+- Search and fetch from a terminal with the
+  [dependency-free Python CLI](integrations/cli/README.md).
+- Search from an [experimental unpacked Chromium popup](integrations/browser-extension/README.md).
+- Measure UI-independent search behavior with the optional, non-gating
+  relevance evaluator documented in the API guide.
+- Propose a local client or conversation workflow in
+  [community integration issue #197](https://github.com/neonwatty/meme-search/issues/197).
 
-See [Search API and local integrations](docs/search-api.md) for token setup,
-upgrade/migration steps, endpoint examples, compatibility and security
-boundaries, included clients, troubleshooting, and guidance for community-built
-integrations. Optional relevance datasets use explicit stable IDs or normalized
-library-relative paths; ambiguous filename-only v1 fixtures are rejected.
-
-For the complete local equivalent of the required test workflow, install the
-repository dependencies, make sure Docker is available, and run `npm test`.
-When `DATABASE_URL` is unset, the runner creates a temporary pgvector container
-on a Docker-assigned port bound only to `127.0.0.1`; native Rails is pointed at
-that exact test database, and only that runner-owned container is removed on
-exit or interruption. To use an existing PostgreSQL 17 + pgvector server
-instead, supply `DATABASE_URL`; the runner never replaces or stops it.
-
-The runner includes Rails model/controller/service/contract/database/channel/
-task tests, security and static checks, the Python service,
-OpenAPI validation, both local clients, dependency/type checks, and Playwright.
-Focused `test:rails` and `test:python` aliases intentionally run only their
-named component. The production Compose database remains internal-only and is
-not published for native tests.
+API v1 is officially supported only on loopback and is permanently read-only.
+Its bearer tokens do not authenticate the web UI or settings, so do not expose
+the app directly to a public network.
 
 ### Model downloads
 

@@ -63,6 +63,8 @@
             "Semantic image search",
             "Local AI-generated image descriptions",
             "Keyword search",
+            "Read-only Search API",
+            "Dependency-free local CLI",
             "Tags and directory filters",
             "Bulk description generation",
             "Drag-and-drop uploads"
@@ -119,6 +121,7 @@
     </a>
     <nav aria-label="Primary navigation">
       <a href="/meme-search/#features">Features</a>
+      <a href="/meme-search/#integrations">Integrations</a>
       <a href="/meme-search/#how">How it works</a>
       <a href="/meme-search/#models">Models</a>
       <a href="/meme-search/#install">Install</a>
@@ -157,6 +160,26 @@
         Your memes deserve better than scrolling through folders. Index them once with local AI, then search by meaning &mdash; not just filenames.
       </p>
     </div>
+
+    <section id="integrations" class="section api-launch">
+      <div>
+        <p class="eyebrow">New: Search API v1</p>
+        <h2>Find the right meme without opening the web app.</h2>
+        <p>
+          Search from the included local CLI or experimental unpacked Chromium
+          popup, then build your own read-only integration against a documented,
+          token-authenticated contract&mdash;without direct database access.
+        </p>
+        <p class="security-note">
+          Official support is loopback-only. API tokens do not authenticate the
+          web UI, so direct public exposure is unsupported.
+        </p>
+      </div>
+      <div class="actions" role="group" aria-label="Search API actions">
+        <a class="button primary" href="https://github.com/neonwatty/meme-search/blob/main/docs/search-api.md">Explore the Search API</a>
+        <a class="button secondary" href="https://github.com/neonwatty/meme-search/issues/197">Build an integration</a>
+      </div>
+    </section>
 
     <section id="features" class="section">
       <div class="section-heading">
@@ -208,6 +231,11 @@
           <span class="feature-icon">&#x1F433;</span>
           <h3>Docker ready</h3>
           <p>One command to start. <code>docker compose up</code> pulls and runs the app, database, and AI generator.</p>
+        </article>
+        <article>
+          <span class="feature-icon">&#x1F50C;</span>
+          <h3>Local integrations</h3>
+          <p>Use the read-only Search API, CLI, or experimental Chromium popup to retrieve memes outside the web app.</p>
         </article>
       </div>
 
