@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Meme Search Local",
+  "description": "Search your local Meme Search collection from the browser toolbar.",
+  "version": "0.1.0",
+  "action": {
+    "default_title": "Search memes",
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
+  "permissions": [
+    "clipboardWrite",
+    "storage"
+  ],
+  "optional_host_permissions": [
+    "http://127.0.0.1/*",
+    "http://localhost/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}

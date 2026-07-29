@@ -1,0 +1,115 @@
+{
+  "valid": [
+    {
+      "name": "required v1 fields",
+      "payload": {
+        "data": [
+          {
+            "id": 42,
+            "filename": "ship-it.gif",
+            "description": "A celebratory launch",
+            "tags": ["deploy", "success"],
+            "media_type": "image/gif",
+            "content_url": "/api/v1/memes/42/content"
+          }
+        ],
+        "meta": {
+          "query": "ship it",
+          "mode": "keyword",
+          "tags": [],
+          "limit": 10,
+          "count": 1
+        }
+      }
+    },
+    {
+      "name": "additive response fields",
+      "payload": {
+        "data": [
+          {
+            "id": 7,
+            "filename": "incident.jpg",
+            "description": null,
+            "tags": ["work"],
+            "media_type": "image/jpeg",
+            "content_url": "/api/v1/memes/7/content",
+            "future_meme_field": "clients ignore this"
+          }
+        ],
+        "meta": {
+          "query": "incident",
+          "mode": "vector",
+          "tags": ["work"],
+          "limit": 5,
+          "count": 1,
+          "future_meta_field": {
+            "cursor": "opaque"
+          }
+        },
+        "future_top_level_field": true
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "missing required meta count",
+      "payload": {
+        "data": [],
+        "meta": {
+          "query": "ship it",
+          "mode": "keyword",
+          "tags": [],
+          "limit": 10
+        }
+      }
+    },
+    {
+      "name": "invalid meta tags type",
+      "payload": {
+        "data": [],
+        "meta": {
+          "query": "ship it",
+          "mode": "keyword",
+          "tags": "deploy",
+          "limit": 10,
+          "count": 0
+        }
+      }
+    },
+    {
+      "name": "boolean is not an integer count",
+      "payload": {
+        "data": [],
+        "meta": {
+          "query": "ship it",
+          "mode": "keyword",
+          "tags": [],
+          "limit": 10,
+          "count": true
+        }
+      }
+    },
+    {
+      "name": "unsafe absolute content URL",
+      "payload": {
+        "data": [
+          {
+            "id": 42,
+            "filename": "ship-it.gif",
+            "description": null,
+            "tags": [],
+            "media_type": "image/gif",
+            "content_url": "http://localhost:9999/steal"
+          }
+        ],
+        "meta": {
+          "query": "ship it",
+          "mode": "keyword",
+          "tags": [],
+          "limit": 10,
+          "count": 1
+        }
+      }
+    }
+  ]
+}

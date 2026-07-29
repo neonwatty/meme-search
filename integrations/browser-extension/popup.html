@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Meme Search</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="popup">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Local collection</p>
+        <h1>Meme Search</h1>
+      </div>
+      <button id="open-settings" class="icon-button" type="button" aria-label="Open settings" title="Settings">⚙</button>
+    </header>
+
+    <main>
+      <form id="search-form" class="search-form">
+        <label class="sr-only" for="query">Search your memes</label>
+        <div class="search-row">
+          <input id="query" name="query" type="search" maxlength="200" placeholder="production incident…" autocomplete="off" autofocus required>
+          <button class="primary-button" type="submit">Search</button>
+        </div>
+        <div class="search-options">
+          <label for="mode">Mode</label>
+          <select id="mode" name="mode">
+            <option value="keyword">Keyword</option>
+            <option value="vector">Semantic</option>
+          </select>
+          <label for="limit">Results</label>
+          <select id="limit" name="limit">
+            <option value="4">4</option>
+            <option value="8" selected>8</option>
+            <option value="12">12</option>
+            <option value="20">20</option>
+          </select>
+        </div>
+      </form>
+
+      <p id="status" class="status" role="status" aria-live="polite">Search without opening the web app.</p>
+      <section id="results" class="results" aria-label="Search results"></section>
+    </main>
+
+    <template id="result-template">
+      <article class="result-card">
+        <div class="result-details">
+          <h2 class="result-title"></h2>
+          <p class="result-description"></p>
+          <p class="result-tags"></p>
+          <p class="media-note">Media loads only after Copy or Download.</p>
+          <div class="result-actions">
+            <button class="copy-button secondary-button" type="button">Copy image</button>
+            <button class="download-button ghost-button" type="button">Download</button>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
