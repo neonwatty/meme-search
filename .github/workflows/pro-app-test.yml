@@ -11,11 +11,17 @@ on:
       - "playwright.config.ts"
       - "playwright/**"
       - "playwright-docker/**"
-      - "integrations/browser-extension/**"
+      - "integrations/**"
+      - "docs/search-api*"
       - "meme_search/meme_search_app/**"
       - ".github/workflows/pro-app-test.yml"
       - "README.md"
+      - "SECURITY.md"
+      - ".env.example"
+      - "docker-compose.yml"
+      - "docker-compose-local-build.yml"
       - "scripts/validate_discord_link.sh"
+      - "scripts/run_all_ci_tests.sh"
       - "!meme_search/meme_search_app/**/*.md"
       - "!meme_search/meme_search_app/**/LICENSE"
   push:
@@ -27,11 +33,17 @@ on:
       - "playwright.config.ts"
       - "playwright/**"
       - "playwright-docker/**"
-      - "integrations/browser-extension/**"
+      - "integrations/**"
+      - "docs/search-api*"
       - "meme_search/meme_search_app/**"
       - ".github/workflows/pro-app-test.yml"
       - "README.md"
+      - "SECURITY.md"
+      - ".env.example"
+      - "docker-compose.yml"
+      - "docker-compose-local-build.yml"
       - "scripts/validate_discord_link.sh"
+      - "scripts/run_all_ci_tests.sh"
       - "!meme_search/meme_search_app/**/*.md"
       - "!meme_search/meme_search_app/**/LICENSE"
 
@@ -93,25 +105,43 @@ jobs:
         working-directory: ./meme_search/meme_search_app
         run: bin/importmap audit
 
-  browser_extension:
+  integration_clients:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
 
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
           node-version: "20"
 
+      - name: Install root contract dependencies
+        run: npm ci
+
+      - name: Validate OpenAPI 3.1 contract
+        run: npm run contract:openapi
+
+      - name: Audit root dependencies
+        run: npm audit --audit-level=high
+
+      - name: Test local CLI
+        working-directory: ./integrations/cli
+        run: |
+          python -m unittest discover -v
+          python -m py_compile meme_search_cli.py meme-search
+
       - name: Test browser extension
         working-directory: ./integrations/browser-extension
         run: |
-          npm ci
           npm test
           npm run check
-          npm audit --audit-level=high
           node -e 'JSON.parse(require("fs").readFileSync("manifest.json", "utf8")); console.log("manifest ok")'
           ! rg 'innerHTML|outerHTML|insertAdjacentHTML' . --glob '*.js'
           ! rg --pcre2 'https?://(?!127\.0\.0\.1|localhost)' . --glob '*.js' --glob '!test/**'
@@ -192,6 +222,30 @@ jobs:
           COVERAGE: true
         run: bin/rails test test/controllers
 
+      - name: Run service tests
+        working-directory: ./meme_search/meme_search_app
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          COVERAGE: true
+        run: bin/rails test test/services
+
+      - name: Run API contract tests
+        working-directory: ./meme_search/meme_search_app
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          COVERAGE: true
+        run: bin/rails test test/contracts
+
+      - name: Run database and migration tests
+        working-directory: ./meme_search/meme_search_app
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          COVERAGE: true
+        run: bin/rails test test/db
+
       - name: Run channel tests
         working-directory: ./meme_search/meme_search_app
         env:
@@ -199,6 +253,14 @@ jobs:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
           COVERAGE: true
         run: bin/rails test test/channels
+
+      - name: Run Rake task tests
+        working-directory: ./meme_search/meme_search_app
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          COVERAGE: true
+        run: bin/rails test test/tasks
 
   playwright_tests:
     runs-on: ubuntu-latest

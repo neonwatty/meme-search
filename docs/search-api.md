@@ -6,11 +6,10 @@ the web UI and stream media through an authenticated endpoint. They never need
 PostgreSQL credentials, Docker-network access, database schema knowledge, or
 filesystem paths.
 
-The API does not add authentication to the web UI. Official support for API v1
-is loopback-only; keep the default loopback binding. Direct public exposure is
-unsupported. Proxy/VPN operation is advanced and unsupported; its
-authentication, TLS, ingress, host-authorization, and secret management are
-entirely the operator's responsibility.
+The API does not add authentication to the web UI. Official support is loopback-only for API v1 and the included clients; keep the default loopback
+binding. Direct public exposure is unsupported. Proxy/VPN operation is advanced
+and unsupported; its authentication, TLS, ingress, host-authorization, and
+secret management are entirely the operator's responsibility.
 
 Rails also enforces an exact Host-header allowlist to prevent DNS rebinding.
 Loopback and required Docker-internal names work without configuration. An
@@ -38,14 +37,14 @@ Rails tasks provide automation and recovery paths. For Docker:
 
 ```sh
 docker compose exec meme_search bin/rails api_tokens:create \
-  NAME="My integration" SCOPES="search:read,media:read"
+  NAME="Local CLI" SCOPES="search:read,media:read"
 ```
 
 For a native Rails checkout, run the same task from
 `meme_search/meme_search_app`:
 
 ```sh
-bin/rails api_tokens:create NAME="My integration" SCOPES="search:read,media:read"
+bin/rails api_tokens:create NAME="Local CLI" SCOPES="search:read,media:read"
 ```
 
 Optional `EXPIRES_AT` must be an ISO-8601 timestamp with a timezone, such as
@@ -160,9 +159,31 @@ Errors use `{"error":{"code":"...","message":"..."}}`:
 | `429` | this authenticated token exceeded 60 searches per minute |
 
 The machine-readable contract is available in
-[`search-api-openapi.yml`](search-api-openapi.yml). Contract tests compare its
-routes, bounds, response schemas, scopes, errors, and media types to the Rails
-implementation.
+[`search-api-openapi.yml`](search-api-openapi.yml).
+After installing root dependencies, validate the OpenAPI 3.1 document locally
+without network access:
+
+```sh
+npm run contract:openapi
+```
+
+The CLI and extension test suites both consume
+`integrations/shared/search-response-conformance.json`, including an
+additive-field fixture, so their required-field checks stay aligned.
+
+## Included clients
+
+- [`integrations/cli`](../integrations/cli/README.md) provides dependency-free
+  Python search and fetch commands. Downloads verify a declared content length,
+  refuse concurrent no-force clobbers atomically, and replace atomically only
+  when `--force` is explicit.
+- [`integrations/browser-extension`](../integrations/browser-extension/README.md)
+  provides a small unpacked Chromium popup for loopback search. Result cards
+  remain metadata-only because API v1 has no bounded thumbnail representation.
+  It fetches media only after an explicit copy or download and cancels stale
+  action requests on a replacement search or popup unload.
+
+Neither client is published to a package or extension store.
 
 ## Upgrade and migration
 
@@ -191,6 +212,68 @@ bin/rails db:migrate:status
 A fresh database receives the same schema through `db:prepare`; an existing
 database receives the forward-only `api_tokens` migration. The migration adds
 no user/library ownership model and does not authenticate existing web routes.
+
+## Relevance benchmark
+
+The included `meme_search/meme_search_app/benchmark/search_relevance.yml` is a
+replace-me template, not a canonical dataset or a search-quality claim. Copy it
+outside the repository, set `template_only: false`, replace the samples with
+stable IDs or normalized paths relative to `public/memes`, and run:
+
+```yaml
+version: 2
+template_only: false
+cases:
+  - query: "production incident"
+    mode: keyword
+    expected:
+      - path: "work/reactions/incident.gif"
+      - id: 123
+```
+
+Each expected entry must contain exactly one positive `id` or one `path`.
+Paths include the registered library directory and filename; bare filenames
+and v1 datasets are rejected because different directories may contain the
+same filename. Then run:
+
+```sh
+cd meme_search/meme_search_app
+bin/rails search:relevance DATASET=/path/to/search_relevance.yml K=10
+```
+
+The JSON report contains per-query rankings plus hit rate, mean reciprocal rank
+(MRR), and mean recall at K. Because the evaluator calls the shared query
+service directly, it measures search behavior without Turbo, templates, or
+browser state.
+
+This tool is optional and non-gating in v1. The repository does not ship a
+canonical relevance dataset, a regression threshold, or CI/release enforcement.
+Choosing and maintaining canonical data and quality thresholds is explicitly
+deferred to v2. Never commit filenames, descriptions, images, or embeddings
+from a private collection.
+
+## Local CI parity
+
+From the repository root, `npm test` runs the required workflow suite families:
+Rails security/static checks and model, controller, service, contract,
+database, channel, and Rake-task tests; the Python service; the
+OpenAPI validator; root dependency and TypeScript checks; CLI and extension
+tests/static checks; and Playwright. It requires installed root/Ruby/Python
+dependencies, Docker, and a Chromium available to Playwright. When
+`DATABASE_URL` is unset, the runner starts its own ephemeral
+`pgvector/pgvector:pg17` container, publishes its database only to
+`127.0.0.1` on a Docker-assigned port, and points native Rails at that exact
+endpoint. It removes only that runner-owned container on normal exit, failure,
+or interruption. The production Compose database remains internal-only.
+
+Set `DATABASE_URL` to use a caller-managed PostgreSQL 17 + pgvector test
+server. The runner preserves that value, creates no database container, and
+never stops the caller-managed server.
+
+`npm run test:ci:skip-e2e` skips only Playwright. The `test:rails` and
+`test:python` scripts are explicitly focused shortcuts and are not CI-parity
+commands. Every required suite records its own failure, and the runner exits
+nonzero if any required suite fails.
 
 ## Community integration contract
 
@@ -236,3 +319,6 @@ the app public merely to connect a platform integration.
 - Connection refused: confirm the app is running at
   `http://127.0.0.1:3000`. Official support does not require changing the bind
   address.
+- CLI or extension errors: follow their linked README and run their local
+  contract tests. Interactive extension permission/clipboard/download behavior
+  is covered by its manual smoke checklist, not claimed by Node tests.
