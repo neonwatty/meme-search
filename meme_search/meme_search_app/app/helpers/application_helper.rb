@@ -16,7 +16,8 @@ module ApplicationHelper
     tab_mapping = {
       tags: :tag_names,
       paths: :image_paths,
-      models: :image_to_texts
+      models: :image_to_texts,
+      api_tokens: :api_tokens
     }
 
     if tab_mapping[tab] == current_controller

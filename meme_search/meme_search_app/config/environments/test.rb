@@ -24,6 +24,10 @@ Rails.application.configure do
   config.action_controller.perform_caching = false
   config.cache_store = :null_store
 
+  # Exercise the same strict HostAuthorization boundary as production. Rails
+  # integration tests use www.example.com as their default request host.
+  config.hosts = MemeSearch::HostAuthorization.allowed_hosts + [ "www.example.com" ]
+
   # Render exception templates for rescuable exceptions and raise for other exceptions.
   config.action_dispatch.show_exceptions = :rescuable
 

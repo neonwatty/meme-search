@@ -1,0 +1,50 @@
+<div id="api-token-list">
+  <h2 class="mb-4 text-2xl font-bold">Issued tokens</h2>
+
+  <% if api_tokens.empty? %>
+    <p class="rounded-2xl border border-gray-200 bg-white/80 p-5 text-gray-600 dark:border-gray-700 dark:bg-slate-800/80 dark:text-gray-400">
+      No API tokens have been created.
+    </p>
+  <% else %>
+    <div class="overflow-x-auto rounded-2xl border border-gray-200 bg-white/90 shadow-lg dark:border-gray-700 dark:bg-slate-800/90">
+      <table class="min-w-full text-left text-sm">
+        <thead class="border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-slate-900/60">
+          <tr>
+            <th class="px-4 py-3">Client</th>
+            <th class="px-4 py-3">Prefix</th>
+            <th class="px-4 py-3">Scopes</th>
+            <th class="px-4 py-3">Created</th>
+            <th class="px-4 py-3">Last used</th>
+            <th class="px-4 py-3">Expires (UTC)</th>
+            <th class="px-4 py-3">Status</th>
+            <th class="px-4 py-3"><span class="sr-only">Action</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% api_tokens.each do |token| %>
+            <tr id="<%= dom_id(token) %>" class="border-b border-gray-100 last:border-0 dark:border-gray-700">
+              <td class="px-4 py-4 font-medium"><%= token.name %></td>
+              <td class="px-4 py-4 font-mono"><%= token.token_prefix %></td>
+              <td class="px-4 py-4"><%= token.scopes.join(", ") %></td>
+              <td class="px-4 py-4"><%= token.created_at.to_fs(:short) %></td>
+              <td class="px-4 py-4"><%= token.last_used_at&.to_fs(:short) || "Never" %></td>
+              <td class="px-4 py-4"><%= token.expires_at&.utc&.to_fs(:short) || "Never" %></td>
+              <td class="px-4 py-4">
+                <span class="api-token-status rounded-full px-3 py-1 font-semibold"><%= token.lifecycle_status %></span>
+              </td>
+              <td class="px-4 py-4">
+                <% unless token.revoked_at? %>
+                  <%= button_to "Revoke",
+                    revoke_settings_api_token_path(token),
+                    method: :patch,
+                    class: "rounded-xl bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700",
+                    form: { data: { turbo_confirm: "Revoke token #{token.token_prefix}? Existing clients will immediately lose access." } } %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

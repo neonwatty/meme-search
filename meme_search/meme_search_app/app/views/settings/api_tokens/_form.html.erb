@@ -1,0 +1,71 @@
+<div id="api-token-form" class="mb-10 rounded-2xl border border-gray-200 bg-white/90 p-6 shadow-lg dark:border-gray-700 dark:bg-slate-800/90">
+  <h2 class="text-2xl font-bold">Create a token</h2>
+  <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+    The complete token is displayed once. Copy it before leaving or refreshing this page.
+  </p>
+
+  <% if api_token.errors.any? %>
+    <div id="api-token-errors" class="mt-4 rounded-xl border border-red-300 bg-red-50 p-4 text-red-900 dark:border-red-700 dark:bg-red-950/30 dark:text-red-100" role="alert">
+      <p class="font-semibold">Token was not created:</p>
+      <ul class="mt-2 list-disc pl-5">
+        <% api_token.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with url: settings_api_tokens_path,
+    scope: :api_token,
+    class: "mt-6 space-y-5",
+    data: {
+      controller: "api-token-form",
+      action: "submit->api-token-form#prepareExpiry"
+    } do |form| %>
+    <div>
+      <%= form.label :name, "Client name", class: "block text-sm font-semibold" %>
+      <%= form.text_field :name,
+        value: api_token.name,
+        required: true,
+        maxlength: 100,
+        autocomplete: "off",
+        placeholder: "Local CLI",
+        class: "mt-2 w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 dark:border-gray-600 dark:bg-slate-700 dark:text-white" %>
+    </div>
+
+    <fieldset>
+      <legend class="text-sm font-semibold">Read scopes</legend>
+      <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">Select at least one scope.</p>
+      <div class="mt-3 flex flex-wrap gap-5">
+        <% ApiToken::ALLOWED_SCOPES.each do |scope| %>
+          <label class="inline-flex items-center gap-2">
+            <%= check_box_tag "api_token[scopes][]",
+              scope,
+              Array(api_token.scopes).include?(scope),
+              id: "api_token_scope_#{scope.tr(':', '_')}" %>
+            <span><%= scope %></span>
+          </label>
+        <% end %>
+      </div>
+    </fieldset>
+
+    <div>
+      <%= label_tag :api_token_expires_at_local,
+        "Expires at (your local time, optional)",
+        class: "block text-sm font-semibold" %>
+      <%= datetime_local_field_tag "api_token[expires_at_local]",
+        expires_at_local_input,
+        id: "api_token_expires_at_local",
+        data: { api_token_form_target: "localExpiry" },
+        class: "mt-2 rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 dark:border-gray-600 dark:bg-slate-700 dark:text-white" %>
+      <%= hidden_field_tag "api_token[expires_at]",
+        expires_at_input,
+        data: { api_token_form_target: "expiry" } %>
+      <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">
+        Your browser converts this local time to an exact timezone-aware instant before submission.
+      </p>
+    </div>
+
+    <%= form.submit "Create API token", class: submit_button_classes %>
+  <% end %>
+</div>

@@ -1,0 +1,259 @@
+openapi: 3.1.0
+info:
+  title: Meme Search API
+  version: 1.0.0
+  description: Stable, permanently read-only API officially supported on loopback.
+  x-token-scopes: ["search:read", "media:read"]
+  x-support-boundary: loopback-only
+  x-compatibility:
+    changes: additive-only
+    breaking-changes-require: /api/v2
+    write-operations: never-in-v1
+servers:
+  - url: http://127.0.0.1:3000
+    description: Default loopback instance
+security:
+  - bearerAuth: []
+paths:
+  /api/v1/search:
+    get:
+      summary: Search the indexed meme collection
+      operationId: searchMemes
+      x-required-scope: search:read
+      x-rate-limit:
+        requests: 60
+        window-seconds: 60
+        key: authenticated-token
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 200
+        - name: mode
+          in: query
+          schema:
+            type: string
+            enum: [keyword, vector]
+            default: keyword
+        - name: tag
+          in: query
+          description: May be repeated. Each value is one exact tag; percent-encode commas rather than using them as separators. Results match any supplied tag.
+          schema:
+            type: array
+            maxItems: 10
+            items:
+              type: string
+              maxLength: 20
+          style: form
+          explode: true
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 10
+      responses:
+        "200":
+          description: Ranked search results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+  /api/v1/memes/{id}:
+    get:
+      summary: Retrieve one meme's metadata
+      operationId: getMeme
+      x-required-scope: search:read
+      parameters:
+        - $ref: "#/components/parameters/MemeId"
+      responses:
+        "200":
+          description: Meme metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Meme"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /api/v1/memes/{id}/content:
+    get:
+      summary: Stream the original media bytes
+      operationId: getMemeContent
+      x-required-scope: media:read
+      parameters:
+        - $ref: "#/components/parameters/MemeId"
+      responses:
+        "200":
+          description: Original meme media
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+              description: Private media cache policy.
+            X-Content-Type-Options:
+              schema:
+                type: string
+                const: nosniff
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/gif:
+              schema:
+                type: string
+                format: binary
+            image/webp:
+              schema:
+                type: string
+                format: binary
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: MemeSearchToken
+  parameters:
+    MemeId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+  schemas:
+    Meme:
+      type: object
+      additionalProperties: true
+      required: [id, filename, description, tags, media_type, content_url]
+      properties:
+        id:
+          type: integer
+        filename:
+          type: string
+        description:
+          type: [string, "null"]
+        tags:
+          type: array
+          items:
+            type: string
+        media_type:
+          type: string
+        content_url:
+          type: string
+          pattern: "^/api/v1/memes/[1-9][0-9]*/content$"
+    SearchResponse:
+      type: object
+      additionalProperties: true
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Meme"
+        meta:
+          type: object
+          additionalProperties: true
+          required: [query, mode, tags, limit, count]
+          properties:
+            query:
+              type: string
+            mode:
+              type: string
+              enum: [keyword, vector]
+            tags:
+              type: array
+              items:
+                type: string
+            limit:
+              type: integer
+              minimum: 1
+              maximum: 20
+            count:
+              type: integer
+              minimum: 0
+              maximum: 20
+    ErrorResponse:
+      type: object
+      additionalProperties: true
+      required: [error]
+      properties:
+        error:
+          type: object
+          additionalProperties: true
+          required: [code, message]
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+  responses:
+    Unauthorized:
+      description: Missing, invalid, expired, or revoked bearer token
+      headers:
+        WWW-Authenticate:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Forbidden:
+      description: Bearer token lacks the required scope
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: Meme was not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    UnprocessableEntity:
+      description: Invalid search input
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    RateLimited:
+      description: Per-token search rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"

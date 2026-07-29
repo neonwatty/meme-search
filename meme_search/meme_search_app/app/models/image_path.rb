@@ -73,7 +73,15 @@ class ImagePath < ApplicationRecord
     return if relative_path.absolute?
     return if segments.empty? || segments.any? { |segment| segment == ".." }
 
-    Rails.root.join("public", "memes", *segments).cleanpath
+    memes_root = Rails.root.join("public", "memes").cleanpath
+    current_path = memes_root
+
+    segments.each do |segment|
+      current_path = current_path.join(segment)
+      return if current_path.symlink?
+    end
+
+    current_path.cleanpath
   end
 
   def scan_and_update!
@@ -95,7 +103,10 @@ class ImagePath < ApplicationRecord
           last_scan_error: nil
         )
 
-        Rails.logger.info "[Scan] #{name} - Duration: #{duration_ms}ms, Added: #{result[:added]}, Removed: #{result[:removed]}"
+        Rails.logger.info(
+          "[Scan] #{name} - Duration: #{duration_ms}ms, Added: #{result[:added]}, " \
+          "Removed: #{result[:removed]}, Unsafe: #{result[:unsafe]}"
+        )
         result
       rescue => e
         update_columns(
@@ -135,14 +146,41 @@ class ImagePath < ApplicationRecord
     # allowed extensions
     allowed_extensions = [ ".jpg", ".jpeg", ".png", ".webp", ".gif" ]
 
-    # get images from filesystem
-    image_names = Dir.entries(full_path).select do |f|
-      file_path = File.join(full_path, f)
-      File.file?(file_path) && allowed_extensions.include?(File.extname(f).downcase)
+    # Classify supported names before reconciling records. Unsafe-but-present
+    # entries are never indexed, but retaining their existing records avoids
+    # destructive metadata loss when upgrading from older symlink behavior.
+    image_names = []
+    unsafe_names = []
+    candidate_names = Dir.entries(full_path).select do |f|
+      allowed_extensions.include?(File.extname(f).downcase)
     end
 
-    # Convert to set for O(1) lookup
-    filesystem_files = image_names.to_set
+    candidate_names.each do |name|
+      file_path = File.join(full_path, name)
+
+      if File.symlink?(file_path)
+        unsafe_names << name
+      elsif File.file?(file_path)
+        image_names << name
+      elsif File.exist?(file_path) || File.lexist?(file_path)
+        unsafe_names << name
+      end
+    rescue SystemCallError
+      # A permission or transient stat failure is not proof that the entry was
+      # deleted. Preserve any existing record for this scan and try again later.
+      unsafe_names << name
+    end
+
+    if unsafe_names.any?
+      Rails.logger.warn(
+        "[Scan] #{self.name} - Preserving metadata for unsafe entries that were not indexed: " \
+        "#{unsafe_names.join(", ")}"
+      )
+    end
+
+    # Convert present safe and unsafe names to a set for O(1) lookup. Truly
+    # missing names are still removed below.
+    filesystem_entries = (image_names + unsafe_names).to_set
 
     added_count = 0
     removed_count = 0
@@ -156,7 +194,7 @@ class ImagePath < ApplicationRecord
 
     # Remove orphaned records (files that no longer exist on disk)
     image_cores.each do |image_core|
-      unless filesystem_files.include?(image_core.name)
+      unless filesystem_entries.include?(image_core.name)
         image_core.destroy # Triggers before_destroy callback and cascade deletes
         removed_count += 1
       end
@@ -171,6 +209,6 @@ class ImagePath < ApplicationRecord
       image_names.map { |f| File.join(full_path, f) }.each { |file| puts file }
     end
 
-    { added: added_count, removed: removed_count }
+    { added: added_count, removed: removed_count, unsafe: unsafe_names.length }
   end
 end

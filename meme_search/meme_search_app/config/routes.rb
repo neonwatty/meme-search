@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  namespace :api do
+    namespace :v1 do
+      get "search", to: "search#index"
+      resources :memes, only: [ :show ] do
+        get :content, on: :member
+      end
+    end
+  end
+
   resources :image_to_texts
   resources :image_embeddings
   resources :image_tags
@@ -8,6 +17,9 @@ Rails.application.routes.draw do
   get "/settings", to: redirect("/settings/tag_names")
 
   namespace :settings do
+    resources :api_tokens, only: [ :index, :create ] do
+      patch :revoke, on: :member
+    end
     resources :tag_names
     resources :image_paths do
       member do
