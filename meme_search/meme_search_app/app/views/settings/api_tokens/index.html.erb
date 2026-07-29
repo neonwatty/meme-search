@@ -1,0 +1,41 @@
+<% content_for :title, "API tokens" %>
+<% content_for :head do %>
+  <meta name="turbo-cache-control" content="no-cache">
+<% end %>
+
+<div class="w-full max-w-6xl px-4 py-8">
+  <%= render "settings/shared/tabs" %>
+
+  <div class="mb-8 mt-6">
+    <h1 class="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-purple-400">
+      API tokens
+    </h1>
+    <p class="text-gray-600 dark:text-gray-400 mt-2">
+      Create revocable credentials for local, read-only integrations.
+    </p>
+  </div>
+
+  <div class="mb-8 rounded-2xl border border-amber-300 bg-amber-50 p-5 text-amber-950 dark:border-amber-700 dark:bg-amber-950/30 dark:text-amber-100">
+    <h2 class="font-bold">Local API boundary</h2>
+    <p class="mt-2 text-sm">
+      Official support is loopback-only. These tokens protect only <code>/api/v1</code>;
+      they do not authenticate this settings page or the rest of the web application.
+      Do not expose Meme Search directly to a public network.
+    </p>
+    <p class="mt-2 text-sm">
+      <%= link_to "Read the Search API setup and security guide",
+        "https://github.com/neonwatty/meme-search/blob/main/docs/search-api.md",
+        class: "font-semibold underline",
+        target: "_blank",
+        rel: "noopener noreferrer" %>.
+    </p>
+  </div>
+
+  <div id="api-token-secret" class="mb-8" aria-live="polite"></div>
+
+  <%= render "form",
+    api_token: @api_token,
+    expires_at_input: @expires_at_input,
+    expires_at_local_input: @expires_at_local_input %>
+  <%= render "list", api_tokens: @api_tokens %>
+</div>

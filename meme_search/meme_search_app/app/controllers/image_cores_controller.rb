@@ -253,18 +253,11 @@ class ImageCoresController < ApplicationController
 
     @query = search_params["query"]
     @checkbox_value = search_params["checkbox_value"]
-    if @checkbox_value == "0" # keyword
-      @query = remove_stopwords(@query)
-      @image_cores = ImageCore.search_any_word(@query).limit(10) || []
-    end
-    if @checkbox_value == "1" # vector
-      @image_cores = vector_search(@query)
-    end
-
-    # filter search results via selected tags
-    if selected_tag_names.length > 0
-      @image_cores = @image_cores.select { |item| (item.image_tags&.map { |tag| tag.tag_name&.name } & selected_tag_names).any? }
-    end
+    @image_cores = ImageSearchQuery.new(
+      query: @query,
+      mode: @checkbox_value,
+      selected_tag_names: selected_tag_names
+    ).call
 
     respond_to do |format|
       # resopnd to turbo
@@ -280,9 +273,6 @@ class ImageCoresController < ApplicationController
       format.html do
         # Redirect or render a specific view if needed
       end
-
-      # Optionally handle other formats like JSON
-      format.json { render json: @words }
     end
   end
 
@@ -443,13 +433,6 @@ class ImageCoresController < ApplicationController
       image_cores
     end
 
-    def vector_search(query)
-      query_embedding = ImageEmbedding.new({ image_core_id: ImageCore.first.id, snippet: query })
-      query_embedding.compute_embedding
-      results = query_embedding.get_neighbors.map { |item| item.image_core_id }.uniq.map { |image_core_id| ImageCore.find(image_core_id) }
-      results
-    end
-
     # Use callbacks to share common setup or constraints between actions.
     def set_image_core
       @image_core = ImageCore.find(params[:id])
@@ -503,15 +486,6 @@ class ImageCoresController < ApplicationController
         callback_token: data[:callback_token]
       )
     end
-
-  def remove_stopwords(input_string)
-    stopwords = %w[a i me my myself we our ours ourselves you your yours yourself yourselves he him his himself she her hers herself it its itself they them their theirs themselves what which who whom this that these those am is are was were be been being have has had having do does did doing a an the and but if or as until while of at by for with above below to from up down in out on off over under how all any both each few more most other some such no nor not only own same so than too very s]
-
-    words = input_string.split
-    filtered_words = words.reject { |word| stopwords.include?(word.downcase) }
-
-    filtered_words.join(" ")
-  end
 
   def search_params
     permitted_params = params.permit([ :query, :checkbox_value, :authenticity_token, :source, :controller, :action, :selected_tag_names, search_tags: [ :tag ] ])

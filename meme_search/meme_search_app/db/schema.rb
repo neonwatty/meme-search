@@ -10,10 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_24_001000) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_28_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vector"
+
+  create_table "api_tokens", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "token_digest", null: false
+    t.string "token_prefix", null: false
+    t.jsonb "scopes", default: [], null: false
+    t.datetime "last_used_at"
+    t.datetime "expires_at"
+    t.datetime "revoked_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["revoked_at"], name: "index_api_tokens_on_revoked_at"
+    t.index ["token_digest"], name: "index_api_tokens_on_token_digest", unique: true
+    t.index ["token_prefix"], name: "index_api_tokens_on_token_prefix"
+  end
 
   create_table "description_provider_settings", force: :cascade do |t|
     t.integer "singleton_key", default: 0, null: false

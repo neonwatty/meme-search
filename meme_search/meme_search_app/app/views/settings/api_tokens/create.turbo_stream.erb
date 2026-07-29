@@ -1,0 +1,20 @@
+<%= turbo_stream.replace "api-token-secret" do %>
+  <% if @raw_token %>
+    <div id="api-token-secret" class="mb-8" aria-live="polite">
+      <%= render "secret", raw_token: @raw_token %>
+    </div>
+  <% else %>
+    <div id="api-token-secret" class="mb-8" aria-live="polite"></div>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.replace "api-token-form" do %>
+  <%= render "form",
+    api_token: @api_token,
+    expires_at_input: @expires_at_input,
+    expires_at_local_input: @expires_at_local_input %>
+<% end %>
+
+<%= turbo_stream.replace "api-token-list" do %>
+  <%= render "list", api_tokens: @api_tokens %>
+<% end %>

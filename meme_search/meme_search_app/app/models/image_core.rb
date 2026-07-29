@@ -7,6 +7,7 @@ class ImageCore < ApplicationRecord
   DESCRIPTION_MAX_LENGTH = 500
 
   class FileDeletionError < StandardError; end
+  class UnsafeSourceFileError < StandardError; end
 
   # keyword search scope
   include PgSearch::Model
@@ -99,6 +100,29 @@ class ImageCore < ApplicationRecord
     end
 
     memes_root.join(relative_path).cleanpath
+  end
+
+  def safe_source_file_path
+    memes_root = Rails.root.join("public", "memes").cleanpath
+    path = source_file_path
+    relative_path = path.relative_path_from(memes_root)
+    current_path = memes_root
+
+    relative_path.each_filename do |segment|
+      current_path = current_path.join(segment)
+      raise UnsafeSourceFileError, "Refusing to access a symlinked meme file." if current_path.symlink?
+    end
+
+    resolved_root = memes_root.realpath
+    resolved_path = path.realpath
+    root_prefix = "#{resolved_root}#{File::SEPARATOR}"
+    unless resolved_path.to_s.start_with?(root_prefix) && resolved_path.file? && resolved_path.readable?
+      raise UnsafeSourceFileError, "Refusing to access a file outside the configured meme library."
+    end
+
+    resolved_path
+  rescue ArgumentError, Errno::ENOENT, Errno::EACCES, Errno::ELOOP, Errno::ENOTDIR, Errno::EPERM
+    raise UnsafeSourceFileError, "The configured meme file is not safely accessible."
   end
 
   def delete_source_file!
