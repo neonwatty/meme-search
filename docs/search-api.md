@@ -18,6 +18,15 @@ list of exact hostnames or IP addresses. Wildcards, URLs, ports, and CIDR ranges
 are rejected. This setting does not authenticate the web UI or make remote
 exposure supported.
 
+## See it in action
+
+[Watch the 16-second silent app-and-CLI demo](assets/search-api/search-api-v1-demo-short.mp4),
+or read its [timed transcript and exact commands](demos/search-api-v1-demo.md).
+
+| Web app | Local CLI |
+| --- | --- |
+| ![Meme Search showing the “bunny rabbit” query in default keyword mode and the top of the checked-in Bugs Bunny result](assets/search-api/app-search-bunny.png) | ![Terminal-style panel showing a CLI search for “bunny rabbit,” the checked-in result, and a fetch to a local output file; the API token is hidden](assets/search-api/cli-search-fetch.png) |
+
 ## Create and revoke tokens
 
 Open **Settings → API tokens** to create a named token, select one or both read
@@ -303,6 +312,11 @@ Community integrations must remain read-only, use a separate least-privilege
 token per client, honor result/rate bounds, and avoid direct database,
 filesystem, Python-service, or Docker-network access. Do not ask users to make
 the app public merely to connect a platform integration.
+
+Have an idea for a launcher, local bot, mobile shortcut, or conversation
+workflow? Join [community integration issue #197](https://github.com/neonwatty/meme-search/issues/197)
+before implementation so its credential, runtime, and maintenance model can be
+reviewed.
 
 ## Troubleshooting
 

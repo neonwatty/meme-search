@@ -16,6 +16,7 @@ jobs:
   create-release:
     runs-on: ubuntu-latest
     permissions:
+      actions: write
       contents: write
       packages: write
     steps:
@@ -26,7 +27,7 @@ jobs:
 
       - name: Get version from tag
         id: get_version
-        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
 
       - name: Verify VERSION file matches tag
         run: |
@@ -37,6 +38,17 @@ jobs:
             exit 1
           fi
           echo "Version verified: $TAG_VERSION"
+
+      - name: Verify curated release notes
+        id: release_notes
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          NOTES_PATH="docs/releases/v${VERSION}.md"
+          if [ ! -s "$NOTES_PATH" ]; then
+            echo "Missing curated release notes: $NOTES_PATH"
+            exit 1
+          fi
+          echo "path=$NOTES_PATH" >> "$GITHUB_OUTPUT"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -81,8 +93,19 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           name: Release v${{ steps.get_version.outputs.version }}
-          generate_release_notes: true
+          body_path: ${{ github.workspace }}/${{ steps.release_notes.outputs.path }}
+          generate_release_notes: false
           draft: false
           prerelease: ${{ contains(github.ref, '-alpha') || contains(github.ref, '-beta') || contains(github.ref, '-rc') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Releases created with GITHUB_TOKEN do not trigger release-event
+      # workflows. workflow_dispatch is an explicit GitHub-supported exception.
+      - name: Dispatch Discord release notification
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run discord-release.yml \
+            --ref "${{ github.event.repository.default_branch }}" \
+            --field tag="${GITHUB_REF#refs/tags/}"
