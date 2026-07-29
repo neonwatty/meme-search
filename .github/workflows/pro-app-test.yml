@@ -11,6 +11,7 @@ on:
       - "playwright.config.ts"
       - "playwright/**"
       - "playwright-docker/**"
+      - "integrations/browser-extension/**"
       - "meme_search/meme_search_app/**"
       - ".github/workflows/pro-app-test.yml"
       - "README.md"
@@ -26,6 +27,7 @@ on:
       - "playwright.config.ts"
       - "playwright/**"
       - "playwright-docker/**"
+      - "integrations/browser-extension/**"
       - "meme_search/meme_search_app/**"
       - ".github/workflows/pro-app-test.yml"
       - "README.md"
@@ -90,6 +92,29 @@ jobs:
       - name: Scan for security vulnerabilities in JavaScript dependencies
         working-directory: ./meme_search/meme_search_app
         run: bin/importmap audit
+
+  browser_extension:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "20"
+
+      - name: Test browser extension
+        working-directory: ./integrations/browser-extension
+        run: |
+          npm ci
+          npm test
+          npm run check
+          npm audit --audit-level=high
+          node -e 'JSON.parse(require("fs").readFileSync("manifest.json", "utf8")); console.log("manifest ok")'
+          ! rg 'innerHTML|outerHTML|insertAdjacentHTML' . --glob '*.js'
+          ! rg --pcre2 'https?://(?!127\.0\.0\.1|localhost)' . --glob '*.js' --glob '!test/**'
 
   pro_app_lint:
     runs-on: ubuntu-latest
