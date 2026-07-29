@@ -10,6 +10,7 @@
     "test:ci:verbose": "bash scripts/run_all_ci_tests.sh --verbose",
     "test:rails": "bash scripts/run_all_ci_tests.sh --skip-python --skip-e2e",
     "test:python": "bash scripts/run_all_ci_tests.sh --skip-rails --skip-e2e",
+    "test:site": "node scripts/validate_site.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
