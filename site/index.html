@@ -162,7 +162,7 @@
     </div>
 
     <section id="integrations" class="section api-launch">
-      <div>
+      <div class="api-launch-copy">
         <p class="eyebrow">New: Search API v1</p>
         <h2>Find the right meme without opening the web app.</h2>
         <p>
@@ -174,11 +174,28 @@
           Official support is loopback-only. API tokens do not authenticate the
           web UI, so direct public exposure is unsupported.
         </p>
+        <div class="actions" role="group" aria-label="Search API actions">
+          <a class="button primary" href="https://github.com/neonwatty/meme-search/blob/main/docs/search-api.md">Explore the Search API</a>
+          <a class="button secondary" href="https://github.com/neonwatty/meme-search/issues/197">Build an integration</a>
+        </div>
       </div>
-      <div class="actions" role="group" aria-label="Search API actions">
-        <a class="button primary" href="https://github.com/neonwatty/meme-search/blob/main/docs/search-api.md">Explore the Search API</a>
-        <a class="button secondary" href="https://github.com/neonwatty/meme-search/issues/197">Build an integration</a>
-      </div>
+      <figure class="api-demo">
+        <video
+          controls="controls"
+          playsinline="playsinline"
+          preload="metadata"
+          poster="assets/search-api-demo-poster.png"
+          aria-describedby="search-api-demo-caption"
+        >
+          <source src="assets/search-api-v1-demo-short.mp4" type="video/mp4">
+          Your browser cannot play this video.
+          <a href="assets/search-api-v1-demo-short.mp4">Download the 16-second Search API demo</a>.
+        </video>
+        <figcaption id="search-api-demo-caption">
+          A 16-second silent demo of web-app search and local CLI retrieval.
+          <a href="https://github.com/neonwatty/meme-search/blob/main/docs/demos/search-api-v1-demo.md">Read the transcript and exact commands.</a>
+        </figcaption>
+      </figure>
     </section>
 
     <section id="features" class="section">
