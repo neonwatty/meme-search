@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.0] - 2026-07-30
+
+Search beyond the web app:
+
+- **Search API v1**: Added a documented, stable, additive, and permanently
+  read-only `/api/v1` contract for keyword and vector search, meme metadata,
+  tags, and authenticated original-media retrieval.
+- **Scoped API tokens**: Added hashed, expiring, individually revocable tokens
+  with separate `search:read` and `media:read` permissions.
+- **Local CLI**: Added a dependency-free Python client for searching collections,
+  producing human-readable or JSON results, and safely fetching media.
+- **Chromium popup**: Added an experimental unpacked browser extension for
+  loopback search, explicit copy, and download actions. It is not published to
+  an extension store.
+- **Integration readiness**: Added an OpenAPI 3.1 contract, shared
+  client-conformance fixtures, security and migration coverage, and an optional
+  UI-independent relevance evaluator.
+- **Documentation and demos**: Published the
+  [Search API guide](docs/search-api.md), a
+  [browser-playable app-and-CLI demo](https://neonwatty.github.io/meme-search/#integrations),
+  and [issue #197](https://github.com/neonwatty/meme-search/issues/197) for
+  coordinating community-built integrations.
+
+Security and upgrade notes:
+
+- Official support remains loopback-only. API bearer tokens protect `/api/v1`;
+  they do not authenticate the web UI or settings, and direct public exposure
+  remains unsupported.
+- Clients should use one least-privilege token per integration and must not
+  connect directly to PostgreSQL, internal Docker services, or the meme
+  filesystem.
+- The release adds the `api_tokens` table. Back up the database before
+  upgrading and follow the
+  [v2.3.0 release and upgrade notes](https://github.com/neonwatty/meme-search/releases/tag/v2.3.0).
+
 ## [2.0.0] - 2025-11-03
 
 Testing infrastructure and quality improvements:
