@@ -232,9 +232,9 @@ h3 {
   margin-top: 48px;
   padding: 36px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 480px);
   gap: 36px;
-  align-items: center;
+  align-items: start;
   border: 1px solid #c4b5fd;
   border-radius: 12px;
   background: linear-gradient(135deg, var(--surface), var(--accent-light));
@@ -248,19 +248,44 @@ h3 {
   max-width: 760px;
 }
 
-.api-launch .actions {
-  max-width: 250px;
-  margin-top: 0;
+.api-launch-copy .actions {
+  max-width: 520px;
 }
 
 .api-launch .button {
-  width: 100%;
+  flex: 1 1 200px;
 }
 
 .api-launch .security-note {
-  margin-bottom: 0;
   color: var(--text);
   font-size: 14px;
+  font-weight: 650;
+}
+
+.api-demo {
+  min-width: 0;
+  margin: 0;
+}
+
+.api-demo video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #111827;
+  box-shadow: 0 16px 36px rgb(31 41 55 / 14%);
+}
+
+.api-demo figcaption {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.api-demo figcaption a {
   font-weight: 650;
 }
 
@@ -462,10 +487,6 @@ pre {
   .install,
   .api-launch {
     grid-template-columns: 1fr;
-  }
-
-  .api-launch .actions {
-    max-width: none;
   }
 
   .hero {

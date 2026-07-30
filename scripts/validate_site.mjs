@@ -285,6 +285,28 @@ for (const { attributes, source } of elements(html, "img")) {
   validateLocalUrl(attributes.src, "image");
 }
 
+const videos = elements(html, "video");
+check(videos.length === 1, `Expected one project demo video, found ${videos.length}`);
+for (const { attributes, source } of videos) {
+  check("controls" in attributes, `Video must expose browser controls: ${source}`);
+  check("playsinline" in attributes, `Video must support inline mobile playback: ${source}`);
+  check(!("autoplay" in attributes), `Video must not autoplay: ${source}`);
+  check(Boolean(attributes["aria-describedby"]), `Video requires a described-by caption: ${source}`);
+  check(
+    ids.includes(attributes["aria-describedby"]),
+    `Video described-by target is missing: ${attributes["aria-describedby"]}`,
+  );
+  validateLocalUrl(attributes.poster, "video poster");
+}
+
+const mediaSources = elements(html, "source");
+check(mediaSources.length === 1, `Expected one project demo media source, found ${mediaSources.length}`);
+for (const { attributes, source } of mediaSources) {
+  check(Boolean(attributes.src), `Media source is missing src: ${source}`);
+  check(attributes.type === "video/mp4", `Media source must declare video/mp4: ${source}`);
+  validateLocalUrl(attributes.src, "media source");
+}
+
 for (const { attributes } of elements(html, "link")) {
   validateLocalUrl(attributes.href, "link");
 }
