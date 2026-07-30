@@ -15,6 +15,8 @@ Visit the [Meme Search project site](https://neonwatty.github.io/meme-search/) f
 > The API is read-only and officially supported on loopback; it also gives
 > community integrations a stable boundary that does not expose your database.
 
+[Watch the 16-second app-and-CLI demo](https://neonwatty.github.io/meme-search/#integrations).
+
   <p align="center">
     <img src="https://github.com/user-attachments/assets/0529764f-a009-4e17-8947-63c7c96075a5"
   alt="meme-search-2.0-demo">
