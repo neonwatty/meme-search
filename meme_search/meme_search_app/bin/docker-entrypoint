@@ -6,9 +6,30 @@ if [ -z "${LD_PRELOAD+x}" ] && [ -f /usr/lib/*/libjemalloc.so.2 ]; then
 fi
 
 # If running the Rails server or job worker then create or migrate the database.
+prepare_database() {
+  local max_attempts=5
+  local retry_delay_seconds=2
+  local attempt=1
+
+  while [ "${attempt}" -le "${max_attempts}" ]; do
+    if ./bin/rails db:prepare; then
+      return 0
+    fi
+
+    if [ "${attempt}" -eq "${max_attempts}" ]; then
+      echo "Database preparation failed after ${max_attempts} attempts." >&2
+      return 1
+    fi
+
+    echo "Database preparation failed (attempt ${attempt}/${max_attempts}); retrying in ${retry_delay_seconds}s." >&2
+    sleep "${retry_delay_seconds}"
+    attempt=$((attempt + 1))
+  done
+}
+
 if { [ "${1}" == "./bin/rails" ] && [ "${2}" == "server" ]; } || [ "${1}" == "./bin/jobs" ]; then
   # Prepare the database (create, migrate, seed, etc.)
-  ./bin/rails db:prepare
+  prepare_database
 fi
 
 exec "${@}"

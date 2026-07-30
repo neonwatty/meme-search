@@ -223,6 +223,8 @@ if [ ! -f "package.json" ] || [ ! -d "meme_search" ]; then
 fi
 echo -e "${GREEN}✓ Running from project root${NC}"
 
+run_tracked "Docker entrypoint retry tests" bash scripts/test_docker_entrypoint.sh
+
 # =============================================================================
 # RAILS APP TESTS
 # =============================================================================
