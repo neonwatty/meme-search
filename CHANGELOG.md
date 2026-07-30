@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.1] - 2026-07-30
+
+Docker startup reliability:
+
+- Fixed a transient fresh-install race when the web and jobs containers run
+  `db:prepare` concurrently while PostgreSQL is enabling pgvector.
+- The Rails server and job-worker entrypoints now retry database preparation up
+  to five times with a two-second delay. Persistent preparation failures still
+  stop the container with a nonzero exit instead of hiding the error.
+- Added deterministic entrypoint coverage for transient recovery, retry
+  exhaustion, both application processes, and commands that do not prepare the
+  database.
+
+This patch does not change the database schema or Search API contract. See the
+[v2.3.1 release and upgrade notes](docs/releases/v2.3.1.md).
+
 ## [2.3.0] - 2026-07-30
 
 Search beyond the web app:
