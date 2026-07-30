@@ -20,7 +20,7 @@ exposure supported.
 
 ## See it in action
 
-[Watch the 16-second silent app-and-CLI demo](assets/search-api/search-api-v1-demo-short.mp4),
+[Watch the 16-second silent app-and-CLI demo](https://neonwatty.github.io/meme-search/#integrations),
 or read its [timed transcript and exact commands](demos/search-api-v1-demo.md).
 
 | Web app | Local CLI |
