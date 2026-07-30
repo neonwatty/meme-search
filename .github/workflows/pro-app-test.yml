@@ -21,6 +21,7 @@ on:
       - "docker-compose.yml"
       - "docker-compose-local-build.yml"
       - "scripts/validate_discord_link.sh"
+      - "scripts/test_docker_entrypoint.sh"
       - "scripts/run_all_ci_tests.sh"
       - "!meme_search/meme_search_app/**/*.md"
       - "!meme_search/meme_search_app/**/LICENSE"
@@ -43,6 +44,7 @@ on:
       - "docker-compose.yml"
       - "docker-compose-local-build.yml"
       - "scripts/validate_discord_link.sh"
+      - "scripts/test_docker_entrypoint.sh"
       - "scripts/run_all_ci_tests.sh"
       - "!meme_search/meme_search_app/**/*.md"
       - "!meme_search/meme_search_app/**/LICENSE"
@@ -51,6 +53,16 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  docker_entrypoint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Test bounded database preparation retries
+        run: bash scripts/test_docker_entrypoint.sh
+
   validate_discord_link:
     runs-on: ubuntu-latest
 
