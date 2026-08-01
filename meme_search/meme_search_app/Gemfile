@@ -71,7 +71,7 @@ end
 # user added
 gem "pg"
 gem "pg_search"
-gem "pagy", "~> 9.0"
+gem "pagy", "~> 43.6"
 gem "tailwindcss-rails", "~> 3.0"
 gem "neighbor"
 gem "informers"
