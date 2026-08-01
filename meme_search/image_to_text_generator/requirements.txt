@@ -4,7 +4,7 @@ requests
 Pillow
 torch>=2.0.0
 torchvision>=0.28.0
-transformers==4.49.0
+transformers==5.14.1
 einops>=0.8.2
 pyvips
 timm>=1.0.28
