@@ -2,7 +2,7 @@ fastapi[standard]
 uvicorn
 requests
 Pillow
-torch>=2.0.0
+torch>=2.13.0
 torchvision>=0.28.0
 transformers==4.49.0
 einops>=0.8.2
@@ -11,6 +11,6 @@ timm>=1.0.28
 # flash_attn
 
 # Quantization support for memory-constrained hardware
-bitsandbytes>=0.42.0
+bitsandbytes>=0.50.0
 accelerate>=1.14.0
 psutil>=7.2.2
