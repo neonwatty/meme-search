@@ -24,9 +24,8 @@ jobs:
           python-version: "3.12"
       - uses: chartboost/ruff-action@v1
         with:
-          args: "check --fix"
-          config: .ruff.toml
-          working-directory: ./meme_search/image_to_text_generator/app
+          args: "check --config meme_search/image_to_text_generator/.ruff.toml"
+          src: ./meme_search/image_to_text_generator/app
   image_to_text_tests:
     name: run pytest
     runs-on: ubuntu-latest
