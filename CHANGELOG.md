@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.2] - 2026-08-04
+
+Dependency and CI maintenance:
+
+- Updated the image-to-text runtime floor to PyTorch 2.13, bitsandbytes 0.50,
+  and psutil 7.2.2, with the image-to-text test suite passing on the combined
+  dependency set.
+- Updated Ruby OpenSSL to 4.0.2, SimpleCov to 1.0.3, the frontend test
+  dependencies, and GitHub Actions Python setup to v7.
+- Fixed the image-to-text Ruff workflow so its component-specific configuration
+  and source path are honored instead of linting unrelated repository files.
+
+This patch does not change the database schema or Search API contract. See the
+[v2.3.2 release and upgrade notes](docs/releases/v2.3.2.md).
+
 ## [2.3.1] - 2026-07-30
 
 Docker startup reliability:
