@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const siteRoot = join(repositoryRoot, "site");
-const baseUrl = "https://neonwatty.github.io/meme-search/";
+const baseUrl = "https://meme-search.neonwatty.com/";
 const repositoryUrl = "https://github.com/neonwatty/meme-search";
 const expectedTitle = "Meme Search - AI-powered meme search engine you can self-host";
 const expectedDescription =
@@ -314,7 +314,7 @@ for (const { attributes } of elements(html, "link")) {
 validateJsonLd(html);
 
 check(/^User-agent:\s*\*$/m.test(robots), "robots.txt must define the default user agent");
-check(/^Allow:\s*\/meme-search\/$/m.test(robots), "robots.txt must allow the deployed base path");
+check(/^Allow:\s*\/$/m.test(robots), "robots.txt must allow the deployed root path");
 check(!/^Disallow:/m.test(robots), "robots.txt must not disallow crawlable content");
 check(
   new RegExp(`^Sitemap:\\s*${baseUrl.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}sitemap\\.xml$`, "m").test(robots),
