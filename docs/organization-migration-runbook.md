@@ -18,7 +18,9 @@ authorization to transfer the repository.
 ## Current public entry points
 
 - Repository: `https://github.com/neonwatty/meme-search`
-- Project site: `https://neonwatty.github.io/meme-search/`
+- Existing canonical project site: `https://neonwatty.github.io/meme-search/`
+- Configured custom domain: `https://meme-search.neonwatty.com/` (certificate
+  issuance and canonical cutover are still pending)
 - Rails image: `ghcr.io/neonwatty/meme_search`
 - Generator image: `ghcr.io/neonwatty/image_to_text_generator`
 - Releases, issues, pull requests, discussions, forks, stars, and watchers are
@@ -29,6 +31,33 @@ before transfer:
 
 - `ghcr.io/neonwatty/meme_search_pro`
 - `ghcr.io/neonwatty/meme-search`
+
+## Preflight snapshot
+
+Recorded before transfer on August 29, 2026:
+
+- The public repository has 12 releases, 15 tags, 29 forks, Discussions, and a
+  workflow-published Pages site.
+- All 12 Actions workflows are enabled. The repository permits all actions and
+  does not require full-length commit SHA pinning.
+- One repository Actions secret exists: `OPENAI_API_KEY`. There are no repository
+  variables.
+- The `github-pages` environment has a custom branch policy and no environment
+  secrets or variables.
+- The default branch is governed by one active ruleset. It blocks deletion and
+  non-fast-forward pushes and requires pull requests, but currently requires no
+  approving reviews or code-owner review.
+- Secret scanning and push protection are enabled. Dependabot security updates
+  are disabled.
+- There are no webhooks or deploy keys. The only direct collaborator and
+  assignable user is `neonwatty`.
+- Four public Container registry packages are linked to the repository:
+  `meme_search`, `image_to_text_generator`, `meme_search_pro`, and `meme-search`.
+- The destination organization contains `.github` and `meme-search-unraid`. Its
+  default repository permission is `none`, member repository creation is
+  disabled, and `neonwatty` is currently its only member.
+- Organization Actions policy could not be read with the current API token and
+  must be confirmed in the organization settings before transfer.
 
 ## Gate 1: stable website identity
 
@@ -51,18 +80,26 @@ Pages URL as canonical.
 ## Gate 2: container publishing continuity
 
 GitHub Container Registry packages are account-scoped and do not automatically
-change owners with a repository transfer. Before transferring:
+change owners with a repository transfer. For the Container registry, the
+packages remain under `neonwatty`, their repository link is removed, and the
+transferred repository's workflows lose package access until it is explicitly
+restored. Before transferring:
 
 1. Record each linked package, visibility, repository link, Actions access, and
    active tags.
 2. Classify the two legacy or special-purpose packages listed above.
-3. Verify how the transferred repository will retain write access to the active
-   `neonwatty` packages.
+3. Grant the transferred repository explicit Actions access to the active
+   `neonwatty` packages, or configure a narrowly scoped compatibility credential.
 4. Test an authenticated staging publication with the same mechanism the release
    workflow will use after transfer.
 5. Decide whether organization-scoped image names will be introduced in parallel.
 6. If new names are introduced, publish both names for a documented compatibility
    period; do not silently break existing Compose installations.
+
+The preferred long-term shape is dual publication to the existing personal
+namespace and `ghcr.io/meme-search/...`, followed by a separately announced
+deprecation period. Existing Compose files must continue pulling the personal
+namespace until the organization packages have been exercised in a real release.
 
 ## Gate 3: repository and organization readiness
 
@@ -73,6 +110,8 @@ Before the transfer:
   authentication.
 - Confirm organization Actions policy permits every action used by current
   workflows.
+- Confirm the `OPENAI_API_KEY` repository secret is still present after transfer
+  without exposing or rotating its value unnecessarily.
 - Confirm Pages, Discussions, private vulnerability reporting, branch rules,
   environments, secrets, webhooks, deploy keys, and installed GitHub Apps.
 - Export or record the current settings needed for comparison after transfer.
@@ -88,7 +127,8 @@ Before the transfer:
    `https://github.com/meme-search/meme-search`.
 5. Reconfigure Pages immediately while retaining the custom domain.
 6. Restore or grant Actions access to every active package.
-7. Update local remotes and the repository's internal links after redirect
+7. Compare the transferred repository against the preflight snapshot above.
+8. Update local remotes and the repository's internal links after redirect
    verification.
 
 ## Post-transfer verification
