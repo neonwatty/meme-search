@@ -6,6 +6,7 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  IMAGE_NAMESPACE: ghcr.io/${{ github.repository_owner }}
 
 jobs:
   build_pro_image_to_text:
@@ -75,7 +76,7 @@ jobs:
         uses: docker/metadata-action@v6
         with:
           images: |
-            ghcr.io/${{ github.actor }}/image_to_text_generator
+            ${{ env.IMAGE_NAMESPACE }}/image_to_text_generator
           tags: type=ref,event=tag
           flavor: latest=true
 
@@ -98,7 +99,7 @@ jobs:
           context: ./meme_search/image_to_text_generator
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/neonwatty/image_to_text_generator:latest
+          tags: ${{ env.IMAGE_NAMESPACE }}/image_to_text_generator:latest
           labels: ${{ steps.meta.outputs.labels }}
           provenance: mode=max
           sbom: true

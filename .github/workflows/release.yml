@@ -10,6 +10,7 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  IMAGE_NAMESPACE: ghcr.io/${{ github.repository_owner }}
 
 jobs:
   # Create GitHub Release
@@ -64,11 +65,11 @@ jobs:
         run: |
           EXPECTED_REVISION="$(git rev-parse HEAD)"
 
-          docker pull --platform linux/amd64 ghcr.io/neonwatty/meme_search:latest
-          APP_REVISION="$(docker image inspect ghcr.io/neonwatty/meme_search:latest --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}')"
+          docker pull --platform linux/amd64 "$IMAGE_NAMESPACE/meme_search:latest"
+          APP_REVISION="$(docker image inspect "$IMAGE_NAMESPACE/meme_search:latest" --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}')"
 
-          docker pull --platform linux/amd64 ghcr.io/neonwatty/image_to_text_generator:latest
-          GENERATOR_REVISION="$(docker image inspect ghcr.io/neonwatty/image_to_text_generator:latest --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}')"
+          docker pull --platform linux/amd64 "$IMAGE_NAMESPACE/image_to_text_generator:latest"
+          GENERATOR_REVISION="$(docker image inspect "$IMAGE_NAMESPACE/image_to_text_generator:latest" --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}')"
 
           if [ "$APP_REVISION" != "$EXPECTED_REVISION" ]; then
             echo "Rails image revision $APP_REVISION does not match release commit $EXPECTED_REVISION"
@@ -83,11 +84,11 @@ jobs:
       - name: Create versioned Docker image tags
         run: |
           docker buildx imagetools create \
-            ghcr.io/neonwatty/meme_search:latest \
-            --tag ghcr.io/neonwatty/meme_search:v${{ steps.get_version.outputs.version }}
+            "$IMAGE_NAMESPACE/meme_search:latest" \
+            --tag "$IMAGE_NAMESPACE/meme_search:v${{ steps.get_version.outputs.version }}"
           docker buildx imagetools create \
-            ghcr.io/neonwatty/image_to_text_generator:latest \
-            --tag ghcr.io/neonwatty/image_to_text_generator:v${{ steps.get_version.outputs.version }}
+            "$IMAGE_NAMESPACE/image_to_text_generator:latest" \
+            --tag "$IMAGE_NAMESPACE/image_to_text_generator:v${{ steps.get_version.outputs.version }}"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
