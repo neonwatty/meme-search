@@ -26,11 +26,16 @@ authorization to transfer the repository.
 - Releases, issues, pull requests, discussions, forks, stars, and watchers are
   attached to the core repository.
 
-Additional public packages currently linked to the repository must be classified
-before transfer:
+The public packages currently linked to the repository are classified as follows:
 
-- `ghcr.io/neonwatty/meme_search_pro`
-- `ghcr.io/neonwatty/meme-search`
+- Supported and actively published: `ghcr.io/neonwatty/meme_search` and
+  `ghcr.io/neonwatty/image_to_text_generator`. Both track the current release
+  series and are referenced by the current Compose file and publishing workflows.
+- Legacy compatibility only: `ghcr.io/neonwatty/meme_search_pro` and
+  `ghcr.io/neonwatty/meme-search`. Neither is referenced by the current runtime or
+  publishing configuration. Keep both public and pullable during migration, but
+  do not reproduce them in the organization namespace or advertise them as
+  supported images.
 
 ## Preflight snapshot
 
@@ -91,8 +96,10 @@ transferred repository's workflows lose package access until it is explicitly
 restored. Before transferring:
 
 1. Record each linked package, visibility, repository link, Actions access, and
-   active tags.
-2. Classify the two legacy or special-purpose packages listed above.
+   active tags. Run `scripts/inventory_ghcr_packages.sh neonwatty` immediately
+   before transfer and retain its output with the transfer record.
+2. Confirm the supported-versus-legacy classification above still matches the
+   repository's runtime and publishing configuration.
 3. Grant the transferred repository explicit Actions access to the active
    `neonwatty` packages, or configure a narrowly scoped compatibility credential.
 4. Test an authenticated staging publication with the same mechanism the release
