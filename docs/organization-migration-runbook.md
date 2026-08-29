@@ -56,8 +56,13 @@ Recorded before transfer on August 29, 2026:
 - The destination organization contains `.github` and `meme-search-unraid`. Its
   default repository permission is `none`, member repository creation is
   disabled, and `neonwatty` is currently its only member.
-- Organization Actions policy could not be read with the current API token and
-  must be confirmed in the organization settings before transfer.
+- The destination organization enables Actions for all repositories and permits
+  all actions and reusable workflows. Full-length commit SHA pinning is not
+  required, standard hosted runners are enabled, and first-time contributors
+  require workflow approval.
+- The organization's default `GITHUB_TOKEN` permission is read-only for contents
+  and packages, and Actions cannot create or approve pull requests by default.
+  Existing workflows already request job-level write scopes where needed.
 
 ## Gate 1: stable website identity
 
