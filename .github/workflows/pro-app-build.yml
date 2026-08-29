@@ -6,6 +6,7 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  IMAGE_NAMESPACE: ghcr.io/${{ github.repository_owner }}
 
 jobs:
   build_pro_app:
@@ -56,7 +57,7 @@ jobs:
         uses: docker/metadata-action@v6
         with:
           images: |
-            ghcr.io/${{ github.actor }}/meme_search
+            ${{ env.IMAGE_NAMESPACE }}/meme_search
           tags: type=ref,event=tag
           flavor: latest=true
 
@@ -80,7 +81,7 @@ jobs:
           file: ./meme_search/meme_search_app/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/neonwatty/meme_search:latest
+          tags: ${{ env.IMAGE_NAMESPACE }}/meme_search:latest
           labels: ${{ steps.meta.outputs.labels }}
           provenance: mode=max
           sbom: true
