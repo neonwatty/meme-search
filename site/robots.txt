@@ -1,4 +1,4 @@
 User-agent: *
-Allow: /meme-search/
+Allow: /
 
-Sitemap: https://neonwatty.github.io/meme-search/sitemap.xml
+Sitemap: https://meme-search.neonwatty.com/sitemap.xml

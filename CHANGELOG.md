@@ -52,7 +52,7 @@ Search beyond the web app:
   UI-independent relevance evaluator.
 - **Documentation and demos**: Published the
   [Search API guide](docs/search-api.md), a
-  [browser-playable app-and-CLI demo](https://neonwatty.github.io/meme-search/#integrations),
+  [browser-playable app-and-CLI demo](https://meme-search.neonwatty.com/#integrations),
   and [issue #197](https://github.com/neonwatty/meme-search/issues/197) for
   coordinating community-built integrations.
 

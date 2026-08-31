@@ -13,10 +13,10 @@ The GitHub Pages site intentionally remains a focused, single-page project overv
 
 - Do not create NAS-specific deployment content here; that belongs to the separate NAS initiative.
 - Do not create translated or Chinese-language documentation here; that belongs to the separate localization initiative.
-- Every published page must have a unique title, description, canonical URL, social metadata, and a sitemap entry using the `/meme-search/` base path.
+- Every published page must have a unique title, description, canonical URL, social metadata, and a sitemap entry on the custom-domain origin.
 - Add reciprocal, descriptive links between the landing page and each supporting page.
 - Publish only content with a named maintainer or a reliable synchronization check; stale model and deployment details are worse than a smaller site.
 
 ## GitHub Pages deployment note
 
-This project repository publishes `site/robots.txt` at `/meme-search/robots.txt`, which resolves the project-path 404 and advertises the project sitemap. The Robots Exclusion Protocol discovers robots rules only at the origin-level `/robots.txt`; that URL is controlled by the separate `neonwatty.github.io` user-site repository. If origin-level sitemap discovery is required, add the sitemap directive there as a separate infrastructure change. The landing page also carries explicit page-level indexing directives.
+The custom domain publishes `site/robots.txt` at the origin-level `/robots.txt`, where the Robots Exclusion Protocol discovers it. It allows the full site and advertises the custom-domain sitemap. The landing page also carries explicit page-level indexing directives.
