@@ -18,9 +18,10 @@ authorization to transfer the repository.
 ## Current public entry points
 
 - Repository: `https://github.com/neonwatty/meme-search`
-- Existing canonical project site: `https://neonwatty.github.io/meme-search/`
-- Configured custom domain: `https://meme-search.neonwatty.com/` (certificate
-  issuance and canonical cutover are still pending)
+- Legacy project site: `https://neonwatty.github.io/meme-search/` (permanently
+  redirects to the custom domain)
+- Canonical project site: `https://meme-search.neonwatty.com/` (valid HTTPS
+  certificate, HTTPS enforcement enabled, and canonical metadata deployed)
 - Rails image: `ghcr.io/neonwatty/meme_search`
 - Generator image: `ghcr.io/neonwatty/image_to_text_generator`
 - Releases, issues, pull requests, discussions, forks, stars, and watchers are
@@ -39,10 +40,10 @@ The public packages currently linked to the repository are classified as follows
 
 ## Preflight snapshot
 
-Recorded before transfer on August 29, 2026:
+Recorded before transfer and refreshed on August 31, 2026:
 
-- The public repository has 12 releases, 15 tags, 29 forks, Discussions, and a
-  workflow-published Pages site.
+- The public repository has 12 releases, 15 tags, 719 stars, 27 forks, 3
+  watchers, Discussions, and a workflow-published Pages site.
 - All 12 Actions workflows are enabled. The repository permits all actions and
   does not require full-length commit SHA pinning.
 - One repository Actions secret exists: `OPENAI_API_KEY`. There are no repository
@@ -58,6 +59,8 @@ Recorded before transfer on August 29, 2026:
   assignable user is `neonwatty`.
 - Four public Container registry packages are linked to the repository:
   `meme_search`, `image_to_text_generator`, `meme_search_pro`, and `meme-search`.
+  The supported images both have `latest` and `v2.3.2` multi-architecture tags
+  for `linux/amd64` and `linux/arm64`.
 - The destination organization contains `.github` and `meme-search-unraid`. Its
   default repository permission is `none`, member repository creation is
   disabled, and `neonwatty` is currently its only member.
@@ -68,6 +71,20 @@ Recorded before transfer on August 29, 2026:
 - The organization's default `GITHUB_TOKEN` permission is read-only for contents
   and packages, and Actions cannot create or approve pull requests by default.
   Existing workflows already request job-level write scopes where needed.
+- The target repository name `meme-search/meme-search` is available. There are no
+  destination organization teams, GitHub App installations, or Container
+  registry packages.
+- The source repository has no webhooks or deploy keys. Its `github-pages`
+  environment permits deployments from `main` and `landing-page`.
+- The source repository's only Actions secret is `OPENAI_API_KEY`. The Discord
+  release workflow references `DISCORD_RELEASE_WEBHOOK_URL`, but that secret is
+  not configured and the latest successful run skipped the notification.
+- Neither the personal account nor the destination organization currently has a
+  verified GitHub Pages domain. Verify only
+  `meme-search.neonwatty.com` for the organization before transfer to minimize
+  the ownership scope while protecting the project hostname.
+- The repository and organization profile website fields still use the legacy
+  Pages URL. Update both to the custom domain before the transfer window.
 
 ## Gate 1: stable website identity
 
@@ -84,8 +101,21 @@ name. Before transferring the repository:
 6. Monitor indexing and organic traffic until the custom domain is the stable
    canonical location.
 
+As of August 31, 2026, steps 1 through 5 are complete. Google Search Console has
+processed `https://meme-search.neonwatty.com/sitemap.xml`, discovered the
+homepage, and placed an explicit indexing request in its priority crawl queue.
+The page is currently reported as "Discovered - currently not indexed," so step
+6 remains open.
+
 Do not transfer the repository while search engines still treat the account-bound
 Pages URL as canonical.
+
+Immediately before the transfer, verify `meme-search.neonwatty.com` in the
+destination organization's Pages settings. The current DNS-only CNAME points to
+`neonwatty.github.io`. During the cutover, change it to
+`meme-search.github.io`, reattach the custom domain to the transferred
+repository, and dispatch the Pages workflow. GitHub redirects repository and Git
+URLs after a transfer, but does not redirect the Pages site itself.
 
 ## Gate 2: container publishing continuity
 
@@ -113,6 +143,13 @@ namespace and `ghcr.io/meme-search/...`, followed by a separately announced
 deprecation period. Existing Compose files must continue pulling the personal
 namespace until the organization packages have been exercised in a real release.
 
+The current build and release workflows derive the image namespace from
+`github.repository_owner`. After transfer they will therefore target the new
+organization namespace, while `docker-compose.yml` will continue pulling the
+supported personal namespace. Do not transfer until a staging publication proves
+that the organization images can be published and the compatibility publication
+path for the personal images is authenticated and working.
+
 ## Gate 3: repository and organization readiness
 
 Before the transfer:
@@ -130,6 +167,30 @@ Before the transfer:
 - Announce a short maintenance window and avoid merging unrelated release changes
   during it.
 
+## Current go/no-go status
+
+Status on August 31, 2026: **NO-GO for transfer; preflight is otherwise healthy.**
+
+Open gates:
+
+1. Google has discovered but not yet indexed the custom-domain homepage or
+   selected it as canonical.
+2. The destination organization has not yet verified
+   `meme-search.neonwatty.com` for GitHub Pages.
+3. GHCR dual-publication or another tested compatibility mechanism is not yet in
+   place for the supported personal image paths.
+
+Non-blocking follow-ups:
+
+- Change the repository homepage and organization website to
+  `https://meme-search.neonwatty.com/`.
+- Decide whether to configure `DISCORD_RELEASE_WEBHOOK_URL` or formally keep
+  Discord release notifications disabled.
+- Add a second recovery owner before enabling organization-wide two-factor
+  authentication.
+- Update current-code repository links after the transfer redirects have been
+  verified; historical release notes may remain unchanged.
+
 ## Transfer procedure
 
 1. Re-run the current test and site-validation suites on `main`.
@@ -137,10 +198,14 @@ Before the transfer:
 3. Transfer `neonwatty/meme-search` to `meme-search` without renaming it.
 4. Confirm `https://github.com/neonwatty/meme-search` redirects to
    `https://github.com/meme-search/meme-search`.
-5. Reconfigure Pages immediately while retaining the custom domain.
-6. Restore or grant Actions access to every active package.
-7. Compare the transferred repository against the preflight snapshot above.
-8. Update local remotes and the repository's internal links after redirect
+5. Change the DNS-only CNAME for `meme-search.neonwatty.com` from
+   `neonwatty.github.io` to `meme-search.github.io`.
+6. Reconfigure Pages immediately while retaining the custom domain, enforce
+   HTTPS, and dispatch the Pages workflow.
+7. Restore or grant Actions access to every active package and run the staged
+   compatibility publication.
+8. Compare the transferred repository against the preflight snapshot above.
+9. Update local remotes and the repository's internal links after redirect
    verification.
 
 ## Post-transfer verification
