@@ -79,10 +79,9 @@ Recorded before transfer and refreshed on August 31, 2026:
 - The source repository's only Actions secret is `OPENAI_API_KEY`. The Discord
   release workflow references `DISCORD_RELEASE_WEBHOOK_URL`, but that secret is
   not configured and the latest successful run skipped the notification.
-- Neither the personal account nor the destination organization currently has a
-  verified GitHub Pages domain. Verify only
-  `meme-search.neonwatty.com` for the organization before transfer to minimize
-  the ownership scope while protecting the project hostname.
+- The destination organization has verified `meme-search.neonwatty.com` for
+  GitHub Pages. The verification TXT record remains published in Cloudflare,
+  protecting the project hostname without claiming the entire apex domain.
 - The repository and organization profile website fields still use the legacy
   Pages URL. Update both to the custom domain before the transfer window.
 
@@ -110,12 +109,12 @@ The page is currently reported as "Discovered - currently not indexed," so step
 Do not transfer the repository while search engines still treat the account-bound
 Pages URL as canonical.
 
-Immediately before the transfer, verify `meme-search.neonwatty.com` in the
-destination organization's Pages settings. The current DNS-only CNAME points to
-`neonwatty.github.io`. During the cutover, change it to
-`meme-search.github.io`, reattach the custom domain to the transferred
-repository, and dispatch the Pages workflow. GitHub redirects repository and Git
-URLs after a transfer, but does not redirect the Pages site itself.
+The destination organization verified `meme-search.neonwatty.com` on August 31,
+2026. Keep the verification TXT record published. The current DNS-only CNAME
+points to `neonwatty.github.io`. During the cutover, change it to
+`meme-search.github.io`, reattach the custom domain to the transferred repository,
+and dispatch the Pages workflow. GitHub redirects repository and Git URLs after a
+transfer, but does not redirect the Pages site itself.
 
 ## Gate 2: container publishing continuity
 
@@ -175,9 +174,7 @@ Open gates:
 
 1. Google has discovered but not yet indexed the custom-domain homepage or
    selected it as canonical.
-2. The destination organization has not yet verified
-   `meme-search.neonwatty.com` for GitHub Pages.
-3. GHCR dual-publication or another tested compatibility mechanism is not yet in
+2. GHCR dual-publication or another tested compatibility mechanism is not yet in
    place for the supported personal image paths.
 
 Non-blocking follow-ups:
