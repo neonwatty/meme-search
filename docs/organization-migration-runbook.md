@@ -46,8 +46,9 @@ Recorded before transfer and refreshed on August 31, 2026:
   watchers, Discussions, and a workflow-published Pages site.
 - All 12 Actions workflows are enabled. The repository permits all actions and
   does not require full-length commit SHA pinning.
-- One repository Actions secret exists: `OPENAI_API_KEY`. There are no repository
-  variables.
+- Two repository Actions secrets exist: `OPENAI_API_KEY` and
+  `GHCR_COMPAT_TOKEN`. There are no repository variables. The compatibility
+  token expires November 29, 2026.
 - The `github-pages` environment has a custom branch policy and no environment
   secrets or variables.
 - The default branch is governed by one active ruleset. It blocks deletion and
@@ -72,13 +73,15 @@ Recorded before transfer and refreshed on August 31, 2026:
   and packages, and Actions cannot create or approve pull requests by default.
   Existing workflows already request job-level write scopes where needed.
 - The target repository name `meme-search/meme-search` is available. There are no
-  destination organization teams, GitHub App installations, or Container
-  registry packages.
+  destination organization teams or GitHub App installations. The organization
+  has public `meme_search` and `image_to_text_generator` Container registry
+  packages seeded with `latest` and `v2.3.2`.
 - The source repository has no webhooks or deploy keys. Its `github-pages`
   environment permits deployments from `main` and `landing-page`.
-- The source repository's only Actions secret is `OPENAI_API_KEY`. The Discord
-  release workflow references `DISCORD_RELEASE_WEBHOOK_URL`, but that secret is
-  not configured and the latest successful run skipped the notification.
+- The source repository's Actions secrets are `OPENAI_API_KEY` and
+  `GHCR_COMPAT_TOKEN`. The Discord release workflow references
+  `DISCORD_RELEASE_WEBHOOK_URL`, but that secret is not configured and the latest
+  successful run skipped the notification.
 - The destination organization must not verify `meme-search.neonwatty.com`
   before the repository transfer. A pre-transfer verification test caused GitHub
   to detach the hostname from the personal repository and was removed. The TXT
@@ -147,12 +150,25 @@ namespace and `ghcr.io/meme-search/...`, followed by a separately announced
 deprecation period. Existing Compose files must continue pulling the personal
 namespace until the organization packages have been exercised in a real release.
 
-The current build and release workflows derive the image namespace from
-`github.repository_owner`. After transfer they will therefore target the new
-organization namespace, while `docker-compose.yml` will continue pulling the
-supported personal namespace. Do not transfer until a staging publication proves
-that the organization images can be published and the compatibility publication
-path for the personal images is authenticated and working.
+As of August 31, 2026, the organization packages are seeded and this gate is
+complete:
+
+- `ghcr.io/meme-search/meme_search:{latest,v2.3.2}` is public and matches source
+  digest `sha256:e303174bbdcd8cdefb6a9f22d82f14acafa91cbf0719ebae20f33a82a3ecb136`.
+- `ghcr.io/meme-search/image_to_text_generator:{latest,v2.3.2}` is public and
+  matches source digest
+  `sha256:ea1b4d1fa0d37aa2f23d10de32d0538e33b7fd7703dd7b8682ea7c1425884296`.
+- All four tags were inspected successfully after removing local GHCR
+  credentials, proving anonymous access.
+- Build and release workflows include conditional post-transfer compatibility
+  publication to the existing personal namespace. The path remains dormant
+  while the repository owner is `neonwatty` and uses the narrowly scoped
+  `GHCR_COMPAT_TOKEN` after transfer.
+
+Rotate or remove `GHCR_COMPAT_TOKEN` before it expires on November 29, 2026, or
+at the end of the compatibility period, whichever comes first. Existing Compose
+files continue pulling the personal namespace until organization packages have
+also been exercised by a real post-transfer release.
 
 ## Gate 3: repository and organization readiness
 
@@ -179,8 +195,6 @@ Open gates:
 
 1. Google has discovered but not yet indexed the custom-domain homepage or
    selected it as canonical.
-2. GHCR dual-publication or another tested compatibility mechanism is not yet in
-   place for the supported personal image paths.
 
 Non-blocking follow-ups:
 
