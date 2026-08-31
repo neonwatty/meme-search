@@ -79,9 +79,11 @@ Recorded before transfer and refreshed on August 31, 2026:
 - The source repository's only Actions secret is `OPENAI_API_KEY`. The Discord
   release workflow references `DISCORD_RELEASE_WEBHOOK_URL`, but that secret is
   not configured and the latest successful run skipped the notification.
-- The destination organization has verified `meme-search.neonwatty.com` for
-  GitHub Pages. The verification TXT record remains published in Cloudflare,
-  protecting the project hostname without claiming the entire apex domain.
+- The destination organization must not verify `meme-search.neonwatty.com`
+  before the repository transfer. A pre-transfer verification test caused GitHub
+  to detach the hostname from the personal repository and was removed. The TXT
+  challenge remains published in Cloudflare so verification can be repeated
+  immediately after the repository belongs to the organization.
 - The repository and organization profile website fields still use the legacy
   Pages URL. Update both to the custom domain before the transfer window.
 
@@ -109,12 +111,15 @@ The page is currently reported as "Discovered - currently not indexed," so step
 Do not transfer the repository while search engines still treat the account-bound
 Pages URL as canonical.
 
-The destination organization verified `meme-search.neonwatty.com` on August 31,
-2026. Keep the verification TXT record published. The current DNS-only CNAME
-points to `neonwatty.github.io`. During the cutover, change it to
-`meme-search.github.io`, reattach the custom domain to the transferred repository,
-and dispatch the Pages workflow. GitHub redirects repository and Git URLs after a
-transfer, but does not redirect the Pages site itself.
+Do not verify the Pages hostname under the destination organization while the
+repository still belongs to the personal account. GitHub restricts a verified
+hostname to repositories owned by the verifying account, so doing this early
+automatically detaches the hostname and serves a Pages 404. The current DNS-only
+CNAME points to `neonwatty.github.io`. During the cutover, transfer the repository
+first, verify the hostname for the organization, change the CNAME to
+`meme-search.github.io`, reattach the custom domain, and dispatch the Pages
+workflow. GitHub redirects repository and Git URLs after a transfer, but does not
+redirect the Pages site itself.
 
 ## Gate 2: container publishing continuity
 
@@ -195,14 +200,16 @@ Non-blocking follow-ups:
 3. Transfer `neonwatty/meme-search` to `meme-search` without renaming it.
 4. Confirm `https://github.com/neonwatty/meme-search` redirects to
    `https://github.com/meme-search/meme-search`.
-5. Change the DNS-only CNAME for `meme-search.neonwatty.com` from
+5. Verify `meme-search.neonwatty.com` in the destination organization's Pages
+   settings using the TXT challenge already published in Cloudflare.
+6. Change the DNS-only CNAME for `meme-search.neonwatty.com` from
    `neonwatty.github.io` to `meme-search.github.io`.
-6. Reconfigure Pages immediately while retaining the custom domain, enforce
+7. Reconfigure Pages immediately while retaining the custom domain, enforce
    HTTPS, and dispatch the Pages workflow.
-7. Restore or grant Actions access to every active package and run the staged
+8. Restore or grant Actions access to every active package and run the staged
    compatibility publication.
-8. Compare the transferred repository against the preflight snapshot above.
-9. Update local remotes and the repository's internal links after redirect
+9. Compare the transferred repository against the preflight snapshot above.
+10. Update local remotes and the repository's internal links after redirect
    verification.
 
 ## Post-transfer verification
