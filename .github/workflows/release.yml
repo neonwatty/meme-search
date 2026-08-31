@@ -11,6 +11,7 @@ on:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   IMAGE_NAMESPACE: ghcr.io/${{ github.repository_owner }}
+  COMPAT_IMAGE_NAMESPACE: ghcr.io/neonwatty
 
 jobs:
   # Create GitHub Release
@@ -89,6 +90,34 @@ jobs:
           docker buildx imagetools create \
             "$IMAGE_NAMESPACE/image_to_text_generator:latest" \
             --tag "$IMAGE_NAMESPACE/image_to_text_generator:v${{ steps.get_version.outputs.version }}"
+
+      - name: Require compatibility publishing credential
+        if: github.repository_owner != 'neonwatty'
+        env:
+          GHCR_COMPAT_TOKEN: ${{ secrets.GHCR_COMPAT_TOKEN }}
+        run: |
+          if [ -z "$GHCR_COMPAT_TOKEN" ]; then
+            echo "GHCR_COMPAT_TOKEN is required after the organization transfer."
+            exit 1
+          fi
+
+      - name: Log in for compatibility publishing
+        if: github.repository_owner != 'neonwatty'
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: neonwatty
+          password: ${{ secrets.GHCR_COMPAT_TOKEN }}
+
+      - name: Create versioned compatibility image tags
+        if: github.repository_owner != 'neonwatty'
+        run: |
+          docker buildx imagetools create \
+            "$IMAGE_NAMESPACE/meme_search:latest" \
+            --tag "$COMPAT_IMAGE_NAMESPACE/meme_search:v${{ steps.get_version.outputs.version }}"
+          docker buildx imagetools create \
+            "$IMAGE_NAMESPACE/image_to_text_generator:latest" \
+            --tag "$COMPAT_IMAGE_NAMESPACE/image_to_text_generator:v${{ steps.get_version.outputs.version }}"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
