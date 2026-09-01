@@ -143,3 +143,10 @@ Suggested description:
 For every Priority 1 target, record the date contacted, correction URL or pull
 request, and completion date. Recheck the Priority 2 pages after seven days.
 Keep the old GitHub repository URL unclaimed so GitHub's redirect remains intact.
+
+| Target | Submitted | Correction | Status |
+| --- | --- | --- | --- |
+| Awesome Self-Hosted | — | Manual two-line source update required | Not submitted; its contribution rules prohibit machine/LLM-generated contributions |
+| selfh.st/apps | 2026-09-01 | [selfhst/cdn issue #1](https://github.com/selfhst/cdn/issues/1) | Open |
+| selfhost.directory | 2026-09-01 | [selfhost.directory issue #2](https://github.com/turhobr/selfhost.directory/issues/2) | Open |
+| Holtzweb blog | 2026-09-01 | [marcusholtz.github.io PR #1](https://github.com/MarcusHoltz/marcusholtz.github.io/pull/1) | Open |
