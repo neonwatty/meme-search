@@ -200,6 +200,9 @@ Non-blocking follow-ups:
 
 - Change the repository homepage and organization website to
   `https://meme-search.neonwatty.com/`.
+- Complete the prioritized referral-site corrections in
+  `docs/referral-outreach-inventory-2026-09-01.md` after the transfer redirect
+  has been verified.
 - Decide whether to configure `DISCORD_RELEASE_WEBHOOK_URL` or formally keep
   Discord release notifications disabled.
 - Add a second recovery owner before enabling organization-wide two-factor
