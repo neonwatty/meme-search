@@ -190,16 +190,16 @@ Before the transfer:
 
 ## Current go/no-go status
 
-Status on September 1, 2026: **GO for transfer.**
+Status on September 1, 2026: **TRANSFER COMPLETE.**
 
-The stable website identity, container publishing continuity, and repository
-readiness gates are complete. Execute the transfer only in a deliberate cutover
-window with the immediate Pages and DNS steps below ready to follow.
+The repository now lives at `meme-search/meme-search`. The old repository and
+Git URLs redirect, the custom-domain Pages site remains online with HTTPS, and
+the authoritative DNS CNAME points to `meme-search.github.io`. See
+`docs/post-transfer-verification-2026-09-01.md` for the cutover record and the
+remaining monitoring work.
 
 Non-blocking follow-ups:
 
-- Change the repository homepage and organization website to
-  `https://meme-search.neonwatty.com/`.
 - Complete the prioritized referral-site corrections in
   `docs/referral-outreach-inventory-2026-09-01.md` after the transfer redirect
   has been verified.
