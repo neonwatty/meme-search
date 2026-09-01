@@ -29,15 +29,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/neonwatty/meme-search.git"
+    "url": "git+https://github.com/meme-search/meme-search.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/neonwatty/meme-search/issues"
+    "url": "https://github.com/meme-search/meme-search/issues"
   },
-  "homepage": "https://github.com/neonwatty/meme-search#readme",
+  "homepage": "https://github.com/meme-search/meme-search#readme",
   "devDependencies": {
     "@playwright/test": "^1.62.0",
     "@redocly/cli": "^2.41.2",

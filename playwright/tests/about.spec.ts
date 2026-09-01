@@ -20,7 +20,7 @@ test.describe('About Page', () => {
 
   test('displays all navigation links', async ({ page }) => {
     // Check for GitHub link (now text link at bottom)
-    const githubLink = page.locator('a[href="https://github.com/neonwatty/meme-search"]');
+    const githubLink = page.locator('a[href="https://github.com/meme-search/meme-search"]');
     await expect(githubLink).toBeVisible();
     await expect(githubLink).toHaveText(/See on GitHub/);
 
@@ -30,12 +30,12 @@ test.describe('About Page', () => {
     await expect(neonwattyLink).toHaveText(/@neonwatty/);
 
     // Check for issues link in Feedback section
-    const issuesLink = page.locator('a[href="https://github.com/neonwatty/meme-search/issues"]');
+    const issuesLink = page.locator('a[href="https://github.com/meme-search/meme-search/issues"]');
     await expect(issuesLink).toBeVisible();
     await expect(issuesLink).toHaveText(/Submit an issue on GitHub/);
 
     // Check for README link for Discord (replaces direct Discord link)
-    const readmeDiscordLink = page.locator('a[href="https://github.com/neonwatty/meme-search#discord-server"]');
+    const readmeDiscordLink = page.locator('a[href="https://github.com/meme-search/meme-search#discord-server"]');
     await expect(readmeDiscordLink).toBeVisible();
     await expect(readmeDiscordLink).toHaveText(/README\.md/);
   });
@@ -68,7 +68,7 @@ test.describe('About Page', () => {
 
   test('README link has correct attributes', async ({ page }) => {
     // Target the README link for Discord
-    const readmeLink = page.locator('a[href="https://github.com/neonwatty/meme-search#discord-server"]');
+    const readmeLink = page.locator('a[href="https://github.com/meme-search/meme-search#discord-server"]');
 
     // Check target="_blank" for opening in new tab
     await expect(readmeLink).toHaveAttribute('target', '_blank');
