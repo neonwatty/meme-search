@@ -39,10 +39,10 @@
   },
   "homepage": "https://github.com/meme-search/meme-search#readme",
   "devDependencies": {
-    "@playwright/test": "^1.62.0",
-    "@redocly/cli": "^2.41.2",
-    "@types/node": "^26.1.2",
-    "axios": "^1.18.1",
+    "@playwright/test": "^1.62.1",
+    "@redocly/cli": "^2.49.0",
+    "@types/node": "^26.4.0",
+    "axios": "^1.20.0",
     "dotenv": "^17.4.2",
     "typescript": "^7.0.2"
   }
