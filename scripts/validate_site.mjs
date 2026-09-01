@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const siteRoot = join(repositoryRoot, "site");
 const baseUrl = "https://meme-search.neonwatty.com/";
-const repositoryUrl = "https://github.com/neonwatty/meme-search";
+const repositoryUrl = "https://github.com/meme-search/meme-search";
 const expectedTitle = "Meme Search - AI-powered meme search engine you can self-host";
 const expectedDescription =
   "Open source meme search engine that uses local AI to index images by content and text for semantic search. Self-host with Docker.";

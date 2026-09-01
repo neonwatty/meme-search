@@ -13,12 +13,12 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
 
   test "about page contains GitHub repository link" do
     get about_path
-    assert_select "a[href='https://github.com/neonwatty/meme-search']"
+    assert_select "a[href='https://github.com/meme-search/meme-search']"
   end
 
   test "about page contains GitHub issues link" do
     get about_path
-    assert_select "a[href='https://github.com/neonwatty/meme-search/issues']"
+    assert_select "a[href='https://github.com/meme-search/meme-search/issues']"
   end
 
   test "about page contains personal website link" do

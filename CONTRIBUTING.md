@@ -6,7 +6,7 @@ By participating, you agree to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Before opening an issue
 
-- Search existing [issues](https://github.com/neonwatty/meme-search/issues) and [discussions](https://github.com/neonwatty/meme-search/discussions).
+- Search existing [issues](https://github.com/meme-search/meme-search/issues) and [discussions](https://github.com/meme-search/meme-search/discussions).
 - Use the bug report form for reproducible defects and include the Meme Search version, host platform, Docker/Compose version, relevant logs, and provider/model.
 - Remove API keys, private paths, image contents, and other sensitive information from logs.
 - Use Discussions for support questions and early feature ideas.

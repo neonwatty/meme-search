@@ -27,7 +27,7 @@ This repository contains the services and web app for indexing, searching, and r
 ## Quick start
 
 ```sh
-git clone https://github.com/neonwatty/meme-search.git
+git clone https://github.com/meme-search/meme-search.git
 cd meme-search
 docker compose up
 ```
@@ -282,7 +282,7 @@ You can index your memes by creating your own descriptions, or by generating des
 
 <img align="center" src="https://github.com/jermwatt/readme_gifs/blob/main/meme-search-generate-example.gif" height="225">
 
-To start indexing your own memes, first adjust the [compose file](https://github.com/neonwatty/meme-search/blob/main/docker-compose.yml) by adding `volume` mount to the `meme_search` and `image_to_text_generator` services to properly connect your local meme subdirectory to the app.
+To start indexing your own memes, first adjust the [compose file](https://github.com/meme-search/meme-search/blob/main/docker-compose.yml) by adding `volume` mount to the `meme_search` and `image_to_text_generator` services to properly connect your local meme subdirectory to the app.
 
 For example, if suppose (one of your) meme directories was called `new_memes` and was located at the following path on your machine: `/local/path/to/my/memes/new_memes`.
 
@@ -339,7 +339,7 @@ Docker-network access, schema knowledge, or filesystem paths.
 - Measure UI-independent search behavior with the optional, non-gating
   relevance evaluator documented in the API guide.
 - Propose a local client or conversation workflow in
-  [community integration issue #197](https://github.com/neonwatty/meme-search/issues/197).
+  [community integration issue #197](https://github.com/meme-search/meme-search/issues/197).
 
 API v1 is officially supported only on loopback and is permanently read-only.
 Its bearer tokens do not authenticate the web UI or settings, so do not expose
@@ -479,7 +479,7 @@ Meme Search is under active development! See the `CHANGELOG.md` in this repo for
 
 Feature requests and contributions are welcome!
 
-See [the discussion section of this repository](https://github.com/neonwatty/meme-search/discussions) for suggested enhancements to contribute to or weigh in on.
+See [the discussion section of this repository](https://github.com/meme-search/meme-search/discussions) for suggested enhancements to contribute to or weigh in on.
 
 Please see [`CONTRIBUTING.md`](CONTRIBUTING.md) for setup, testing, and contribution guidance. Security-sensitive reports should follow [`SECURITY.md`](SECURITY.md) instead of being filed publicly.
 
@@ -520,12 +520,12 @@ flowchart TD
     Docker ---|"orchestrates"| DB
 
     %% Click Events
-    click Rails "https://github.com/neonwatty/meme-search/tree/main/meme_search/meme_search_app"
-    click Python "https://github.com/neonwatty/meme-search/tree/main/meme_search/image_to_text_generator"
-    click DB "https://github.com/neonwatty/meme-search/blob/main/meme_search/meme_search_app/config/database.yml"
-    click Docker "https://github.com/neonwatty/meme-search/blob/main/docker-compose.yml"
-    click PublicMemes "https://github.com/neonwatty/meme-search/tree/main/meme_search/meme_search_app/public/memes"
-    click MemeDir "https://github.com/neonwatty/meme-search/tree/main/meme_search/memes"
+    click Rails "https://github.com/meme-search/meme-search/tree/main/meme_search/meme_search_app"
+    click Python "https://github.com/meme-search/meme-search/tree/main/meme_search/image_to_text_generator"
+    click DB "https://github.com/meme-search/meme-search/blob/main/meme_search/meme_search_app/config/database.yml"
+    click Docker "https://github.com/meme-search/meme-search/blob/main/docker-compose.yml"
+    click PublicMemes "https://github.com/meme-search/meme-search/tree/main/meme_search/meme_search_app/public/memes"
+    click MemeDir "https://github.com/meme-search/meme-search/tree/main/meme_search/memes"
 
     %% Styles
     classDef user fill:#fceabb,stroke:#d79b00,stroke-width:2px;

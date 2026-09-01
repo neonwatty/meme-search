@@ -314,7 +314,7 @@ filesystem, Python-service, or Docker-network access. Do not ask users to make
 the app public merely to connect a platform integration.
 
 Have an idea for a launcher, local bot, mobile shortcut, or conversation
-workflow? Join [community integration issue #197](https://github.com/neonwatty/meme-search/issues/197)
+workflow? Join [community integration issue #197](https://github.com/meme-search/meme-search/issues/197)
 before implementation so its credential, runtime, and maintenance model can be
 reviewed.
 

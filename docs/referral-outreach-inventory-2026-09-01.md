@@ -150,3 +150,4 @@ Keep the old GitHub repository URL unclaimed so GitHub's redirect remains intact
 | selfh.st/apps | 2026-09-01 | [selfhst/cdn issue #1](https://github.com/selfhst/cdn/issues/1) | Open |
 | selfhost.directory | 2026-09-01 | [selfhost.directory issue #2](https://github.com/turhobr/selfhost.directory/issues/2) | Open |
 | Holtzweb blog | 2026-09-01 | [marcusholtz.github.io PR #1](https://github.com/MarcusHoltz/marcusholtz.github.io/pull/1) | Open |
+| DailyFOSS | 2026-09-01 | [dailyfoss.github.io PR #190](https://github.com/dailyfoss/dailyfoss.github.io/pull/190) | Open |
