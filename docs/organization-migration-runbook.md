@@ -40,7 +40,8 @@ The public packages currently linked to the repository are classified as follows
 
 ## Preflight snapshot
 
-Recorded before transfer and refreshed on August 31, 2026:
+Recorded before transfer and refreshed on September 1, 2026. The detailed final
+snapshot is in `docs/pre-transfer-inventory-2026-09-01.md`:
 
 - The public repository has 12 releases, 15 tags, 719 stars, 27 forks, 3
   watchers, Discussions, and a workflow-published Pages site.
@@ -105,11 +106,11 @@ name. Before transferring the repository:
 6. Monitor indexing and organic traffic until the custom domain is the stable
    canonical location.
 
-As of August 31, 2026, steps 1 through 5 are complete. Google Search Console has
-processed `https://meme-search.neonwatty.com/sitemap.xml`, discovered the
-homepage, and placed an explicit indexing request in its priority crawl queue.
-The page is currently reported as "Discovered - currently not indexed," so step
-6 remains open.
+As of September 1, 2026, all six steps are complete. Google Search Console has
+successfully processed `https://meme-search.neonwatty.com/sitemap.xml`, indexed
+the homepage, and reports both the user-declared and Google-selected canonical
+as `https://meme-search.neonwatty.com/`. The last recorded Googlebot smartphone
+crawl succeeded on August 31, 2026.
 
 Do not transfer the repository while search engines still treat the account-bound
 Pages URL as canonical.
@@ -189,12 +190,11 @@ Before the transfer:
 
 ## Current go/no-go status
 
-Status on August 31, 2026: **NO-GO for transfer; preflight is otherwise healthy.**
+Status on September 1, 2026: **GO for transfer.**
 
-Open gates:
-
-1. Google has discovered but not yet indexed the custom-domain homepage or
-   selected it as canonical.
+The stable website identity, container publishing continuity, and repository
+readiness gates are complete. Execute the transfer only in a deliberate cutover
+window with the immediate Pages and DNS steps below ready to follow.
 
 Non-blocking follow-ups:
 
